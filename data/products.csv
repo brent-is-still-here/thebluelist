@@ -1,0 +1,622 @@
+name,description
+Hardware,General tools and supplies for home improvement and construction
+Hand Tools,"Manual tools like hammers, wrenches, and screwdrivers"
+Power Tools,"Electric tools including drills, saws, and grinders"
+Fasteners,"Nails, screws, bolts, nuts, and washers"
+Measuring Tools,"Tape measures, levels, and calipers"
+Safety Gear,"Protective equipment such as gloves, goggles, and helmets"
+Locks & Security,"Locks, deadbolts, and security systems"
+Ladders,"Step ladders, extension ladders, and scaffolding"
+Lumber,Various types of wood for construction and carpentry
+Dimensional Lumber,Standard sized wood for framing and construction
+Plywood,Thin sheets of wood for flooring and wall panels
+Treated Wood,Wood treated to resist moisture and decay
+Specialty Woods,"Hardwoods like oak, mahogany, and cherry"
+Veneer Sheets,Thin wood layers used for finishing
+Electrical Tools,Tools for electrical work and installations
+Multimeters,"Devices for measuring voltage, current, and resistance"
+Wire Strippers,Tools for stripping insulation from wires
+Circuit Testers,Devices to test electrical circuits
+Soldering Irons,Tools for soldering electronic components
+Electrical Cables,Wiring and cables for electrical installations
+Switches & Outlets,"Electrical switches, sockets, and outlets"
+Plumbing Supply,Materials and tools for plumbing repairs
+Pipes & Fittings,"Copper, PVC, and steel pipes with connectors"
+Faucets & Fixtures,"Bathroom and kitchen faucets, showerheads"
+Plumbing Tools,"Wrenches, plungers, and pipe cutters"
+Water Heaters,Gas and electric water heating systems
+Pipe Insulation,Materials to insulate hot and cold water pipes
+Woodworking Tools,Tools and machines for woodworking projects
+Planers & Jointers,Machines for smoothing and joining wood
+Clamps & Vises,Tools for holding materials securely
+Sandpaper & Abrasives,Materials for sanding and smoothing surfaces
+Wood Glue & Adhesives,Glue and adhesives for woodworking
+Finishing Products,"Stains, varnishes, and sealers for wood"
+Building Materials,Materials for construction and home improvement
+Cement & Concrete,Materials for building foundations and structures
+Drywall & Plaster,Wall materials for interior construction
+Roofing Materials,"Shingles, tar paper, and roofing nails"
+Insulation,Thermal and sound insulation materials
+Windows & Doors,"Pre-hung doors, windows, and frames"
+Flooring,"Hardwood, laminate, and tile flooring options"
+Kitchen Appliances,Cooking and food preparation appliances
+Refrigerators,Large appliances for food storage
+Dishwashers,Appliances for automatic dish cleaning
+Coffee Makers,Machines for brewing coffee and espresso
+Outdoor Furniture,"Patio chairs, tables, and loungers"
+Gardening Tools,"Shovels, pruners, and garden hoses"
+Lawn Care,"Lawn mowers, trimmers, and fertilizers"
+BBQ Grills,Gas and charcoal grills for outdoor cooking
+Fire Pits,Outdoor fire pits and accessories
+Swimming Pools,Above-ground pools and maintenance equipment
+Automotive Parts,"Car parts including brakes, filters, and batteries"
+Car Accessories,"Seat covers, mats, and car organizers"
+Motor Oil & Fluids,"Engine oil, coolants, and brake fluid"
+Tires & Wheels,"Car and truck tires, rims, and accessories"
+Motorcycle Gear,"Helmets, jackets, and riding boots"
+Smartwatches,Wearable tech with health tracking features
+Headphones,Wireless and noise-canceling headphones
+Bluetooth Speakers,Portable speakers with wireless connectivity
+Men's Clothing,"Shirts, pants, and outerwear for men"
+Women's Clothing,"Dresses, tops, and skirts for women"
+Kids' Clothing,Apparel for children and infants
+Footwear,"Shoes, boots, and sandals for all genders"
+Jewelry,"Necklaces, rings, and bracelets"
+Watches,Fashion and digital watches for men and women
+Bags & Wallets,"Handbags, wallets, and backpacks"
+Eyewear,Sunglasses and prescription glasses
+Televisions,"4K UHD, Smart TVs, and LED screens"
+Home Theater Systems,Surround sound systems and audio receivers
+Soundbars,Compact speakers for enhanced TV audio
+Projectors,Home cinema projectors for big-screen viewing
+Streaming Devices,"Devices like Roku, Apple TV, and Chromecast"
+Blu-ray & DVD Players,Players for high-definition and standard discs
+Speakers,"Portable Bluetooth speakers, bookshelf, and floor-standing speakers"
+Earbuds,True wireless and wired earbuds
+Smart Speakers,Voice-controlled speakers like Amazon Echo and Google Home
+Sound Systems,Stereo systems for high-quality audio playback
+Turntables,Vinyl record players and accessories
+Desktop Computers,"Personal computers for work, gaming, and home use"
+Laptops,Portable computers for everyday use and productivity
+Monitors,Computer displays including 4K and curved screens
+Keyboards,Wired and wireless keyboards for PCs
+Mice,"Wired, wireless, and gaming mice"
+Printers,"Inkjet, laser, and 3D printers"
+Scanners,Devices for scanning documents and photos
+Wi-Fi Routers,Wireless routers for home networking
+Modems,"Cable, DSL, and fiber optic modems"
+Network Switches,Devices for expanding wired network connections
+Range Extenders,Devices to extend Wi-Fi coverage
+Mesh Wi-Fi Systems,Whole-home Wi-Fi systems for seamless connectivity
+Smart Hubs,Central controllers for smart home devices
+Smart Thermostats,Wi-Fi thermostats for energy-efficient heating and cooling
+Smart Lighting,Wi-Fi enabled light bulbs and fixtures
+Smart Plugs,Plugs to control appliances remotely
+Smart Locks,Keyless entry systems and smart door locks
+Security Cameras,Indoor and outdoor surveillance cameras
+Video Doorbells,Smart doorbells with video and audio
+Microwaves,Countertop and built-in microwave ovens
+Blenders,High-speed blenders for smoothies and food prep
+Toasters & Toaster Ovens,Appliances for toasting and baking
+Electric Kettles,Appliances for boiling water quickly
+Slow Cookers,Crock-Pots and multi-cookers for easy meals
+Air Fryers,Healthy cooking appliances for frying without oil
+Smartphones,Mobile phones with advanced features
+Tablets,"Touchscreen tablets for reading, browsing, and entertainment"
+Fitness Trackers,Devices to monitor workouts and health metrics
+E-Readers,Devices for reading digital books and magazines
+Portable Power Banks,Chargers for phones and other mobile devices
+Gaming Consoles,"PlayStation, Xbox, and Nintendo consoles"
+Gaming Controllers,Controllers and accessories for gaming
+VR Headsets,Virtual reality systems for immersive gaming
+Gaming Headsets,Headsets with microphones for online gaming
+Gaming Chairs,Chairs designed for ergonomic gaming comfort
+Office Phones,Cordless and corded phones for business use
+Fax Machines,Devices for sending and receiving faxes
+Shredders,Paper shredders for home and office security
+Laminators,Devices for laminating documents
+Label Makers,Devices for printing labels for organization
+Digital Cameras,"DSLR, mirrorless, and point-and-shoot cameras"
+Camera Lenses,Lenses for photography and videography
+Camcorders,Video cameras for home movies and events
+Drones,Drones with cameras for aerial photography
+Tripods,Stands for cameras and smartphones
+Camera Accessories,"Batteries, memory cards, and cleaning kits"
+Electric Shavers,Men's and women's electric razors
+Hair Dryers,Professional and compact hair dryers
+Electric Toothbrushes,Rechargeable and battery-powered toothbrushes
+Massage Devices,Handheld massagers and massage chairs
+Blood Pressure Monitors,Devices to measure blood pressure at home
+Thermometers,Digital thermometers for health monitoring
+Batteries,Rechargeable and disposable batteries for electronics
+Remote Controls,Universal remotes for TVs and home theaters
+Chargers & Cables,"USB, lightning, and charging cables"
+Projector Screens,Screens for home theater projectors
+Digital Picture Frames,Frames for displaying digital photos
+UPS & Surge Protectors,Backup power supplies and surge protectors
+Hand Trowels,Small hand tools for digging and planting
+Pruners,Tools for trimming plants and small branches
+Garden Forks,Tools for aerating soil and turning compost
+Spades,Shovels designed for digging and moving soil
+Garden Hoses,Flexible hoses for watering plants and lawns
+Sprinklers,Devices for automated lawn and garden watering
+Watering Cans,Manual watering cans for small plants
+Garden Gloves,Protective gloves for gardening activities
+Kneeling Pads,Cushioned pads for kneeling while gardening
+Rakes,Tools for gathering leaves and leveling soil
+Potting Soil,Specially formulated soil for container gardening
+Topsoil,Soil for garden beds and landscaping
+Compost,Organic matter for enriching garden soil
+Mulch,Materials for retaining moisture and controlling weeds
+Fertilizers,Nutrients for promoting plant growth
+Organic Fertilizers,Natural fertilizers for eco-friendly gardening
+Lawn Fertilizers,Specialized fertilizers for grass and lawns
+Plant Food,Liquid and granular food for plants
+Soil Amendments,Materials to improve soil structure and fertility
+Peat Moss,Organic material used to improve soil quality
+Trellises,Supports for climbing plants and vines
+Garden Arches,Decorative arches for garden entrances
+Garden Stakes,Supports for growing plants and vegetables
+Plant Cages,Cages for supporting tomatoes and other tall plants
+Raised Garden Beds,Containers for growing vegetables and flowers
+Greenhouses,Structures for growing plants year-round
+Planters,Pots and containers for indoor and outdoor gardening
+Hanging Baskets,Baskets for hanging plants
+Window Boxes,Containers for growing plants on windowsills
+Insecticides,Products for controlling garden pests
+Organic Insecticides,Natural pest control solutions
+Weed Killers,Herbicides for controlling weeds in gardens
+Animal Repellents,Products to deter animals from gardens
+Slug & Snail Control,Solutions for managing slugs and snails
+Fungicides,Products to control fungal diseases on plants
+Vegetable Seeds,Seeds for growing vegetables and herbs
+Flower Seeds,Seeds for growing ornamental flowers
+Grass Seeds,Seeds for establishing or repairing lawns
+Herb Seeds,Seeds for growing culinary herbs
+Bulbs,"Flowering bulbs like tulips, daffodils, and lilies"
+Seedlings,Young plants ready for transplanting
+Ornamental Plants,Decorative plants for garden aesthetics
+Succulents,Drought-tolerant plants for indoor and outdoor use
+Fruit Trees,Trees for growing fruit in home gardens
+Shrubs,Bushes and shrubs for landscaping
+Garden Statues,Decorative statues for garden spaces
+Bird Baths,Water features for attracting birds
+Bird Feeders,Feeders for attracting and feeding birds
+Garden Lighting,Solar lights and lanterns for gardens
+Outdoor Fountains,Water fountains for garden ambiance
+Wind Chimes,Decorative chimes for outdoor spaces
+Garden Flags,Decorative flags for yards and gardens
+Lawn Mowers,Electric and gas-powered lawn mowers
+Lawn Trimmers,Tools for trimming grass edges and hard-to-reach areas
+Leaf Blowers,Devices for clearing leaves and debris
+Lawn Aerators,Tools for aerating lawns to improve soil health
+Lawn Edgers,Tools for creating clean lawn edges
+Grass Seed Spreader,Tools for evenly distributing grass seeds
+Compost Bins,Containers for composting organic waste
+Worm Composters,Bins for vermicomposting
+Compost Tumblers,Rotating bins for quick composting
+Garden Waste Bags,Bags for collecting garden debris
+Drip Irrigation Kits,Systems for efficient water delivery to plants
+Soaker Hoses,Hoses that slowly release water for deep watering
+Irrigation Timers,Timers for automated garden watering
+Rain Barrels,Containers for collecting rainwater
+Spray Nozzles,Attachments for garden hoses to control water flow
+Plant Labels,Markers for identifying plants
+Garden Tools Storage,Sheds and organizers for garden tools
+Potting Benches,Benches for potting plants and gardening tasks
+Frost Protection Covers,Covers to protect plants from cold weather
+Garden Nets,Nets for protecting plants from birds and pests
+Fruits,"Fresh fruits like apples, bananas, and oranges"
+Vegetables,"Leafy greens, root vegetables, and more"
+Herbs,"Fresh herbs like cilantro, parsley, and basil"
+Organic Produce,Fruits and vegetables grown without pesticides
+Salad Greens,"Lettuce, spinach, and mixed greens"
+Fresh Meat,"Beef, pork, chicken, and lamb"
+Seafood,"Fish, shrimp, scallops, and shellfish"
+Deli Meats,"Sliced ham, turkey, and salami"
+Sausages & Hot Dogs,Various types of sausages and hot dogs
+Frozen Meat,"Frozen beef, chicken, and seafood options"
+Plant-Based Meat,Vegan meat substitutes like Beyond Meat
+Milk,Dairy and plant-based milks like almond and soy milk
+Cheese,"Cheddar, mozzarella, goat cheese, and more"
+Yogurt,"Flavored, Greek, and non-dairy yogurts"
+Butter & Margarine,Dairy and non-dairy spreads
+Eggs,"Organic, free-range, and conventional eggs"
+Cream & Sour Cream,"Heavy cream, half-and-half, and sour cream"
+Bread & Bakery,"Loaves, bagels, and pastries"
+Canned Goods,"Canned beans, vegetables, and soups"
+Pasta & Noodles,"Spaghetti, ramen, and gluten-free pasta"
+Rice & Grains,"White rice, brown rice, quinoa, and couscous"
+Flour & Baking Supplies,"Flours, sugar, baking powder, and yeast"
+Spices & Seasonings,"Salt, pepper, herbs, and spice blends"
+Cooking Oils,"Olive oil, vegetable oil, and specialty oils"
+Vinegars,"Balsamic, apple cider, and white vinegar"
+Condiments,"Ketchup, mustard, mayonnaise, and hot sauce"
+Jams & Spreads,"Peanut butter, almond butter, and fruit preserves"
+Chips & Crackers,"Potato chips, tortilla chips, and crackers"
+Cookies & Biscuits,"Chocolate chip cookies, shortbread, and wafers"
+Candy & Chocolate,"Chocolate bars, gummies, and hard candies"
+Nuts & Seeds,"Almonds, peanuts, sunflower seeds, and trail mix"
+Granola & Energy Bars,"Protein bars, granola bars, and snack bars"
+Breakfast Cereals,"Oatmeal, granola, and cold cereals"
+Coffee & Tea,"Ground coffee, tea bags, and specialty teas"
+Juices & Smoothies,Freshly squeezed and bottled juices
+Soft Drinks,"Sodas, sparkling water, and flavored drinks"
+Bottled Water,"Spring water, mineral water, and flavored water"
+Alcoholic Beverages,"Wine, beer, and spirits"
+Energy Drinks,Caffeinated energy drinks and shots
+Frozen Vegetables,"Frozen peas, broccoli, and mixed vegetables"
+Frozen Fruits,"Berries, mangoes, and smoothie packs"
+Frozen Dinners,Microwavable meals and TV dinners
+Frozen Pizza,Ready-to-bake frozen pizzas
+Ice Cream & Desserts,"Ice cream, sorbet, and frozen desserts"
+Frozen Breakfast,"Waffles, pancakes, and breakfast sandwiches"
+Asian Foods,"Soy sauce, noodles, and sushi ingredients"
+Mexican Foods,"Tortillas, salsa, and taco seasoning"
+Indian Foods,"Curry paste, basmati rice, and naan"
+Italian Foods,"Pasta sauces, olive oil, and risotto"
+Mediterranean Foods,"Hummus, olives, and feta cheese"
+Gluten-Free Products,"Snacks, pasta, and baking mixes"
+Vegan & Vegetarian,"Plant-based meals, snacks, and dairy alternatives"
+Keto & Low Carb,"Low-carb snacks, protein powders, and keto-friendly items"
+Organic Foods,Certified organic pantry and frozen items
+Sugar-Free Products,"Sugar-free snacks, syrups, and beverages"
+Cakes & Pastries,"Cupcakes, muffins, and pastries"
+Cookies,Bakery-fresh cookies and biscuits
+Pies & Tarts,"Fruit pies, cream pies, and savory tarts"
+Baking Mixes,"Cake, pancake, and brownie mixes"
+Baby Formula,Infant formula and baby milk powders
+Baby Snacks,"Puffs, teething biscuits, and yogurt melts"
+Baby Food Jars,"Pureed fruits, vegetables, and meats"
+Toddler Meals,Microwavable meals for toddlers
+Baby Cereal,Oat and rice cereals for infants
+Honey & Syrups,"Maple syrup, agave, and honey"
+Pickles & Olives,"Pickled cucumbers, olives, and peppers"
+Soup & Broth,Canned and boxed soups and broths
+Ready-to-Eat Meals,"Prepared salads, wraps, and sandwiches"
+Specialty Cheeses,"Brie, blue cheese, and imported varieties"
+Tofu & Meat Substitutes,"Tofu, tempeh, and plant-based meat alternatives"
+Dried Fruits,"Raisins, apricots, and prunes"
+Instant Noodles,"Ramen, udon, and cup noodles"
+Salsas & Dips,"Guacamole, hummus, and queso dip"
+Seasoning Mixes,"Taco seasoning, rubs, and spice blends"
+Camping Tents,Tents for camping and backpacking
+Sleeping Bags,Sleeping bags for outdoor adventures
+Camping Stoves,Portable stoves for cooking outdoors
+Hiking Backpacks,Backpacks designed for hiking and travel
+Fishing Rods,Rods for freshwater and saltwater fishing
+Fishing Reels,Reels for different types of fishing
+Fishing Supplies,Bait and tackle for fishing
+Bicycles,"Mountain bikes, road bikes, and hybrid bicycles"
+Cycling Helmets,Protective helmets for cycling
+Scooters,Manual and electric scooters
+Skateboards,"Longboards, cruiser boards, and standard skateboards"
+Kayaks & Canoes,Boats for water sports and recreation
+Paddleboards,Stand-up paddleboards for water activities
+Basketballs,Balls for indoor and outdoor basketball
+Soccer Balls,Balls for soccer and futsal
+Baseballs & Softballs,Balls for baseball and softball games
+Football Gear,Equipment for American football
+Volleyballs,Indoor and beach volleyballs
+Tennis Racquets,Racquets for tennis and pickleball
+Golf Clubs,"Drivers, irons, and putters for golfing"
+Golf Balls,Balls for various types of golf games
+Baseball Bats,Bats for baseball and softball
+Hockey Sticks,Sticks for ice hockey and field hockey
+Cricket Gear,"Bats, balls, and protective gear for cricket"
+Dumbbells,Free weights for strength training
+Kettlebells,Weights for dynamic strength exercises
+Yoga Mats,Mats for yoga and stretching exercises
+Treadmills,Machines for running and walking indoors
+Elliptical Machines,Low-impact cardio equipment
+Rowing Machines,Machines for full-body cardio workouts
+Exercise Bikes,Stationary bikes for indoor cycling
+Resistance Bands,Bands for resistance training and rehab
+Pull-Up Bars,Bars for upper body exercises
+Jump Ropes,Ropes for cardio and fitness training
+Snorkeling Gear,"Masks, snorkels, and fins for snorkeling"
+Swim Goggles,Goggles for swimming in pools and open water
+Swimwear,"Swimsuits, trunks, and rash guards"
+Surfboards,Boards for surfing waves
+Life Jackets,Personal flotation devices for water safety
+Diving Equipment,Gear for scuba diving and free diving
+Water Skis,Skis for water skiing and wakeboarding
+Snowboards,Boards for snowboarding on slopes
+Ski Boots,Boots designed for skiing
+Ski Poles,Poles used for skiing balance and propulsion
+Ice Skates,Skates for ice rinks and figure skating
+Sleds,Sleds for snow play and downhill racing
+Snowshoes,Footwear for walking on snow
+Ski Goggles,Goggles for snow sports
+Badminton Racquets,Racquets for playing badminton
+Squash Racquets,Racquets for squash games
+Table Tennis Equipment,"Paddles, balls, and nets for table tennis"
+Pickleball Paddles,Paddles for the sport of pickleball
+Shuttlecocks,Feathered projectiles for badminton
+Boxing Gloves,Gloves for boxing and martial arts
+Punching Bags,Bags for boxing training and fitness
+MMA Gear,Protective gear for mixed martial arts
+Martial Arts Uniforms,Gis and belts for martial arts training
+Protective Gear,"Headgear, mouthguards, and pads"
+Running Shoes,Shoes for road running and trail running
+Track Spikes,Spiked shoes for track and field events
+Running Belts,Belts for carrying essentials during runs
+Hydration Packs,Packs for carrying water during long runs
+Water Bottles,Reusable bottles for hydration
+Hydration Bladders,Water reservoirs for backpacks
+Coolers,Coolers for keeping drinks cold
+Binoculars,Optical devices for bird watching and hiking
+Compasses,Tools for navigation in the wilderness
+Trekking Poles,Poles for hiking and trekking
+Survival Kits,Emergency kits for outdoor survival
+Sunscreen & Insect Repellent,Protection for outdoor activities
+Archery Equipment,"Bows, arrows, and targets for archery"
+Darts & Dartboards,Sets for playing darts
+Paintball Gear,"Markers, masks, and paintballs"
+Frisbees & Discs,Discs for ultimate and disc golf
+Kites,Kites for outdoor fun and kiteboarding
+Bocce Balls,Sets for playing bocce ball
+Lawn Games,"Cornhole, croquet, and lawn bowling"
+Trampolines,Outdoor trampolines for exercise and fun
+Gymnastics Equipment,"Mats, bars, and rings for gymnastics"
+Skates & Rollerblades,Inline skates and quad roller skates
+Dog Food,"Dry kibble, wet food, and grain-free options for dogs"
+Cat Food,Dry and wet food for cats
+Puppy Food,Specially formulated food for puppies
+Kitten Food,Nutrient-rich food for growing kittens
+Senior Pet Food,Food designed for older dogs and cats
+Pet Treats,"Biscuits, chews, and training treats for pets"
+Pet Supplements,Vitamins and supplements for pets' health
+Flea & Tick Control,Treatments to prevent fleas and ticks
+Heartworm Medication,Preventative medicine for heartworm
+Pet Vitamins,Vitamins and minerals for pet health
+Pet Shampoo & Conditioner,Bathing products for pets
+Ear Cleaners,Solutions for cleaning pets' ears
+Dental Care,"Pet toothpaste, toothbrushes, and dental chews"
+First Aid Kits,Kits for pet emergencies
+Dog Beds,Comfortable beds for dogs of all sizes
+Cat Beds,Soft beds and sleeping mats for cats
+Pet Crates,Crates and kennels for dogs and cats
+Pet Cages,Cages for small pets like rabbits and guinea pigs
+Cat Trees & Scratching Posts,Furniture for cats to scratch and climb
+Pet Carriers,Portable carriers for transporting pets
+Pet Gates & Barriers,Gates to restrict pet access
+Pet Brushes & Combs,Grooming tools for cats and dogs
+Nail Clippers & Trimmers,Tools for trimming pets' nails
+Pet Hair Dryers,Dryers for grooming pets at home
+Pet Wipes,Disposable wipes for quick clean-ups
+Pet Clippers,Electric clippers for grooming
+Pet Perfume,Deodorizers for pets
+Dog Toys,"Chew toys, balls, and squeaky toys for dogs"
+Cat Toys,"Feather toys, laser pointers, and interactive toys"
+Pet Puzzle Toys,Toys to stimulate pets' minds
+Catnip Toys,Toys infused with catnip for cats
+Interactive Pet Toys,Electronic toys to keep pets engaged
+Pet Tunnels,Tunnels for small animals and cats
+Dog Training Pads,Absorbent pads for house training puppies
+Pet Training Clickers,Clickers for training dogs and cats
+Pet Repellents,Sprays to deter pets from unwanted areas
+Pet Calming Aids,Supplements and sprays to reduce pet anxiety
+Bark Control Devices,Collars and devices to stop excessive barking
+Pet Doors,Doors for dogs and cats to enter and exit
+Pet Food Bowls,Bowls for feeding pets
+Automatic Feeders,Feeders that dispense food at set times
+Pet Water Fountains,Water dispensers for pets
+Pet Food Storage,Containers to keep pet food fresh
+Pet Treat Dispensers,Interactive treat dispensing toys
+Fish Tanks & Aquariums,Aquariums for fish and aquatic pets
+Fish Food,"Flakes, pellets, and live food for fish"
+Aquarium Filters,Filters to keep aquariums clean
+Aquarium Heaters,Heaters for tropical fish tanks
+Aquarium Decorations,"Ornaments, plants, and gravel for tanks"
+Water Testing Kits,Kits to test water quality in tanks
+Fish Tank Lights,Lighting for aquariums
+Hamster Cages,Cages and enclosures for hamsters
+Rabbit Hutches,Outdoor and indoor hutches for rabbits
+Small Animal Bedding,"Bedding for guinea pigs, hamsters, and rabbits"
+Small Animal Food,"Food for rabbits, guinea pigs, and ferrets"
+Small Animal Toys,"Toys for rabbits, hamsters, and guinea pigs"
+Small Animal Chews,Chews to keep small pets' teeth healthy
+Reptile Tanks & Terrariums,Enclosures for reptiles
+Reptile Heating Lamps,Heat lamps for reptiles
+Reptile Food,"Food for lizards, turtles, and snakes"
+Reptile Substrate,Bedding and substrate for terrariums
+Reptile Water Bowls,Bowls for feeding reptiles
+Reptile Hides,Hiding spots for reptiles
+Bird Cages,"Cages for parrots, canaries, and other birds"
+Bird Food,"Seeds, pellets, and treats for birds"
+Bird Toys,Toys to keep birds entertained
+Bird Perches,Perches for bird cages
+Bird Baths,Baths for birds to clean themselves
+Bird Feeders,Feeders for outdoor birds
+Pet Clothing,"Sweaters, coats, and costumes for pets"
+Pet ID Tags,Custom tags for pet identification
+Pet Leashes,Leashes for walking dogs
+Pet Harnesses,Harnesses for dogs and cats
+Pet Strollers,Strollers for transporting small pets
+Pet Life Jackets,Life vests for pets during water activities
+Pet Heating Pads,Heated pads for pets during cold weather
+Body Wash,Liquid soaps and body cleansers
+Bar Soap,Solid soaps for cleansing the body
+Shower Gel,Gel-based body washes for the shower
+Bath Bombs,Fragrant bombs for a luxurious bath experience
+Body Scrubs,Exfoliating scrubs to remove dead skin cells
+Hand Soap,Liquid and foam soaps for hand washing
+Toothpaste,Fluoride and natural toothpaste options
+Toothbrushes,Manual and electric toothbrushes
+Mouthwash,Mouth rinses for fresh breath and oral hygiene
+Dental Floss,Floss for cleaning between teeth
+Teeth Whitening,"Whitening strips, gels, and kits"
+Denture Care,"Adhesives, cleaners, and brushes for dentures"
+Tongue Scrapers,Tools for cleaning the tongue
+Shampoo,Cleansers for different hair types
+Conditioner,Moisturizing and volumizing hair conditioners
+Dry Shampoo,Powder and spray shampoos for quick cleaning
+Hair Masks,Deep conditioning treatments for hair
+Hair Oil,Oils for nourishing and styling hair
+Hair Gel,Styling gels for hold and definition
+Hair Spray,Finishing sprays for hair styling
+Hair Color,Permanent and semi-permanent hair dyes
+Hair Brushes & Combs,"Brushes, combs, and detanglers"
+Face Wash,Cleansers for facial skin care
+Facial Moisturizers,Lotions and creams for hydrating the face
+Face Masks,"Sheet masks, clay masks, and peel-off masks"
+Sunscreen,SPF lotions and sprays for sun protection
+Face Serums,Concentrated treatments for skin concerns
+Eye Cream,Creams for reducing puffiness and dark circles
+Acne Treatments,"Spot treatments, patches, and creams"
+Lip Balm,Balms and moisturizers for lips
+Makeup Remover,Cleansers for removing makeup
+Razors,Disposable and reusable razors for shaving
+Shaving Cream,Foams and gels for shaving comfort
+Aftershave,Lotions and balms for post-shave care
+Hair Removal Creams,Creams for removing body hair
+Waxing Kits,Kits for at-home hair removal
+Electric Shavers,Electric razors for men and women
+Epilators,Devices for long-lasting hair removal
+Stick Deodorant,Solid sticks for odor protection
+Spray Deodorant,Aerosol sprays for underarm freshness
+Roll-On Deodorant,Roll-on formulas for sweat control
+Natural Deodorant,Aluminum-free deodorants
+Antiperspirants,Products to reduce sweat and odor
+Sanitary Pads,Pads for menstrual protection
+Tampons,Absorbent tampons for menstrual flow
+Menstrual Cups,Reusable cups for menstruation
+Panty Liners,Thin liners for light protection
+Feminine Wipes,Wipes for feminine hygiene
+Period Panties,Absorbent underwear for menstrual flow
+Feminine Wash,Gentle cleansers for intimate areas
+Beard Oil,Oils for softening and conditioning beards
+Beard Trimmers,Electric trimmers for grooming facial hair
+Mustache Wax,Wax for styling mustaches
+Body Powder,Powder for reducing moisture and chafing
+Cologne,Fragrances for men
+Baby Shampoo,Gentle cleansers for babies' hair
+Baby Lotion,Moisturizers for babies' sensitive skin
+Baby Powder,Talc and cornstarch powders for babies
+Baby Wipes,Gentle wipes for diaper changes
+Diaper Rash Cream,Creams for treating diaper rash
+Baby Oil,Oils for moisturizing babies' skin
+Cotton Balls,Cotton for applying products and cleansing
+Face Towels,Small towels for face washing
+Loofahs & Bath Sponges,Exfoliating tools for bathing
+Nail Clippers,Clippers and scissors for nails
+Tweezers,Tools for hair removal and grooming
+Q-tips,Cotton swabs for ears and makeup application
+Body Lotion,Moisturizers for the entire body
+Foot Cream,Creams for moisturizing feet and heels
+Hand Cream,Creams for dry and cracked hands
+Perfume,Fragrances for women
+Adhesive Bandages,Band-aids and adhesive strips for minor cuts
+Antiseptic Wipes,Wipes to clean wounds and prevent infection
+Gauze Pads,Sterile pads for dressing wounds
+Medical Tape,Tape for securing bandages and dressings
+Hydrogen Peroxide,Antiseptic solution for wound cleaning
+Rubbing Alcohol,Isopropyl alcohol for disinfection
+First Aid Kits,Comprehensive kits for emergency care
+Burn Ointments,Creams and gels for treating burns
+Antibiotic Ointments,Topical ointments to prevent infection
+Butterfly Bandages,Adhesive strips for closing small cuts
+Pain Relievers,"Aspirin, ibuprofen, and acetaminophen"
+Cold & Flu Medications,"Syrups, tablets, and capsules for cold relief"
+Allergy Medications,Antihistamines for allergy relief
+Antacids,Tablets and liquids for heartburn relief
+Cough Drops,Lozenges to soothe sore throats
+Nasal Sprays,Sprays for nasal congestion and allergies
+Anti-Diarrheal Medications,Tablets for diarrhea relief
+Laxatives,Medications to relieve constipation
+Motion Sickness Pills,Tablets to prevent nausea during travel
+Sleep Aids,Medications to help with insomnia
+Face Masks,Surgical masks and cloth face coverings
+Nitrile Gloves,Disposable gloves for medical use
+Hand Sanitizer,Alcohol-based hand sanitizers for germ protection
+Face Shields,Plastic shields for face protection
+Disinfectant Wipes,Wipes for cleaning surfaces and hands
+Thermometers,Digital and infrared thermometers
+Blood Pressure Monitors,Devices for monitoring blood pressure at home
+Glucometers,Devices for measuring blood sugar levels
+Pulse Oximeters,Devices to measure blood oxygen levels
+Nebulizers,Devices for inhalation therapy
+Inhalers,Devices for asthma and respiratory issues
+CPAP Machines,Devices for sleep apnea treatment
+Digital Scales,Scales for measuring body weight
+Heating Pads,Electric pads for pain relief
+Cold Packs,Reusable and disposable ice packs
+Hydrocolloid Dressings,Advanced dressings for wound healing
+Sterile Gloves,Gloves for handling wounds
+Elastic Bandages,Bandages for sprains and muscle injuries
+Compression Socks,Socks for improving blood circulation
+Splints & Supports,Braces and splints for injured limbs
+Cotton Swabs,Swabs for cleaning wounds and applying ointments
+Eye Patches,Patches for eye injuries and protection
+Antibacterial Soaps,Soaps to reduce bacteria on the skin
+Hand Wash,Liquid soaps for hand hygiene
+Surface Disinfectants,Sprays and solutions for sanitizing surfaces
+UV Sanitizers,Devices to disinfect phones and small items
+Feminine Hygiene Products,"Sanitary pads, tampons, and liners"
+Adult Diapers,Incontinence products for adults
+Baby Diapers,Disposable and cloth diapers for babies
+Walking Canes,Canes for stability and support
+Crutches,Aids for mobility after leg injuries
+Wheelchairs,Manual and electric wheelchairs
+Walkers,Supportive devices for elderly and disabled individuals
+Braces & Support Belts,Belts and braces for back and joint support
+Shower Chairs,Chairs for safe bathing
+Pregnancy Tests,At-home tests for pregnancy detection
+Ovulation Kits,Kits for tracking ovulation
+Drug Testing Kits,Kits for detecting drugs in urine
+Cholesterol Test Kits,At-home tests for cholesterol levels
+Allergy Test Kits,Tests for detecting allergens
+Saline Solution,Sterile solution for eye and wound care
+Eye Drops,Drops for dry eyes and irritation
+Nasal Rinses,Solutions for nasal irrigation
+Ear Wax Removal Kits,Kits for cleaning earwax
+Orthopedic Insoles,Insoles for foot support and pain relief
+Anti-Itch Creams,Creams for relief from itching and rashes
+Sterile Syringes,Syringes for administering medication
+Surgical Tape,Tape for securing dressings and bandages
+Hot Water Bottles,Bottles for heat therapy
+Medical Scissors,Scissors for cutting bandages and dressings
+Home Decor,"Wall art, picture frames, and decorative accessories"
+Furniture,"Sofas, coffee tables, and bookcases"
+Lighting,"Floor lamps, table lamps, and chandeliers"
+Bedding,"Bed sheets, comforters, and pillowcases"
+Curtains & Blinds,Window treatments for privacy and decoration
+Home Office Supplies,"Desks, office chairs, and organizers"
+Athletic Wear,"Sports bras, leggings, and tracksuits"
+Outerwear,"Jackets, coats, and rain gear"
+Accessories,"Belts, scarves, and hats"
+Jewelry Boxes,Storage solutions for jewelry
+Baby Furniture,"Cribs, changing tables, and baby dressers"
+Strollers & Car Seats,Infant and toddler car seats
+Toys for Toddlers,Educational and developmental toys
+Wearable Technology,"Fitness bands, VR devices, and health trackers"
+Home Automation,"Smart plugs, smart home security systems"
+Computer Accessories,"External hard drives, USB hubs, and laptop sleeves"
+Baking Essentials,"Yeast, baking powder, and cake decorations"
+Specialty Teas & Coffees,"Matcha, herbal teas, and single-origin coffee beans"
+Condiments & Sauces,"Hot sauces, BBQ sauces, and salad dressings"
+Ethnic & International Foods,"Ingredients specific to Japanese, Middle Eastern, or African cuisines"
+Patio Heaters,Heaters for outdoor spaces
+Grill Accessories,"Grill covers, tongs, and thermometers"
+Garden Soil Enhancers,"Vermiculite, perlite, and compost tea"
+Car Maintenance,"Car wax, cleaning kits, and polishing cloths"
+Car Electronics,"Dash cams, car stereos, and GPS devices"
+Home Gym Equipment,"Pull-up bars, home workout stations"
+Cycling Accessories,"Bike lights, locks, and bike pumps"
+Swimming Gear,"Swim caps, pool floats, and flippers"
+Outdoor Sports Gear,"Archery equipment, frisbees, and bocce sets"
+Makeup,"Foundation, mascara, and lipsticks"
+Nail Care,"Nail polish, nail clippers, and cuticle oils"
+Hair Styling Tools,"Curling irons, flat irons, and hot rollers"
+Pet Training Supplies,"Training collars, clickers, and training aids"
+Pet Cleaning Supplies,"Litter scoops, pet-safe cleaning sprays"
+Pet Clothing & Costumes,"Jackets, sweaters, and themed costumes"
+Dietary Supplements,"Probiotics, collagen, and herbal supplements"
+Homeopathic Remedies,"Essential oils, herbal tinctures, and salves"
+Personal Massagers,"Back massagers, foot spas, and massage guns"
+Sleep Aids,"White noise machines, sleep masks, and weighted blankets"
+Craft Supplies,"Sewing kits, knitting yarn, and art supplies"
+Stationery,"Notebooks, pens, and planners"
+Party Supplies,"Balloons, decorations, and disposable tableware"
+Seasonal Items,"Christmas decorations, Halloween costumes, and Easter baskets"
