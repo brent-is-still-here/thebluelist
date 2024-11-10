@@ -63,37 +63,6 @@
         </div>
         {% endif %}
 
-        <!-- Services and Products -->
-        {% if business.provides_services or business.provides_products %}
-        <div class="bg-white p-6 rounded-lg shadow">
-            {% if business.provides_services %}
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-4">Services Provided</h2>
-                <div class="flex flex-wrap gap-2">
-                    {% for service in business.services.all %}
-                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                            {{ service.name }}
-                        </span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            
-            {% if business.provides_products %}
-            <div>
-                <h2 class="text-xl font-semibold mb-4">Products Offered</h2>
-                <div class="flex flex-wrap gap-2">
-                    {% for product in business.products.all %}
-                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                            {{ product.name }}
-                        </span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
-
         <!-- Political Data -->
         {% if business.politicaldata %}
         <div class="bg-white p-6 rounded-lg shadow">
@@ -154,6 +123,67 @@
                     {{ business.politicaldata.data_source|linebreaks }}
                 </div>
             </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Services and Products -->
+        {% if business.provides_services or business.provides_products %}
+        <div class="bg-white p-6 rounded-lg shadow space-y-6">
+            {% if business.provides_services %}
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Services Provided</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for service in business.services.all %}
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="font-medium text-gray-900">{{ service.name }}</h3>
+                            {% if service.description %}
+                                <p class="text-sm text-gray-600 mt-1">
+                                    {{ service.description }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-600 italic col-span-2">
+                            This business is marked as a service provider but no specific services are listed yet.
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if business.provides_products %}
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Products Offered</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for product in business.products.all %}
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="font-medium text-gray-900">{{ product.name }}</h3>
+                            {% if product.description %}
+                                <p class="text-sm text-gray-600 mt-1">
+                                    {{ product.description }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-600 italic col-span-2">
+                            This business is marked as a product provider but no specific products are listed yet.
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <p class="text-sm text-gray-600">
+                        See something incorrect? 
+                        <a href="{% url 'submit_update' business.id %}" 
+                        class="text-blue-600 hover:text-blue-800">
+                            Submit an update
+                        </a>
+                    </p>
+                </div>
             {% endif %}
         </div>
         {% endif %}
