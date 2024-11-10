@@ -5,6 +5,8 @@ from django.utils.text import slugify
 from django.db import transaction
 from django.db.models import Q, Case, When, Value, IntegerField
 from django.db.models.functions import Lower
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 from .models import Business, EditRequest, PoliticalData, ServiceCategory, ProductCategory
 
 def home(request):
@@ -43,6 +45,21 @@ def business_search(request):
         'query': query,
         'businesses': businesses,
     })
+
+@require_GET
+def filter_categories(request):
+    query = request.GET.get('q', '').strip().lower()
+    category_type = request.GET.get('type')
+    
+    if category_type == 'services':
+        categories = ServiceCategory.objects.filter(name__icontains=query).order_by('name')
+    elif category_type == 'products':
+        categories = ProductCategory.objects.filter(name__icontains=query).order_by('name')
+    else:
+        return JsonResponse({'error': 'Invalid category type'}, status=400)
+    
+    results = [{'id': cat.id, 'name': cat.name, 'description': cat.description} for cat in categories]
+    return JsonResponse({'results': results})
 
 @login_required
 def add_business(request):
@@ -122,7 +139,13 @@ def business_detail(request, slug):
 
 @login_required
 def submit_update(request, business_id):
-    business = get_object_or_404(Business, id=business_id)
+    business = get_object_or_404(
+        Business.objects.prefetch_related(
+            'services',
+            'products'
+        ), 
+        id=business_id
+    )
     
     if request.method == 'POST':
         try:
@@ -135,20 +158,38 @@ def submit_update(request, business_id):
                     name=request.POST.get('name', ''),
                     description=request.POST.get('description', ''),
                     
+                    # Service/Product provision changes
+                    provides_services=request.POST.get('provides_services') == 'on' 
+                        if 'provides_services' in request.POST else None,
+                    provides_products=request.POST.get('provides_products') == 'on'
+                        if 'provides_products' in request.POST else None,
+
                     # Political data changes
                     conservative_percentage=float(request.POST.get('conservative_percentage')) if request.POST.get('conservative_percentage') else None,
                     conservative_total_donations=float(request.POST.get('conservative_total_donations')) if request.POST.get('conservative_total_donations') else None,
                     liberal_percentage=float(request.POST.get('liberal_percentage')) if request.POST.get('liberal_percentage') else None,
                     liberal_total_donations=float(request.POST.get('liberal_total_donations')) if request.POST.get('liberal_total_donations') else None,
-                    trump_donor=request.POST.get('trump_donor', '').lower() == 'true' if request.POST.get('trump_donor') else None,
-                    america_pac_donor=request.POST.get('america_pac_donor', '').lower() == 'true' if request.POST.get('america_pac_donor') else None,
-                    save_america_pac_donor=request.POST.get('save_america_pac_donor', '').lower() == 'true' if request.POST.get('save_america_pac_donor') else None,
+                    trump_donor=request.POST.get('trump_donor') == 'on',
+                    america_pac_donor=request.POST.get('america_pac_donor') == 'on',
+                    save_america_pac_donor=request.POST.get('save_america_pac_donor') == 'on',
                     data_source=request.POST.get('data_source', ''),
                     
                     # Update metadata
                     justification=request.POST['justification'],
                     supporting_links=request.POST.get('supporting_links', '')
                 )
+
+                # Handle services changes
+                if 'services_to_add' in request.POST:
+                    edit_request.services_to_add.set(request.POST.getlist('services_to_add'))
+                if 'services_to_remove' in request.POST:
+                    edit_request.services_to_remove.set(request.POST.getlist('services_to_remove'))
+                
+                # Handle products changes
+                if 'products_to_add' in request.POST:
+                    edit_request.products_to_add.set(request.POST.getlist('products_to_add'))
+                if 'products_to_remove' in request.POST:
+                    edit_request.products_to_remove.set(request.POST.getlist('products_to_remove'))
                 
                 messages.success(request, 'Update request submitted successfully! It will be reviewed by our team.')
                 return redirect('business_search')
@@ -159,8 +200,8 @@ def submit_update(request, business_id):
                 'error': str(e),
                 'business': business,
                 'form_data': request.POST,
-                'services': ServiceCategory.objects.all(),
-                'products': ProductCategory.objects.all(),
+                'available_services': ServiceCategory.objects.all(),  # Changed from services to available_services
+                'available_products': ProductCategory.objects.all(),  # Changed from products to available_products
             })
     
     # For GET request, show form with current values
@@ -176,15 +217,13 @@ def submit_update(request, business_id):
         'america_pac_donor': political_data.america_pac_donor if political_data else False,
         'save_america_pac_donor': political_data.save_america_pac_donor if political_data else False,
         'data_source': political_data.data_source if political_data else '',
-        'services': business.services.all() if business.provides_services else None,
-        'products': business.products.all() if business.provides_products else None,
     }
     
     return render(request, 'companies/submit_update.html', {
         'business': business,
         'form_data': initial_data,
-        'services': ServiceCategory.objects.all(),
-        'products': ProductCategory.objects.all(),
+        'available_services': ServiceCategory.objects.all(),  # Changed from services to available_services
+        'available_products': ProductCategory.objects.all(),  # Changed from products to available_products
     })
 
 @login_required

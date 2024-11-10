@@ -161,6 +161,32 @@ class EditRequest(models.Model):
     america_pac_donor = models.BooleanField(null=True)
     save_america_pac_donor = models.BooleanField(null=True)
     data_source = models.TextField(blank=True)
+
+    # Service changes
+    provides_services = models.BooleanField(null=True)
+    services_to_add = models.ManyToManyField(
+        ServiceCategory,
+        related_name='edit_requests_adding',
+        blank=True
+    )
+    services_to_remove = models.ManyToManyField(
+        ServiceCategory,
+        related_name='edit_requests_removing',
+        blank=True
+    )
+    
+    # Product changes
+    provides_products = models.BooleanField(null=True)
+    products_to_add = models.ManyToManyField(
+        ProductCategory,
+        related_name='edit_requests_adding',
+        blank=True
+    )
+    products_to_remove = models.ManyToManyField(
+        ProductCategory,
+        related_name='edit_requests_removing',
+        blank=True
+    )
     
     # Metadata
     justification = models.TextField()
