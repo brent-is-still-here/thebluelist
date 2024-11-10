@@ -1,0 +1,77 @@
+{% extends "companies/base.html" %}
+
+{% block title %}Search Businesses - The Blue List{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Search Form -->
+    <div class="bg-white p-6 rounded-lg shadow">
+        <form method="get" class="space-y-4">
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <input type="text" name="q" value="{{ query }}" 
+                           placeholder="Search by business name..."
+                           class="w-full p-2 border border-gray-300 rounded">
+                </div>
+                <button type="submit" 
+                        class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Search
+                </button>
+            </div>
+            
+            <div class="flex gap-4 text-sm">
+                <a href="{% url 'add_business' %}" 
+                   class="text-blue-600 hover:text-blue-800">
+                    Don't see what you're looking for? Add a business
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results -->
+    {% if query %}
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Search Results for "{{ query }}"</h2>
+            
+            {% if businesses %}
+                <div class="space-y-4">
+                    {% for business in businesses %}
+                        <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-lg font-medium">{{ business.name }}</h3>
+                                    <p class="text-sm text-gray-600">{{ business.description|truncatewords:30 }}</p>
+                                    
+                                    {% if business.politicaldata %}
+                                        <div class="mt-2">
+                                            <div class="text-sm">
+                                                <span class="text-red-600">{{ business.politicaldata.republican_percentage }}% Republican</span> / 
+                                                <span class="text-blue-600">{{ business.politicaldata.democrat_percentage }}% Democrat</span>
+                                            </div>
+                                            {% if business.politicaldata.trump_donor %}
+                                                <div class="text-sm text-red-600">⚠️ Trump Donor</div>
+                                            {% endif %}
+                                            {% if business.politicaldata.america_pac_donor %}
+                                                <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="flex space-x-2">
+                                    <a href="{% url 'submit_edit' business.id %}" 
+                                       class="text-sm text-blue-600 hover:text-blue-800">
+                                        Submit Edit
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No businesses found matching your search.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
