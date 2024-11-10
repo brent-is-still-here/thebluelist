@@ -33,27 +33,42 @@
                 </div>
             </div>
 
+            <!-- Company Relationships -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900">Company Relationships</h3>
+                
+                <div>
+                    <label for="parent_company" class="block text-sm font-medium text-gray-700">Parent Company</label>
+                    <input type="text" name="parent_company" id="parent_company"
+                           class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Leave blank if this is an independent company</p>
+                </div>
+            </div>
+
             <!-- Services & Products -->
             <div class="space-y-8">
                 <!-- Services Section -->
                 <div>
                     <label class="flex items-center">
                         <input type="checkbox" name="provides_services" id="provides_services"
-                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <span class="ml-2 text-sm text-gray-700">This company provides services</span>
                     </label>
                     
+                    <!-- Services List with Search Bar -->
                     <div id="services_section" class="mt-4 hidden">
                         <h4 class="text-md font-medium text-gray-900">Select Services</h4>
+                        <!-- Search Input -->
                         <input type="text" id="service-search" placeholder="Search services..."
-                               class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-
+                            class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        
+                        <!-- Services List -->
                         <div class="max-h-60 overflow-y-auto border rounded">
                             <div id="services-container">
                                 {% for service in services %}
                                 <label class="service-item flex items-center p-2 hover:bg-gray-50" data-name="{{ service.name|lower }}">
                                     <input type="checkbox" name="services" value="{{ service.id }}"
-                                           class="rounded border-gray-300 text-green-600 focus:border-green-500 focus:ring-green-500">
+                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
                                     <span class="ml-2 text-sm text-gray-700">{{ service.name }}</span>
                                 </label>
                                 {% endfor %}
@@ -67,21 +82,24 @@
                 <div>
                     <label class="flex items-center">
                         <input type="checkbox" name="provides_products" id="provides_products"
-                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <span class="ml-2 text-sm text-gray-700">This company provides products</span>
                     </label>
                     
+                    <!-- Products List with Search Bar -->
                     <div id="products_section" class="mt-4 hidden">
                         <h4 class="text-md font-medium text-gray-900">Select Products</h4>
+                        <!-- Search Input -->
                         <input type="text" id="product-search" placeholder="Search products..."
-                               class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-
+                            class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        
+                        <!-- Products List -->
                         <div class="max-h-60 overflow-y-auto border rounded">
                             <div id="products-container">
                                 {% for product in products %}
                                 <label class="product-item flex items-center p-2 hover:bg-gray-50" data-name="{{ product.name|lower }}">
                                     <input type="checkbox" name="products" value="{{ product.id }}"
-                                           class="rounded border-gray-300 text-green-600 focus:border-green-500 focus:ring-green-500">
+                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
                                     <span class="ml-2 text-sm text-gray-700">{{ product.name }}</span>
                                 </label>
                                 {% endfor %}
@@ -92,9 +110,82 @@
                 </div>
             </div>
 
+            <!-- Political Data -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900">Political Donations</h3>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="conservative_percentage" class="block text-sm font-medium text-gray-700">Conservative Donation %</label>
+                        <input type="number" name="conservative_percentage" id="conservative_percentage" 
+                               required min="0" max="100" step="0.01"
+                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="liberal_percentage" class="block text-sm font-medium text-gray-700">Liberal Donation %</label>
+                        <input type="number" name="liberal_percentage" id="liberal_percentage" 
+                               required min="0" max="100" step="0.01"
+                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
+                        <input type="number" name="conservative_total_donations" id="conservative_total_donations" 
+                               required min="0" step="0.01"
+                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="liberal_total_donations" class="block text-sm font-medium text-gray-700">Liberal Total ($)</label>
+                        <input type="number" name="liberal_total_donations" id="liberal_total_donations" 
+                               required min="0" step="0.01"
+                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="trump_donor" 
+                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Trump Donor</span>
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="america_pac_donor" 
+                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">America PAC Donor</span>
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="save_america_pac_donor" 
+                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Save America PAC Donor</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="data_source" class="block text-sm font-medium text-gray-700">Data Source</label>
+                    <input type="text" name="data_source" id="data_source" required
+                           class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Please provide links or references for the donation data. We recommend <a href="https://opensecrets.org" target="_blank" rel="noopener noreferrer" 
+                        class="text-blue-800 hover:text-blue-900 underline">OpenSecrets.org</a>.</p>
+                </div>
+            </div>
+            
             <div>
                 <button type="submit" 
-                        class="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md
+                               shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700
+                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     Submit Business
                 </button>
             </div>
@@ -102,54 +193,56 @@
     </div>
 </div>
 
+<!-- JavaScript for Dynamic Search Functionality -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const servicesCheckbox = document.getElementById('provides_services');
-    const servicesSection = document.getElementById('services_section');
-    const productsCheckbox = document.getElementById('provides_products');
-    const productsSection = document.getElementById('products_section');
-
-    // Toggle sections based on checkboxes
-    servicesCheckbox.addEventListener('change', () => {
-        servicesSection.classList.toggle('hidden', !servicesCheckbox.checked);
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toggle visibility for services and products sections
+        const servicesCheckbox = document.getElementById('provides_services');
+        const servicesSection = document.getElementById('services_section');
+        const productsCheckbox = document.getElementById('provides_products');
+        const productsSection = document.getElementById('products_section');
+    
+        servicesCheckbox.addEventListener('change', () => {
+            servicesSection.classList.toggle('hidden', !servicesCheckbox.checked);
+        });
+        productsCheckbox.addEventListener('change', () => {
+            productsSection.classList.toggle('hidden', !productsCheckbox.checked);
+        });
+    
+        // Function to fetch categories via AJAX
+        function fetchCategories(searchTerm, categoryType) {
+            fetch(`/filter-categories/?q=${encodeURIComponent(searchTerm)}&type=${categoryType}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = categoryType === 'services' ? '#services-container' : '#products-container';
+                    const noResults = categoryType === 'services' ? '#no-services-message' : '#no-products-message';
+                    const element = document.querySelector(container);
+                    element.innerHTML = '';
+    
+                    if (data.results.length > 0) {
+                        data.results.forEach(item => {
+                            const label = document.createElement('label');
+                            label.classList.add('flex', 'items-center', 'p-2', 'hover:bg-gray-50');
+                            label.innerHTML = `
+                                <input type="checkbox" name="${categoryType}" value="${item.id}" class="rounded">
+                                <span class="ml-2 text-sm">${item.name}</span>
+                            `;
+                            element.appendChild(label);
+                        });
+                        document.querySelector(noResults).classList.add('hidden');
+                    } else {
+                        document.querySelector(noResults).classList.remove('hidden');
+                    }
+                });
+        }
+    
+        // Event listeners for search inputs
+        document.getElementById('service-search').addEventListener('input', function () {
+            fetchCategories(this.value, 'services');
+        });
+        document.getElementById('product-search').addEventListener('input', function () {
+            fetchCategories(this.value, 'products');
+        });
     });
-    productsCheckbox.addEventListener('change', () => {
-        productsSection.classList.toggle('hidden', !productsCheckbox.checked);
-    });
-
-    // Fetch categories via AJAX
-    function fetchCategories(searchTerm, categoryType) {
-        fetch(`/filter-categories/?q=${encodeURIComponent(searchTerm)}&type=${categoryType}`)
-            .then(response => response.json())
-            .then(data => {
-                const container = categoryType === 'services' ? '#services-container' : '#products-container';
-                const noResults = categoryType === 'services' ? '#no-services-message' : '#no-products-message';
-                const element = document.querySelector(container);
-                element.innerHTML = '';
-
-                if (data.results.length > 0) {
-                    data.results.forEach(item => {
-                        const label = document.createElement('label');
-                        label.classList.add('flex', 'items-center', 'p-2', 'hover:bg-gray-50');
-                        label.innerHTML = `
-                            <input type="checkbox" name="${categoryType}" value="${item.id}" class="rounded">
-                            <span class="ml-2 text-sm">${item.name}</span>
-                        `;
-                        element.appendChild(label);
-                    });
-                    document.querySelector(noResults).classList.add('hidden');
-                } else {
-                    document.querySelector(noResults).classList.remove('hidden');
-                }
-            });
-    }
-
-    document.getElementById('service-search').addEventListener('input', function () {
-        fetchCategories(this.value, 'services');
-    });
-    document.getElementById('product-search').addEventListener('input', function () {
-        fetchCategories(this.value, 'products');
-    });
-});
 </script>
 {% endblock %}
