@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 
 class BusinessCategory(models.Model):
@@ -41,7 +42,7 @@ class EditRequest(models.Model):
     ]
     
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
-    submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    submitted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     
     # Changed data
@@ -59,7 +60,7 @@ class EditRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(null=True)
     reviewed_by = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, 
         null=True, 
         related_name='reviewed_edits'

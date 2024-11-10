@@ -18,7 +18,12 @@
                     <a href="{% url 'business_search' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Search</a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'edit_requests' %}" class="hover:bg-blue-700 px-3 py-2 rounded">My Edits</a>
-                        <a href="{% url 'users:logout' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Logout</a>
+                        <form method="post" action="{% url 'users:logout' %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="hover:bg-blue-700 px-3 py-2 rounded text-white">
+                                Logout
+                            </button>
+                        </form>
                     {% else %}
                         <a href="{% url 'users:login' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Login</a>
                     {% endif %}
