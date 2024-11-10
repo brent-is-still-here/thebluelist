@@ -200,3 +200,8 @@ class EditRequest(models.Model):
         related_name='reviewed_edits'
     )
     review_notes = models.TextField(blank=True)
+
+    class Meta:
+            permissions = [
+                ("can_review_edits", "Can review edit requests"),
+            ]
