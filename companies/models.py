@@ -151,15 +151,20 @@ class EditRequest(models.Model):
     # Changed data
     name = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
-    republican_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    democrat_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    
+    # Political data changes
+    conservative_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    conservative_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True)
+    liberal_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    liberal_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True)
     trump_donor = models.BooleanField(null=True)
     america_pac_donor = models.BooleanField(null=True)
-    total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True)
+    save_america_pac_donor = models.BooleanField(null=True)
     data_source = models.TextField(blank=True)
     
+    # Metadata
     justification = models.TextField()
-    supporting_links = models.TextField()
+    supporting_links = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(null=True)
     reviewed_by = models.ForeignKey(

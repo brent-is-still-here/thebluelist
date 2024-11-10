@@ -78,6 +78,87 @@ def add_business(request):
         'products': ProductCategory.objects.all(),
     })
 
+def business_detail(request, slug):
+    business = get_object_or_404(Business.objects.prefetch_related(
+        'services', 
+        'products', 
+        'subsidiaries'
+    ).select_related(
+        'parent_company',
+        'politicaldata'
+    ), slug=slug)
+    
+    return render(request, 'companies/business_detail.html', {
+        'business': business,
+    })
+
+@login_required
+def submit_update(request, business_id):
+    business = get_object_or_404(Business, id=business_id)
+    
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                edit_request = EditRequest.objects.create(
+                    business=business,
+                    submitted_by=request.user,
+                    
+                    # Business data changes
+                    name=request.POST.get('name', ''),
+                    description=request.POST.get('description', ''),
+                    
+                    # Political data changes
+                    conservative_percentage=float(request.POST.get('conservative_percentage')) if request.POST.get('conservative_percentage') else None,
+                    conservative_total_donations=float(request.POST.get('conservative_total_donations')) if request.POST.get('conservative_total_donations') else None,
+                    liberal_percentage=float(request.POST.get('liberal_percentage')) if request.POST.get('liberal_percentage') else None,
+                    liberal_total_donations=float(request.POST.get('liberal_total_donations')) if request.POST.get('liberal_total_donations') else None,
+                    trump_donor=request.POST.get('trump_donor', '').lower() == 'true' if request.POST.get('trump_donor') else None,
+                    america_pac_donor=request.POST.get('america_pac_donor', '').lower() == 'true' if request.POST.get('america_pac_donor') else None,
+                    save_america_pac_donor=request.POST.get('save_america_pac_donor', '').lower() == 'true' if request.POST.get('save_america_pac_donor') else None,
+                    data_source=request.POST.get('data_source', ''),
+                    
+                    # Update metadata
+                    justification=request.POST['justification'],
+                    supporting_links=request.POST.get('supporting_links', '')
+                )
+                
+                messages.success(request, 'Update request submitted successfully! It will be reviewed by our team.')
+                return redirect('business_search')
+                
+        except Exception as e:
+            messages.error(request, f'Error submitting update: {str(e)}')
+            return render(request, 'companies/submit_update.html', {
+                'error': str(e),
+                'business': business,
+                'form_data': request.POST,
+                'services': ServiceCategory.objects.all(),
+                'products': ProductCategory.objects.all(),
+            })
+    
+    # For GET request, show form with current values
+    political_data = getattr(business, 'politicaldata', None)
+    initial_data = {
+        'name': business.name,
+        'description': business.description,
+        'conservative_percentage': political_data.conservative_percentage if political_data else None,
+        'conservative_total_donations': political_data.conservative_total_donations if political_data else None,
+        'liberal_percentage': political_data.liberal_percentage if political_data else None,
+        'liberal_total_donations': political_data.liberal_total_donations if political_data else None,
+        'trump_donor': political_data.trump_donor if political_data else False,
+        'america_pac_donor': political_data.america_pac_donor if political_data else False,
+        'save_america_pac_donor': political_data.save_america_pac_donor if political_data else False,
+        'data_source': political_data.data_source if political_data else '',
+        'services': business.services.all() if business.provides_services else None,
+        'products': business.products.all() if business.provides_products else None,
+    }
+    
+    return render(request, 'companies/submit_update.html', {
+        'business': business,
+        'form_data': initial_data,
+        'services': ServiceCategory.objects.all(),
+        'products': ProductCategory.objects.all(),
+    })
+
 @login_required
 def edit_requests(request):
     user_requests = EditRequest.objects.filter(submitted_by=request.user)

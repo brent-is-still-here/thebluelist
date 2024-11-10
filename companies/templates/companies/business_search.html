@@ -39,14 +39,18 @@
                         <div class="border-b border-gray-200 pb-4 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h3 class="text-lg font-medium">{{ business.name }}</h3>
+                                    <h3 class="text-lg font-medium">
+                                        <a href="{% url 'business_detail' business.slug %}" class="hover:text-blue-600">
+                                            {{ business.name }}
+                                        </a>
+                                    </h3>
                                     <p class="text-sm text-gray-600">{{ business.description|truncatewords:30 }}</p>
                                     
                                     {% if business.politicaldata %}
                                         <div class="mt-2">
                                             <div class="text-sm">
-                                                <span class="text-red-600">{{ business.politicaldata.republican_percentage }}% Republican</span> / 
-                                                <span class="text-blue-600">{{ business.politicaldata.democrat_percentage }}% Democrat</span>
+                                                <span class="text-red-600">{{ business.politicaldata.conservative_percentage }}% Conservative</span> / 
+                                                <span class="text-blue-600">{{ business.politicaldata.liberal_percentage }}% Liberal</span>
                                             </div>
                                             {% if business.politicaldata.trump_donor %}
                                                 <div class="text-sm text-red-600">⚠️ Trump Donor</div>
@@ -54,14 +58,17 @@
                                             {% if business.politicaldata.america_pac_donor %}
                                                 <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
                                             {% endif %}
+                                            {% if business.politicaldata.save_america_pac_donor %}
+                                                <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
+                                            {% endif %}
                                         </div>
                                     {% endif %}
                                 </div>
                                 
                                 <div class="flex space-x-2">
-                                    <a href="{% url 'submit_edit' business.id %}" 
+                                    <a href="{% url 'submit_update' business.id %}" 
                                        class="text-sm text-blue-600 hover:text-blue-800">
-                                        Submit Edit
+                                        Submit Update
                                     </a>
                                 </div>
                             </div>

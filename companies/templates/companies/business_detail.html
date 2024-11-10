@@ -1,0 +1,185 @@
+{% extends "users/base.html" %}
+
+{% block title %}{{ business.name }} - The Blue List{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="space-y-6">
+        <!-- Basic Information -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ business.name }}</h1>
+                    {% if business.website %}
+                        <a href="{{ business.website }}" target="_blank" rel="noopener noreferrer" 
+                           class="text-blue-600 hover:text-blue-800 text-sm">
+                            {{ business.website }}
+                        </a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'submit_update' business.id %}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm 
+                          font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 
+                          focus:ring-offset-2 focus:ring-blue-500">
+                    Submit Update
+                </a>
+            </div>
+            
+            <div class="mt-4 prose max-w-none">
+                <p>{{ business.description }}</p>
+            </div>
+        </div>
+
+        <!-- Company Relationships -->
+        {% if business.parent_company or business.subsidiaries.exists %}
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Company Relationships</h2>
+            
+            {% if business.parent_company %}
+            <div class="mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Parent Company</h3>
+                <a href="{% url 'business_detail' business.parent_company.slug %}" 
+                   class="text-blue-600 hover:text-blue-800">
+                    {{ business.parent_company.name }}
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if business.subsidiaries.exists %}
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">Subsidiaries</h3>
+                <ul class="list-disc pl-5 mt-2">
+                    {% for subsidiary in business.subsidiaries.all %}
+                        <li>
+                            <a href="{% url 'business_detail' subsidiary.slug %}" 
+                               class="text-blue-600 hover:text-blue-800">
+                                {{ subsidiary.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Services and Products -->
+        {% if business.provides_services or business.provides_products %}
+        <div class="bg-white p-6 rounded-lg shadow">
+            {% if business.provides_services %}
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-4">Services Provided</h2>
+                <div class="flex flex-wrap gap-2">
+                    {% for service in business.services.all %}
+                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                            {{ service.name }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if business.provides_products %}
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Products Offered</h2>
+                <div class="flex flex-wrap gap-2">
+                    {% for product in business.products.all %}
+                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                            {{ product.name }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Political Data -->
+        {% if business.politicaldata %}
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Political Donations</h2>
+            
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-red-600">
+                        {{ business.politicaldata.conservative_percentage }}%
+                    </div>
+                    <div class="text-sm text-gray-600">Conservative</div>
+                    <div class="mt-2 text-lg font-semibold">
+                        ${{ business.politicaldata.conservative_total_donations|floatformat:2 }}
+                    </div>
+                </div>
+                
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">
+                        {{ business.politicaldata.liberal_percentage }}%
+                    </div>
+                    <div class="text-sm text-gray-600">Liberal</div>
+                    <div class="mt-2 text-lg font-semibold">
+                        ${{ business.politicaldata.liberal_total_donations|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+            
+            {% if business.politicaldata.trump_donor or business.politicaldata.america_pac_donor or business.politicaldata.save_america_pac_donor %}
+            <div class="border-t pt-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Notable Donations</h3>
+                <ul class="space-y-2">
+                    {% if business.politicaldata.trump_donor %}
+                        <li class="flex items-center text-red-600">
+                            <span class="mr-2">⚠️</span>
+                            Trump Donor
+                        </li>
+                    {% endif %}
+                    {% if business.politicaldata.america_pac_donor %}
+                        <li class="flex items-center text-red-600">
+                            <span class="mr-2">⚠️</span>
+                            America PAC Donor
+                        </li>
+                    {% endif %}
+                    {% if business.politicaldata.save_america_pac_donor %}
+                        <li class="flex items-center text-red-600">
+                            <span class="mr-2">⚠️</span>
+                            Save America PAC Donor
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% if business.politicaldata.data_source %}
+            <div class="border-t pt-4 mt-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Data Sources</h3>
+                <div class="prose max-w-none">
+                    {{ business.politicaldata.data_source|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Metadata -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Information History</h2>
+            <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>
+                    <span class="font-medium">Created:</span> 
+                    {{ business.created_at|date:"F j, Y" }}
+                </div>
+                <div>
+                    <span class="font-medium">Last Updated:</span> 
+                    {{ business.updated_at|date:"F j, Y" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder for future competing businesses section -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Alternative Businesses</h2>
+            <p class="text-gray-600">
+                Coming soon: A list of competing businesses that donate more to liberal causes or don't make political donations.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
