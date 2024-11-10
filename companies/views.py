@@ -215,10 +215,121 @@ def review_edit_request(request, edit_request_id):
                 
                 messages.success(request, f'Edit request {action}d successfully.')
                 return redirect('review_edit_requests')
-    
+        pass
+
     # Prepare changes display
     changes = {}
-    # Add logic to compare current and proposed values for each field
+    business = edit_request.business
+    political_data = getattr(business, 'politicaldata', None)
+
+    if edit_request.name:
+        changes['Name'] = {
+            'current': business.name,
+            'proposed': edit_request.name
+        }
+
+    if edit_request.description:
+        changes['Description'] = {
+            'current': business.description,
+            'proposed': edit_request.description
+        }
+
+    # Check political data changes
+    political_fields = [
+        ('conservative_percentage', 'Conservative Percentage'),
+        ('conservative_total_donations', 'Conservative Total Donations'),
+        ('liberal_percentage', 'Liberal Percentage'),
+        ('liberal_total_donations', 'Liberal Total Donations'),
+    ]
+
+    if edit_request.description:
+        changes['Description'] = {
+            'current': business.description,
+            'proposed': edit_request.description
+        }
+
+    # Check political data changes
+    political_fields = [
+        ('conservative_percentage', 'Conservative Percentage'),
+        ('conservative_total_donations', 'Conservative Total Donations'),
+        ('liberal_percentage', 'Liberal Percentage'),
+        ('liberal_total_donations', 'Liberal Total Donations'),
+    ]
+
+    for field, label in political_fields:
+        new_value = getattr(edit_request, field)
+        if new_value is not None:
+            current_value = getattr(political_data, field) if political_data else None
+            changes[label] = {
+                'current': f"{current_value:.2f}" if current_value is not None else "Not set",
+                'proposed': f"{new_value:.2f}"
+            }
+
+    # Check boolean political fields
+    boolean_fields = [
+        ('trump_donor', 'Trump Donor'),
+        ('america_pac_donor', 'America PAC Donor'),
+        ('save_america_pac_donor', 'Save America PAC Donor'),
+    ]
+
+    for field, label in boolean_fields:
+        new_value = getattr(edit_request, field)
+        if new_value is not None:
+            current_value = getattr(political_data, field) if political_data else False
+            changes[label] = {
+                'current': 'Yes' if current_value else 'No',
+                'proposed': 'Yes' if new_value else 'No'
+            }
+
+    # Check data source changes
+    if edit_request.data_source:
+        changes['Data Source'] = {
+            'current': political_data.data_source if political_data else '',
+            'proposed': edit_request.data_source
+        }
+
+    # Check service changes
+    if edit_request.services_to_add.exists():
+        services_to_add = edit_request.services_to_add.all()
+        changes['Services to Add'] = {
+            'current': 'None',
+            'proposed': ', '.join(s.name for s in services_to_add)
+        }
+
+    if edit_request.services_to_remove.exists():
+        services_to_remove = edit_request.services_to_remove.all()
+        changes['Services to Remove'] = {
+            'current': ', '.join(s.name for s in services_to_remove),
+            'proposed': 'Will be removed'
+        }
+
+    # Check product changes
+    if edit_request.products_to_add.exists():
+        products_to_add = edit_request.products_to_add.all()
+        changes['Products to Add'] = {
+            'current': 'None',
+            'proposed': ', '.join(p.name for p in products_to_add)
+        }
+
+    if edit_request.products_to_remove.exists():
+        products_to_remove = edit_request.products_to_remove.all()
+        changes['Products to Remove'] = {
+            'current': ', '.join(p.name for p in products_to_remove),
+            'proposed': 'Will be removed'
+        }
+
+    # Check service/product provision changes
+    if edit_request.provides_services is not None:
+        changes['Provides Services'] = {
+            'current': 'Yes' if business.provides_services else 'No',
+            'proposed': 'Yes' if edit_request.provides_services else 'No'
+        }
+
+    if edit_request.provides_products is not None:
+        changes['Provides Products'] = {
+            'current': 'Yes' if business.provides_products else 'No',
+            'proposed': 'Yes' if edit_request.provides_products else 'No'
+        }
     
     return render(request, 'companies/review_edit_request.html', {
         'edit_request': edit_request,

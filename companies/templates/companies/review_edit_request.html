@@ -22,21 +22,27 @@
                         <dt class="text-sm font-medium text-gray-500">Changed Fields</dt>
                         <dd class="mt-1 text-sm text-gray-900">
                             <div class="border rounded-lg divide-y">
-                                {% for field, values in changes.items %}
-                                <div class="p-4">
-                                    <h4 class="font-medium">{{ field|title }}</h4>
-                                    <div class="mt-2 grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p class="text-sm text-gray-500">Current</p>
-                                            <p class="text-sm">{{ values.current }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-500">Proposed</p>
-                                            <p class="text-sm">{{ values.proposed }}</p>
+                                {% if changes %}
+                                    {% for field, values in changes.items %}
+                                    <div class="p-4">
+                                        <h4 class="font-medium">{{ field|title }}</h4>
+                                        <div class="mt-2 grid grid-cols-2 gap-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Current</p>
+                                                <p class="text-sm">{{ values.current }}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm text-gray-500">Proposed</p>
+                                                <p class="text-sm">{{ values.proposed }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-4">
+                                        <p class="text-sm text-gray-500 italic">No changes detected</p>
+                                    </div>
+                                {% endif %}
                             </div>
                         </dd>
                     </div>
