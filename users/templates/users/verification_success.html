@@ -1,0 +1,38 @@
+{# users/templates/users/verification_success.html #}
+{% extends "users/base.html" %}
+
+{% block title %}Email Verified - The Blue List{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white p-8 rounded-lg shadow text-center">
+        <div class="mb-6">
+            <svg class="mx-auto h-12 w-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-4">Email Verified Successfully!</h2>
+        
+        <p class="text-gray-600 mb-8">
+            Your email address has been verified. You can now log in to your account and access all features of The Blue List.
+        </p>
+        
+        <div class="space-y-4">
+            <a href="{% url 'users:login' %}" 
+               class="inline-block w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium 
+                      text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 
+                      focus:ring-offset-2 focus:ring-blue-500">
+                Log In Now
+            </a>
+            
+            <a href="{% url 'home' %}" 
+               class="inline-block w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium 
+                      text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 
+                      focus:ring-offset-2 focus:ring-blue-500">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
