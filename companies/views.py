@@ -1,65 +1,20 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.utils.text import slugify
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Q, Case, When, Value, IntegerField
+from django.db.models import Case, IntegerField, Q, Value, When
 from django.db.models.functions import Lower
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.text import slugify
 from django.views.decorators.http import require_GET
-from .models import Business, EditRequest, PoliticalData, ServiceCategory, ProductCategory
 
-def home(request):
-    return render(request, 'companies/home.html')
-
-def business_search(request):
-    query = request.GET.get('q', '').strip()
-    businesses = Business.objects.none()
-    
-    if query:
-        # Create a query that checks for exact matches and partial matches
-        # Use Case/When to assign priority values
-        businesses = Business.objects.annotate(
-            search_priority=Case(
-                # Priority 1: Exact name match (case-insensitive)
-                When(name__iexact=query, then=Value(3)),
-                # Priority 2: Name contains the query
-                When(name__icontains=query, then=Value(2)),
-                # Priority 3: Description contains the query
-                When(description__icontains=query, then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            )
-        ).filter(
-            # Combine conditions with OR
-            Q(name__icontains=query) |
-            Q(description__icontains=query)
-        ).select_related(
-            'politicaldata'
-        ).order_by(
-            '-search_priority',  # Sort by priority (highest first)
-            'name'              # Then alphabetically by name
-        )
-    
-    return render(request, 'companies/business_search.html', {
-        'query': query,
-        'businesses': businesses,
-    })
-
-@require_GET
-def filter_categories(request):
-    query = request.GET.get('q', '').strip().lower()
-    category_type = request.GET.get('type')
-    
-    if category_type == 'services':
-        categories = ServiceCategory.objects.filter(name__icontains=query).order_by('name')
-    elif category_type == 'products':
-        categories = ProductCategory.objects.filter(name__icontains=query).order_by('name')
-    else:
-        return JsonResponse({'error': 'Invalid category type'}, status=400)
-    
-    results = [{'id': cat.id, 'name': cat.name, 'description': cat.description} for cat in categories]
-    return JsonResponse({'results': results})
+from .models import (
+    Business, 
+    EditRequest, 
+    PoliticalData, 
+    ProductCategory, 
+    ServiceCategory
+)
 
 @login_required
 def add_business(request):
@@ -136,6 +91,65 @@ def business_detail(request, slug):
     return render(request, 'companies/business_detail.html', {
         'business': business,
     })
+
+def business_search(request):
+    query = request.GET.get('q', '').strip()
+    businesses = Business.objects.none()
+    
+    if query:
+        # Create a query that checks for exact matches and partial matches
+        # Use Case/When to assign priority values
+        businesses = Business.objects.annotate(
+            search_priority=Case(
+                # Priority 1: Exact name match (case-insensitive)
+                When(name__iexact=query, then=Value(3)),
+                # Priority 2: Name contains the query
+                When(name__icontains=query, then=Value(2)),
+                # Priority 3: Description contains the query
+                When(description__icontains=query, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        ).filter(
+            # Combine conditions with OR
+            Q(name__icontains=query) |
+            Q(description__icontains=query)
+        ).select_related(
+            'politicaldata'
+        ).order_by(
+            '-search_priority',  # Sort by priority (highest first)
+            'name'              # Then alphabetically by name
+        )
+    
+    return render(request, 'companies/business_search.html', {
+        'query': query,
+        'businesses': businesses,
+    })
+
+@login_required
+def edit_requests(request):
+    user_requests = EditRequest.objects.filter(submitted_by=request.user)
+    return render(request, 'companies/edit_requests.html', {
+        'edit_requests': user_requests
+    })
+
+@require_GET
+def filter_categories(request):
+    query = request.GET.get('q', '').strip().lower()
+    category_type = request.GET.get('type')
+    
+    if category_type == 'services':
+        categories = ServiceCategory.objects.filter(name__icontains=query).order_by('name')
+    elif category_type == 'products':
+        categories = ProductCategory.objects.filter(name__icontains=query).order_by('name')
+    else:
+        return JsonResponse({'error': 'Invalid category type'}, status=400)
+    
+    results = [{'id': cat.id, 'name': cat.name, 'description': cat.description} for cat in categories]
+    return JsonResponse({'results': results})
+
+def home(request):
+    return render(request, 'companies/home.html')
 
 @login_required
 def submit_update(request, business_id):
@@ -224,11 +238,4 @@ def submit_update(request, business_id):
         'form_data': initial_data,
         'available_services': ServiceCategory.objects.all(),  # Changed from services to available_services
         'available_products': ProductCategory.objects.all(),  # Changed from products to available_products
-    })
-
-@login_required
-def edit_requests(request):
-    user_requests = EditRequest.objects.filter(submitted_by=request.user)
-    return render(request, 'companies/edit_requests.html', {
-        'edit_requests': user_requests
     })
