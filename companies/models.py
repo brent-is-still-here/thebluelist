@@ -65,8 +65,8 @@ class Business(models.Model):
     )
     
     # Categories and Locations
-    categories = models.ManyToManyField(BusinessCategory)
-    locations = models.ManyToManyField(Location)
+    categories = models.ManyToManyField(BusinessCategory, null=True, blank=True)
+    locations = models.ManyToManyField(Location, null=True, blank=True)
     
     # Services
     provides_services = models.BooleanField(default=False)

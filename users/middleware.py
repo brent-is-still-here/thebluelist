@@ -8,6 +8,10 @@ class EmailVerificationMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated and not request.user.email_verified:
+            # Allow superusers to bypass verification
+            if request.user.is_superuser:
+                return self.get_response(request)
+            
             # Allow access to logout and verification endpoints
             allowed_paths = [
                 reverse('users:logout'),
