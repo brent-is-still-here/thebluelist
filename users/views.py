@@ -19,6 +19,9 @@ from .services.mail import EmailService
 logger = logging.getLogger(__name__)
 email_service = EmailService()
 
+def get_involved(request):
+    return render(request, 'users/get_involved.html')
+
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -40,7 +43,6 @@ def login_view(request):
         form = LoginForm()
     
     return render(request, 'users/login.html', {'form': form})
-
 
 @login_required
 @require_http_methods(['POST'])

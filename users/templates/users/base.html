@@ -16,6 +16,7 @@
                 <div class="flex space-x-4">
                     <a href="{% url 'home' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Home</a>
                     <a href="{% url 'business_search' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Search</a>
+                    <a href="{% url 'users:get_involved' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Get Involved</a>
                     {% if perms.companies.can_review_edits %}
                         <a href="{% url 'review_edit_requests' %}" 
                         class="hover:bg-blue-700 px-3 py-2 rounded">
