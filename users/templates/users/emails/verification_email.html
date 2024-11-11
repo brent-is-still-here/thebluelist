@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome to MyBlueList!</h2>
+    <p>Please verify your email address by clicking the button below:</p>
+    <p>
+        <a href="{{ verification_url }}" class="button">Verify Email</a>
+    </p>
+    <p>Or copy and paste this link into your browser:</p>
+    <p>{{ verification_url }}</p>
+    <p>If you didn't create this account, you can safely ignore this email.</p>
+    <p>Best regards,<br>The MyBlueList Team</p>
+</body>
+</html>

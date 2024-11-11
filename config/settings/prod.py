@@ -90,14 +90,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Email settings (example with SendGrid)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
-DEFAULT_FROM_EMAIL = 'noreply@thebluelist.us'
+# Email settings (example with MailChimp)
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+MAILTRAP_API_TOKEN = os.environ.get('MAILTRAP_API_TOKEN')
+MAILTRAP_SENDER_EMAIL = 'noreply@mybluelist.org'
 
 # Add WhiteNoise Middleware
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')

@@ -1,0 +1,9 @@
+Welcome to MyBlueList!
+
+Please verify your email address by visiting this link:
+{{ verification_url }}
+
+If you didn't create this account, you can safely ignore this email.
+
+Best regards,
+The MyBlueList Team
