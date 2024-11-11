@@ -20,7 +20,6 @@ INSTALLED_APPS = [
     
     # Local apps
     'companies.apps.CompaniesConfig',
-    'donations.apps.DonationsConfig',
     'users.apps.UsersConfig',
 ]
 
