@@ -153,7 +153,7 @@ def filter_categories(request):
     else:
         return JsonResponse({'error': 'Invalid category type'}, status=400)
     
-    results = [{'id': cat.id, 'name': cat.name, 'description': cat.description} for cat in categories]
+    results = [{'id': cat.id, 'name': cat.name, 'parent': cat.parent} for cat in categories]
     return JsonResponse({'results': results})
 
 def home(request):
