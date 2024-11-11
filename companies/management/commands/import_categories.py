@@ -21,8 +21,16 @@ class Command(BaseCommand):
             with open(products_file, 'r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    name = row['name'].strip()
-                    parent = row.get('parent', '').strip()
+                    name = row.get('name')
+                    parent = row.get('parent')
+
+                    # Ensure 'name' is not None or empty
+                    if not name:
+                        self.stdout.write(self.style.WARNING(f"Skipping row with missing 'name': {row}"))
+                        continue
+
+                    name = name.strip()
+                    parent = parent.strip() if parent else None
                     
                     product_category, created = ProductCategory.objects.get_or_create(
                         name=name,
@@ -43,8 +51,16 @@ class Command(BaseCommand):
             with open(services_file, 'r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    name = row['name'].strip()
-                    parent = row.get('parent', '').strip()
+                    name = row.get('name')
+                    parent = row.get('parent')
+
+                    # Ensure 'name' is not None or empty
+                    if not name:
+                        self.stdout.write(self.style.WARNING(f"Skipping row with missing 'name': {row}"))
+                        continue
+
+                    name = name.strip()
+                    parent = parent.strip() if parent else None
                     
                     service_category, created = ServiceCategory.objects.get_or_create(
                         name=name,

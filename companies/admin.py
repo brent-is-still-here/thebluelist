@@ -1,19 +1,33 @@
-from django.contrib import admin
-
+from django.contrib import admin, messages
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from .management.commands.import_categories import Command
 from .models import (
     ServiceCategory, ProductCategory, Location,
     Business, PoliticalData, EditRequest
 )
 
+# Custom admin action to import categories
+def run_import_command(modeladmin, request, queryset=None):
+    command = Command()
+    try:
+        command.handle(products_csv='data/products.csv', services_csv='data/services.csv')
+        messages.success(request, "Categories imported successfully!")
+    except Exception as e:
+        messages.error(request, f"Failed to import categories: {e}")
+    # Redirect back to the admin change list page
+    return HttpResponseRedirect(reverse('admin:companies_productcategory_changelist'))
+
+# Registering ProductCategoryAdmin with the custom action
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'parent', 'slug')
+    search_fields = ('name', 'parent')
+    actions = [run_import_command]
+
 # Register ServiceCategory
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'slug')
-    search_fields = ('name', 'parent')
-
-# Register ProductCategory
-@admin.register(ProductCategory)
-class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'slug')
     search_fields = ('name', 'parent')
 
@@ -48,4 +62,3 @@ class EditRequestAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     filter_horizontal = ('services_to_add', 'services_to_remove', 'products_to_add', 'products_to_remove')
     readonly_fields = ('created_at', 'reviewed_at')
-
