@@ -22,12 +22,12 @@ class Command(BaseCommand):
                 reader = csv.DictReader(file)
                 for row in reader:
                     name = row['name'].strip()
-                    description = row.get('description', '').strip()
+                    parent = row.get('parent', '').strip()
                     
                     product_category, created = ProductCategory.objects.get_or_create(
                         name=name,
                         defaults={
-                            'description': description,
+                            'parent': parent,
                             'slug': slugify(name)
                         }
                     )
@@ -44,12 +44,12 @@ class Command(BaseCommand):
                 reader = csv.DictReader(file)
                 for row in reader:
                     name = row['name'].strip()
-                    description = row.get('description', '').strip()
+                    parent = row.get('parent', '').strip()
                     
                     service_category, created = ServiceCategory.objects.get_or_create(
                         name=name,
                         defaults={
-                            'description': description,
+                            'parent': parent,
                             'slug': slugify(name)
                         }
                     )

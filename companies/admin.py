@@ -8,14 +8,14 @@ from .models import (
 # Register ServiceCategory
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'slug')
-    search_fields = ('name', 'description')
+    list_display = ('name', 'parent', 'slug')
+    search_fields = ('name', 'parent')
 
 # Register ProductCategory
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'slug')
-    search_fields = ('name', 'description')
+    list_display = ('name', 'parent', 'slug')
+    search_fields = ('name', 'parent')
 
 # Register Location
 @admin.register(Location)

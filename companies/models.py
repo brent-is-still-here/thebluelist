@@ -5,7 +5,7 @@ from django.utils.text import slugify
 
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    parent = models.TextField(blank=True)
     slug = models.SlugField(unique=True)
     
     class Meta:
@@ -22,7 +22,7 @@ class ServiceCategory(models.Model):
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    parent = models.TextField(blank=True)
     slug = models.SlugField(unique=True)
     
     class Meta:
