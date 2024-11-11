@@ -8,14 +8,17 @@ ALLOWED_HOSTS = ['.railway.app', 'thebluelist.us']
 # Database configuration
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-print(f"DATABASE_URL: {DATABASE_URL}")
+print(f"Database settings: {os.environ.get('PGDATABASE')}, {os.environ.get('PGHOST')}")
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('PGDATABASE'),
+        'USER': os.environ.get('PGUSER'),
+        'PASSWORD': os.environ.get('PGPASSWORD'),
+        'HOST': os.environ.get('PGHOST'),
+        'PORT': os.environ.get('PGPORT', '5432'),
+    }
 }
 
 # Security settings
