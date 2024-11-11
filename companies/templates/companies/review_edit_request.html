@@ -1,0 +1,96 @@
+{% extends "users/base.html" %}
+
+{% block title %}Review Edit Request - {{ edit_request.business.name }} - The Blue List{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Edit Request for {{ edit_request.business.name }}
+                </h3>
+                <p class="mt-1 text-sm text-gray-500">
+                    Submitted by {{ edit_request.submitted_by.username }} on {{ edit_request.created_at|date:"M d, Y" }}
+                </p>
+            </div>
+
+            <div class="px-4 py-5 sm:p-6">
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                    <!-- Changed Fields Section -->
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-gray-500">Changed Fields</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            <div class="border rounded-lg divide-y">
+                                {% if changes %}
+                                    {% for field, values in changes.items %}
+                                    <div class="p-4">
+                                        <h4 class="font-medium">{{ field|title }}</h4>
+                                        <div class="mt-2 grid grid-cols-2 gap-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Current</p>
+                                                <p class="text-sm">{{ values.current }}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm text-gray-500">Proposed</p>
+                                                <p class="text-sm">{{ values.proposed }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-4">
+                                        <p class="text-sm text-gray-500 italic">No changes detected</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </dd>
+                    </div>
+
+                    <!-- Justification -->
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-gray-500">Justification</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ edit_request.justification }}</dd>
+                    </div>
+
+                    <!-- Supporting Links -->
+                    {% if edit_request.supporting_links %}
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-gray-500">Supporting Links</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ edit_request.supporting_links|urlize }}</dd>
+                    </div>
+                    {% endif %}
+                </dl>
+
+                <!-- Review Form -->
+                <div class="mt-6 border-t border-gray-200 pt-6">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            <div>
+                                <label for="review_notes" class="block text-sm font-medium text-gray-700">Review Notes</label>
+                                <textarea id="review_notes" name="review_notes" rows="3" 
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                            </div>
+                            <div class="flex justify-end space-x-4">
+                                <button type="submit" name="action" value="reject"
+                                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium 
+                                               text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 
+                                               focus:ring-offset-2 focus:ring-red-500">
+                                    Reject
+                                </button>
+                                <button type="submit" name="action" value="approve"
+                                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium 
+                                               text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 
+                                               focus:ring-offset-2 focus:ring-green-500">
+                                    Approve
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

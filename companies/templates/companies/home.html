@@ -1,0 +1,48 @@
+{% extends "users/base.html" %}
+
+{% block title %}The Blue List - Track Political Donations{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">Welcome to The Blue List</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Businesses & Shopping</h2>
+            <p class="text-gray-600 mb-4">Track political donations from businesses and find ethical alternatives.</p>
+            <a href="{% url 'business_search' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search Companies</a>
+        </div>
+        
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Safety at Home</h2>
+            <p class="text-gray-600 mb-4">Get personalized safety recommendations for your home.</p>
+            <a href="#" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Coming Soon</a>
+        </div>
+        
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Online Safety</h2>
+            <p class="text-gray-600 mb-4">Learn about secure communications and online privacy.</p>
+            <a href="#" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Coming Soon</a>
+        </div>
+        
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Relocation Plans</h2>
+            <p class="text-gray-600 mb-4">Resources and guides for planning potential relocation.</p>
+            <a href="#" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Coming Soon</a>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg shadow">
+        <h2 class="text-2xl font-semibold mb-4">Search for a Business</h2>
+        <form action="{% url 'business_search' %}" method="get" class="max-w-2xl mx-auto">
+            <div class="flex gap-4">
+                <input type="text" name="q" placeholder="Enter business name..." 
+                       class="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

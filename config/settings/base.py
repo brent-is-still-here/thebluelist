@@ -33,6 +33,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.EmailVerificationMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -54,6 +55,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
+# Email settings for Auth (Dev purposes only at the moment)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #for Dev purposes only at the moment
+DEFAULT_FROM_EMAIL = 'noreply@mybluelist.org'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

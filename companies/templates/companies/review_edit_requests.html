@@ -1,0 +1,88 @@
+{% extends "users/base.html" %}
+
+{% block title %}Review Edit Requests - The Blue List{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <h1 class="text-2xl font-semibold text-gray-900">Review Edit Requests</h1>
+        
+        <!-- Filters -->
+        <div class="mt-4 bg-white shadow rounded-lg p-4">
+            <form method="get" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select name="status" id="status" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">All</option>
+                            <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>
+                            <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>Rejected</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="business" class="block text-sm font-medium text-gray-700">Business</label>
+                        <input type="text" name="business" id="business" value="{{ business_filter }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" 
+                                class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Edit Requests List -->
+        <div class="mt-6 bg-white shadow overflow-hidden rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted By</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for edit_request in edit_requests %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ edit_request.business.name }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ edit_request.submitted_by.username }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ edit_request.created_at|date:"M d, Y" }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                       {% if edit_request.status == 'approved' %}bg-green-100 text-green-800
+                                       {% elif edit_request.status == 'rejected' %}bg-red-100 text-red-800
+                                       {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                {{ edit_request.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <a href="{% url 'review_edit_request' edit_request.id %}" 
+                               class="text-blue-600 hover:text-blue-900">Review</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                            No edit requests found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
