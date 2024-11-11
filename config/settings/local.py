@@ -1,4 +1,5 @@
 from .base import *
+import os
 
 DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -13,3 +14,8 @@ DATABASES = {
         'PORT': config('DB_PORT', default='5432'),
     }
 }
+
+# Email settings (example with MailChimp)
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+MAILTRAP_API_TOKEN = os.environ.get('MAILTRAP_API_TOKEN')
+MAILTRAP_SENDER_EMAIL = 'noreply@mybluelist.org'
