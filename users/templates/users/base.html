@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}The Blue List{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-full">
     <nav class="bg-blue-600 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -45,7 +45,7 @@
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {% if messages %}
             {% for message in messages %}
                 <div class="mb-4 p-4 rounded {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
@@ -57,10 +57,31 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-gray-100 mt-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <p class="text-center text-gray-600">© {% now "Y" %} The Blue List. All rights reserved.</p>
+    <div class="mt-auto">
+        <!-- Sponsor Section -->
+        <div class="bg-blue-50 py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <p class="text-blue-700 text-sm">
+                        Help keep mybluelist.org running by becoming a sponsor!
+                    </p>
+                    <iframe 
+                        src="https://github.com/sponsors/brent-is-still-here/button" 
+                        title="Sponsor brent-is-still-here" 
+                        height="32" 
+                        width="114" 
+                        style="border: 0; border-radius: 6px;"
+                        class="shadow-sm hover:shadow-md transition-shadow duration-200"
+                    ></iframe>
+                </div>
+            </div>
         </div>
-    </footer>
+
+        <!-- Footer -->
+        <footer class="bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <p class="text-center text-gray-600">© {% now "Y" %} The Blue List. All rights reserved.</p>
+            </div>
+        </footer>
 </body>
 </html>
