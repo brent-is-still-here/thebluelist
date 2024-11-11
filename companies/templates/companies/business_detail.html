@@ -1,4 +1,5 @@
 {% extends "users/base.html" %}
+{% load humanize %}
 
 {% block title %}{{ business.name }} - The Blue List{% endblock %}
 
@@ -135,7 +136,7 @@
                     </div>
                     <div class="text-sm text-gray-600">Conservative</div>
                     <div class="mt-2 text-lg font-semibold">
-                        ${{ business.politicaldata.conservative_total_donations|floatformat:2 }}
+                        ${{ business.politicaldata.conservative_total_donations|floatformat:2|intcomma }}
                     </div>
                 </div>
                 
@@ -145,7 +146,7 @@
                     </div>
                     <div class="text-sm text-gray-600">Liberal</div>
                     <div class="mt-2 text-lg font-semibold">
-                        ${{ business.politicaldata.liberal_total_donations|floatformat:2 }}
+                        ${{ business.politicaldata.liberal_total_donations|floatformat:2|intcomma }}
                     </div>
                 </div>
             </div>
