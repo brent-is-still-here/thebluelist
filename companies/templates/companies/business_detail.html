@@ -206,9 +206,63 @@
         <!-- Placeholder for future competing businesses section -->
         <div class="bg-white p-6 rounded-lg shadow">
             <h2 class="text-xl font-semibold mb-4">Alternative Businesses</h2>
-            <p class="text-gray-600">
-                Coming soon: A list of competing businesses that donate more to liberal causes or don't make political donations.
-            </p>
+            
+            {% if alternatives %}
+                <div class="space-y-4">
+                    {% for alt in alternatives %}
+                        <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                            <div class="flex justify-between items-start">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="text-lg font-medium">
+                                            <a href="{% url 'business_detail' alt.business.slug %}" 
+                                            class="text-blue-600 hover:text-blue-800">
+                                                {{ alt.business.name }}
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600">
+                                        {{ alt.business.description|truncatewords:30 }}
+                                    </p>
+                                    
+                                    <!-- Similarity Info -->
+                                    <div class="text-sm text-gray-500">
+                                        Matches {{ alt.overlap_count }} product{{ alt.overlap_count|pluralize:",s" }}/service{{ alt.overlap_count|pluralize:",s" }}
+                                    </div>
+
+                                    {% if alt.business.politicaldata %}
+                                        <div class="mt-2">
+                                            <div class="text-sm">
+                                                <span class="text-red-600">{{ alt.business.politicaldata.conservative_percentage }}% Conservative</span> / 
+                                                <span class="text-blue-600">{{ alt.business.politicaldata.liberal_percentage }}% Liberal</span>
+                                                {% if alt.business.politicaldata.conservative_total_donations or alt.business.politicaldata.liberal_total_donations %}
+                                                    <br>
+                                                    <span class="text-gray-600 text-xs">
+                                                        Total Donations: ${{ alt.business.politicaldata.conservative_total_donations|floatformat:2 }} Conservative / 
+                                                        ${{ alt.business.politicaldata.liberal_total_donations|floatformat:2 }} Liberal
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            {% if alt.business.politicaldata.trump_donor %}
+                                                <div class="text-sm text-red-600">⚠️ Trump Donor</div>
+                                            {% endif %}
+                                            {% if alt.business.politicaldata.america_pac_donor %}
+                                                <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
+                                            {% endif %}
+                                            {% if alt.business.politicaldata.save_america_pac_donor %}
+                                                <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500">No alternative businesses found with similar offerings.</p>
+            {% endif %}
         </div>
     </div>
 </div>

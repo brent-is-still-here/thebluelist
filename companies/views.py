@@ -80,17 +80,24 @@ def add_business(request):
     })
 
 def business_detail(request, slug):
-    business = get_object_or_404(Business.objects.prefetch_related(
-        'services', 
-        'products', 
-        'subsidiaries'
-    ).select_related(
-        'parent_company',
-        'politicaldata'
-    ), slug=slug)
+    business = get_object_or_404(
+        Business.objects.prefetch_related(
+            'services', 
+            'products', 
+            'subsidiaries'
+        ).select_related(
+            'parent_company',
+            'politicaldata'
+        ), 
+        slug=slug
+    )
+
+    # Get alternative businesses
+    alternatives = business.get_alternative_businesses(limit=5)
     
     return render(request, 'companies/business_detail.html', {
         'business': business,
+        'alternatives': alternatives,
     })
 
 def business_search(request):

@@ -3,11 +3,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
-class BusinessCategory(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    slug = models.SlugField(unique=True)
-
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -65,8 +60,7 @@ class Business(models.Model):
     )
     
     # Categories and Locations
-    categories = models.ManyToManyField(BusinessCategory, null=True, blank=True)
-    locations = models.ManyToManyField(Location, null=True, blank=True)
+    locations = models.ManyToManyField(Location, blank=True)
     
     # Services
     provides_services = models.BooleanField(default=False)
@@ -114,6 +108,65 @@ class Business(models.Model):
         if not self.parent_company:
             return self
         return self.parent_company.ultimate_parent
+    
+    def get_alternative_businesses(self, limit=10):
+        """
+        Find alternative businesses based on product/service similarity and political leanings.
+        Returns businesses ordered by a weighted score.
+        """
+        # Get all products and services of this business
+        my_products = set(self.products.values_list('id', flat=True))
+        my_services = set(self.services.values_list('id', flat=True))
+        total_offerings = len(my_products) + len(my_services)
+
+        if total_offerings == 0:
+            return Business.objects.none()
+
+        # Get other businesses that share at least one product or service
+        alternatives = Business.objects.exclude(id=self.id).filter(
+            models.Q(products__in=my_products) | 
+            models.Q(services__in=my_services)
+        ).distinct()
+
+        # Calculate similarity scores
+        similarity_scores = []
+        my_political_data = self.politicaldata
+
+        for business in alternatives:
+            # Calculate offering overlap
+            their_products = set(business.products.values_list('id', flat=True))
+            their_services = set(business.services.values_list('id', flat=True))
+            
+            product_overlap = len(my_products & their_products)
+            service_overlap = len(my_services & their_services)
+            total_overlap = product_overlap + service_overlap
+
+            # Calculate offering similarity score (0 to 1)
+            offering_score = total_overlap / total_offerings
+
+            # Calculate political score (0 to 1, higher for more liberal businesses)
+            try:
+                # Convert Decimal to float before calculation
+                conservative_pct = float(business.politicaldata.conservative_percentage)
+                political_score = (100 - conservative_pct) / 100
+            except (AttributeError, ZeroDivisionError):
+                political_score = 0.5  # Default if no political data
+
+            # Calculate weighted score
+            # Weight offering similarity and political score equally
+            weighted_score = (offering_score * 0.5) + (political_score * 0.5)
+
+            similarity_scores.append({
+                'business': business,
+                'score': weighted_score,
+                'overlap_count': total_overlap,
+                'conservative_percentage': business.politicaldata.conservative_percentage if hasattr(business, 'politicaldata') else None
+            })
+
+        # Sort by weighted score
+        similarity_scores.sort(key=lambda x: x['score'], reverse=True)
+        
+        return similarity_scores[:limit]
 
 class PoliticalData(models.Model):
     business = models.OneToOneField(Business, on_delete=models.CASCADE)

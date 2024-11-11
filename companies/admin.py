@@ -1,15 +1,9 @@
 from django.contrib import admin
 
 from .models import (
-    BusinessCategory, ServiceCategory, ProductCategory, Location,
+    ServiceCategory, ProductCategory, Location,
     Business, PoliticalData, EditRequest
 )
-
-# Register BusinessCategory
-@admin.register(BusinessCategory)
-class BusinessCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'slug')
-    search_fields = ('name', 'description')
 
 # Register ServiceCategory
 @admin.register(ServiceCategory)
@@ -35,8 +29,8 @@ class LocationAdmin(admin.ModelAdmin):
 class BusinessAdmin(admin.ModelAdmin):
     list_display = ('name', 'website', 'provides_services', 'provides_products', 'created_at', 'updated_at')
     search_fields = ('name', 'description', 'website')
-    list_filter = ('provides_services', 'provides_products', 'categories', 'locations')
-    filter_horizontal = ('categories', 'services', 'products', 'locations')
+    list_filter = ('provides_services', 'provides_products', 'locations')
+    filter_horizontal = ('services', 'products', 'locations')
     prepopulated_fields = {'slug': ('name',)}
 
 # Register PoliticalData
