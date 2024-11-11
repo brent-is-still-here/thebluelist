@@ -22,7 +22,7 @@ class EmailService:
             if text_content is None:
                 text_content = strip_tags(html_content)
 
-            response = self.client.send_email(
+            response = self.client.send(
                 sender=self.sender,
                 to=[{"email": to_email}],
                 subject=subject,
