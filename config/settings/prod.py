@@ -7,6 +7,9 @@ ALLOWED_HOSTS = ['.railway.app', 'thebluelist.us']
 
 # Database configuration
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+print(f"DATABASE_URL: {DATABASE_URL}")
+
 DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
