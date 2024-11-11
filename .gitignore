@@ -168,5 +168,4 @@ db.sqlite3
 .env
 .DS_Store
 *.log
-staticfiles/
 media/
