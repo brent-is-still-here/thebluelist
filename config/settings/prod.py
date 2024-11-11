@@ -60,7 +60,7 @@ LOGGING = {
 }
 
 DEBUG = False
-ALLOWED_HOSTS = ['.railway.app', 'thebluelist.us']
+ALLOWED_HOSTS = ['.railway.app', 'mybluelist.org', 'www.mybluelist.org']
 
 # Database configuration
 DATABASE_URL = os.getenv("DATABASE_URL")
