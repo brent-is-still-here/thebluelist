@@ -112,7 +112,7 @@
 
             <!-- Political Data -->
             <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Political Donations</h3>
+                <h3 class="text-lg font-medium text-gray-900">Political Donations from Company and Senior Employees</h3>
                 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -176,8 +176,40 @@
                     <label for="data_source" class="block text-sm font-medium text-gray-700">Data Source</label>
                     <input type="text" name="data_source" id="data_source" required
                            class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <p class="mt-1 text-sm text-gray-500">Please provide links or references for the donation data. We recommend <a href="https://opensecrets.org" target="_blank" rel="noopener noreferrer" 
-                        class="text-blue-800 hover:text-blue-900 underline">OpenSecrets.org</a>.</p>
+                    <div class="mt-1">
+                        <button type="button" onclick="toggleSourceInfo()" class="text-sm text-gray-500 flex items-center focus:outline-none hover:text-gray-700">
+                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path id="sourceArrow" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M19 9l-7 7-7-7" />
+                            </svg>
+                            Please provide links or references for the donation data
+                        </button>
+                        
+                        <div id="sourceInfo" class="hidden mt-2 p-3 bg-gray-50 rounded-md">
+                            <p class="text-sm text-gray-600">
+                                I recommend 
+                                <a href="https://opensecrets.org" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-blue-600 hover:text-blue-800 underline">
+                                    OpenSecrets.org
+                                </a>, 
+                                <a href="https://followthemoney.org" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-blue-600 hover:text-blue-800 underline">
+                                    FollowTheMoney.org
+                                </a>, 
+                                and 
+                                <a href="https://www.goodsuniteus.com" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-blue-600 hover:text-blue-800 underline">
+                                    GoodsUniteUs.com
+                                </a> 
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -192,6 +224,22 @@
         </form>
     </div>
 </div>
+
+<!-- JavaScript for Dynamic Expansion of Citation Recommendations-->
+<script>
+    function toggleSourceInfo() {
+        const sourceInfo = document.getElementById('sourceInfo');
+        const arrow = document.getElementById('sourceArrow');
+        
+        if (sourceInfo.classList.contains('hidden')) {
+            sourceInfo.classList.remove('hidden');
+            arrow.setAttribute('d', 'M19 15l-7-7-7 7');  // Point up
+        } else {
+            sourceInfo.classList.add('hidden');
+            arrow.setAttribute('d', 'M19 9l-7 7-7-7');   // Point down
+        }
+    }
+</script>
 
 <!-- JavaScript for Dynamic Search Functionality -->
 <script>
