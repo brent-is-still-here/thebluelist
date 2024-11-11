@@ -22,16 +22,16 @@ class EmailService:
             if text_content is None:
                 text_content = strip_tags(html_content)
 
-            response = self.client.send(
-                from_=self.sender,
+            response = self.client.send_email(
+                sender=self.sender,
                 to=[{"email": to_email}],
                 subject=subject,
-                html=html_content,
-                text=text_content
+                html_body=html_content,
+                text_body=text_content
             )
             
-            logger.info(f"Email sent successfully to {to_email}. Message ID: {response['message_ids']}")
-            return True, response['message_ids']
+            logger.info(f"Email sent successfully to {to_email}. Message ID: {response.message_id}")
+            return True, response.message_id
 
         except Exception as e:
             logger.error(f"Failed to send email to {to_email}: {str(e)}", exc_info=True)
@@ -50,21 +50,5 @@ class EmailService:
         
         html_content = render_to_string('users/emails/verification_email.html', context)
         text_content = render_to_string('users/emails/verification_email.txt', context)
-        
-        return self.send_email(user.email, subject, html_content, text_content)
-
-    def send_password_reset_email(self, user, reset_url):
-        """
-        Send password reset email
-        """
-        subject = "Reset your MyBlueList password"
-        
-        context = {
-            'user': user,
-            'reset_url': reset_url
-        }
-        
-        html_content = render_to_string('users/emails/password_reset_email.html', context)
-        text_content = render_to_string('users/emails/password_reset_email.txt', context)
         
         return self.send_email(user.email, subject, html_content, text_content)
