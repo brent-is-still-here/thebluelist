@@ -23,7 +23,6 @@ class EmailService:
                 text_content = strip_tags(html_content)
 
             response = self.client.send(
-                category='Transactional',  # or 'Marketing' if needed
                 from_=self.sender,
                 to=[{"email": to_email}],
                 subject=subject,
