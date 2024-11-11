@@ -63,10 +63,70 @@
         </div>
         {% endif %}
 
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4">
+            <div class="flex flex-col">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <!-- Info icon -->
+                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" 
+                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" 
+                                  clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            <span class="font-medium">Important Note on Political Donations:</span>
+                            Businesses and Organizations can contribute to Political Action Committees, but cannot contribute directly to candidates or party committees. 
+                            Figures displayed represent combined contributions from the business/organization, its affiliates and subsidiaries, and its employees.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Expandable Section -->
+                <div class="mt-4 ml-8">
+                    <button onclick="toggleDataInfo()" class="text-sm text-blue-600 hover:text-blue-800 flex items-center focus:outline-none">
+                        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path id="infoArrow" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M19 9l-7 7-7-7" />
+                        </svg>
+                        Learn more about our data sources and how to help
+                    </button>
+                    
+                    <div id="dataInfo" class="hidden mt-2 text-sm text-blue-700 bg-blue-50 p-4 rounded-md">
+                        <p class="mb-2">
+                            The Blue List is fully open source and operates on a wiki model where any user can contribute updates to correct inaccuracies. 
+                        </p>
+                        <p class="mb-2">
+                            All updates are reviewed to include a data citation and are subject to human review by a site admin before publication. 
+                        </p>
+                        <p>
+                            If you see something that is inaccurate, please submit an update so we can provide the best information possible to our users.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function toggleDataInfo() {
+                const dataInfo = document.getElementById('dataInfo');
+                const arrow = document.getElementById('infoArrow');
+                
+                if (dataInfo.classList.contains('hidden')) {
+                    dataInfo.classList.remove('hidden');
+                    arrow.setAttribute('d', 'M19 15l-7-7-7 7');  // Point up
+                } else {
+                    dataInfo.classList.add('hidden');
+                    arrow.setAttribute('d', 'M19 9l-7 7-7-7');   // Point down
+                }
+            }
+        </script>
+
         <!-- Political Data -->
         {% if business.politicaldata %}
         <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">Political Donations</h2>
+            <h2 class="text-xl font-semibold mb-4">Political Donations for Company and Senior Employees</h2>
             
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
