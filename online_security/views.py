@@ -21,7 +21,6 @@ def security_browse(request):
     query = request.GET.get('q', '').strip()
     category_id = request.GET.get('category')
     severity = request.GET.get('severity')
-    cost = request.GET.get('cost')
 
     # Start with all recommendations
     recommendations = Recommendation.objects.all()
@@ -40,9 +39,6 @@ def security_browse(request):
     if severity:
         recommendations = recommendations.filter(importance=severity)
 
-    if cost:
-        recommendations = recommendations.filter(solutions__cost_duration=cost)
-
     # Get all categories for the filter dropdown
     categories = Category.objects.all().order_by('order', 'name')
 
@@ -54,7 +50,6 @@ def security_browse(request):
             'query': query,
             'category': category_id,
             'severity': severity,
-            'cost': cost,
         }
     }
 
