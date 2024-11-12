@@ -1,0 +1,38 @@
+{
+    "categories": [
+        {
+            "name": "Automotive & Vehicle Supplies",
+            "children": [
+                {
+                    "name": "Motor Oil & Fluids",
+                    "children": []
+                },
+                {
+                    "name": "Automotive Parts",
+                    "children": []
+                },
+                {
+                    "name": "Automotive Accessories",
+                    "children": []
+                }
+            ]
+        },
+        {
+            "name": "Baby & Child Care Products",
+            "children": [
+                {
+                    "name": "Diapers & Wipes",
+                    "children": []
+                },
+                {
+                    "name": "Baby Formula",
+                    "children": []
+                },
+                {
+                    "name": "Baby Food",
+                    "children": []
+                }
+            ]
+        }
+    ]
+}

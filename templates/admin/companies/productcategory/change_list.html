@@ -4,7 +4,7 @@
     <div>
         <form action="{% url 'admin:import_categories' %}" method="POST">
             {% csrf_token %}
-            <input type="submit" value="Import All Categories" style="margin-bottom: 10px;"/>
+            <input type="submit" value="Import Categories" style="margin-bottom: 10px;"/>
         </form>
     </div>
     {{ block.super }}
