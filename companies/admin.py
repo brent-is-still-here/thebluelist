@@ -1,4 +1,3 @@
-# companies/admin.py
 from django.contrib import admin, messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import path, reverse
