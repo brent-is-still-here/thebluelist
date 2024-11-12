@@ -57,12 +57,21 @@ class CategoryAdmin(SecurityDataAdmin, admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path(
-                'populate-security-data/',
-                self.admin_site.admin_view(self.populate_security_data_view),
-                name='populate_security_data',
+                'populate-online-security-data/',
+                self.admin_site.admin_view(self.populate_online_security_data_view),
+                name='populate_online_security_data',
             ),
         ]
         return custom_urls + urls
+    
+    def populate_online_security_data_view(self, request):
+        from django.core.management import call_command
+        try:
+            call_command('populate_online_security_data')
+            self.message_user(request, 'Online Security data populated successfully!')
+        except Exception as e:
+            self.message_user(request, f'Error populating security data: {str(e)}', level=messages.ERROR)
+        return redirect('admin:online_security_category_changelist')
 
 @admin.register(Recommendation)
 class RecommendationAdmin(admin.ModelAdmin):
