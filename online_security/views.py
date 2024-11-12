@@ -1,10 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from .models import Category, Recommendation, Solution
-
-def security_landing(request):
-    """Landing page for the security center"""
-    return render(request, 'online_security/landing.html')
 
 def security_assessment(request):
     if request.method == 'POST':
@@ -63,3 +59,20 @@ def security_browse(request):
     }
 
     return render(request, 'online_security/browse.html', context)
+
+def security_landing(request):
+    """Landing page for the security center"""
+    return render(request, 'online_security/landing.html')
+
+def security_recommendation_detail(request, pk):
+    recommendation = get_object_or_404(
+        Recommendation.objects.prefetch_related(
+            'categories',
+            'solutions'
+        ),
+        pk=pk
+    )
+    
+    return render(request, 'online_security/recommendation_detail.html', {
+        'recommendation': recommendation
+    })
