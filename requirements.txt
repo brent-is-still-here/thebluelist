@@ -9,6 +9,7 @@ gunicorn==23.0.0
 idna==3.10
 mailtrap==2.0.1
 packaging==24.2
+pillow==11.0.0
 psycopg2-binary==2.9.10
 python-decouple==3.8
 requests==2.32.3
