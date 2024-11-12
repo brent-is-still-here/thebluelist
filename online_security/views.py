@@ -6,6 +6,19 @@ def security_landing(request):
     """Landing page for the security center"""
     return render(request, 'online_security/landing.html')
 
+def security_assessment(request):
+    if request.method == 'POST':
+        # Handle form submission and generate recommendations
+        # We'll implement this next
+        pass
+    
+    categories = Category.objects.prefetch_related('recommendations').all()
+    
+    return render(request, 'online_security/assessment.html', {
+        'categories': categories,
+        'total_categories': categories.count(),
+    })
+
 def security_browse(request):
     """Browse security recommendations with filtering"""
     # Get all filter parameters

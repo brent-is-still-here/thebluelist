@@ -1,0 +1,153 @@
+{% extends "users/base.html" %}
+
+{% block title %}Security Assessment - The Blue List{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    {# Progress Bar #}
+    <div class="mb-8">
+        <div class="flex justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700">Overall Progress</span>
+            <span class="text-sm font-medium text-gray-700" id="progress-text">0 of {{ total_categories }} Categories Complete</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <form method="post" id="assessment-form" class="space-y-8">
+        {% csrf_token %}
+        
+        {% for category in categories %}
+        <div class="bg-white rounded-lg shadow p-6 category-section" id="category-{{ category.id }}" 
+             {% if not forloop.first %}style="display: none;"{% endif %}>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ category.name }}</h2>
+            <p class="text-gray-600 mb-6">{{ category.description }}</p>
+
+            {% for recommendation in category.recommendations.all %}
+            <div class="mb-6 border-b border-gray-200 pb-6 last:border-0 last:pb-0">
+                <h3 class="text-lg font-medium text-gray-900 mb-2">{{ recommendation.name }}</h3>
+                <p class="text-gray-600 mb-4">{{ recommendation.description }}</p>
+                
+                <div class="flex items-center space-x-6">
+                    <label class="inline-flex items-center">
+                        <input type="radio" 
+                               name="recommendation_{{ recommendation.id }}" 
+                               value="yes"
+                               class="form-radio h-4 w-4 text-blue-600"
+                               required>
+                        <span class="ml-2 text-gray-700">Yes, I do this</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" 
+                               name="recommendation_{{ recommendation.id }}" 
+                               value="no"
+                               class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700">No, I need to do this</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" 
+                               name="recommendation_{{ recommendation.id }}" 
+                               value="na"
+                               class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700">Not applicable</span>
+                    </label>
+                </div>
+
+                {% if recommendation.importance == 'critical' %}
+                <div class="mt-2 text-sm text-red-600 flex items-center">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    Critical for your security
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="mt-8 flex justify-between">
+                {% if not forloop.first %}
+                <button type="button" 
+                        class="prev-category px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors">
+                    Previous Category
+                </button>
+                {% else %}
+                <div></div>
+                {% endif %}
+
+                {% if forloop.last %}
+                <button type="submit" 
+                        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                    Generate Recommendations
+                </button>
+                {% else %}
+                <button type="button" 
+                        class="next-category px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                    Next Category
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('assessment-form');
+    const sections = document.querySelectorAll('.category-section');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const totalCategories = {{ total_categories }};
+    let currentSection = 0;
+
+    // Update progress
+    function updateProgress() {
+        const progress = ((currentSection + 1) / totalCategories) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${currentSection + 1} of ${totalCategories} Categories`;
+    }
+
+    // Handle next button clicks
+    document.querySelectorAll('.next-category').forEach(button => {
+        button.addEventListener('click', () => {
+            // Validate current section
+            const currentInputs = sections[currentSection].querySelectorAll('input[type="radio"]');
+            let allAnswered = true;
+            currentInputs.forEach(input => {
+                const name = input.name;
+                if (!form.querySelector(`input[name="${name}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Please answer all questions in this section before continuing.');
+                return;
+            }
+
+            sections[currentSection].style.display = 'none';
+            currentSection++;
+            sections[currentSection].style.display = 'block';
+            updateProgress();
+            window.scrollTo(0, 0);
+        });
+    });
+
+    // Handle previous button clicks
+    document.querySelectorAll('.prev-category').forEach(button => {
+        button.addEventListener('click', () => {
+            sections[currentSection].style.display = 'none';
+            currentSection--;
+            sections[currentSection].style.display = 'block';
+            updateProgress();
+            window.scrollTo(0, 0);
+        });
+    });
+
+    // Initialize progress
+    updateProgress();
+});
+</script>
+{% endblock %}
