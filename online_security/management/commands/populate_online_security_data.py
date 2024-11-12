@@ -24,7 +24,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        data_file_path = os.path.join(settings.BASE_DIR, 'data', 'security_data.json')
+        data_file_path = os.path.join(settings.BASE_DIR, 'data', 'online_security.json')
         
         try:
             # Read data from local file

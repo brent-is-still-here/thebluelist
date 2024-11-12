@@ -1,4 +1,5 @@
-"categories": [
+{
+    "categories": [
         {
             "name": "Digital Footprint Management",
             "description": "Review and clean up your online presence to minimize exposure",
@@ -12,7 +13,7 @@
                     "order": 1,
                     "solutions": [
                         {
-                            "title": "Redact",
+                            "name": "Redact",
                             "type": "product",
                             "description": "Mass-delete old social media posts across multiple platforms with manual review",
                             "cost": "7.99",
@@ -23,8 +24,10 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "download_link": "https://redact.dev/download",
                             "order": 1
-                        },
+                        }
                     ]
                 }
             ]
-        },
+        }
+    ]
+}
