@@ -1,0 +1,11 @@
+# templates/admin/online_security/category/change_list.html
+{% extends "admin/change_list.html" %}
+{% block object-tools %}
+    <div>
+        <form action="{% url 'admin:populate_online_security_data' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Populate Online Security Data" style="margin-bottom: 10px;"/>
+        </form>
+    </div>
+    {{ block.super }}
+{% endblock %}

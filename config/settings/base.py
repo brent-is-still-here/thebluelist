@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'companies.apps.CompaniesConfig',
+    'online_security.apps.OnlineSecurityConfig',
     'users.apps.UsersConfig',
 ]
 

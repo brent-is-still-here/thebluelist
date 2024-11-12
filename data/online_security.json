@@ -1,0 +1,33 @@
+{
+    "categories": [
+        {
+            "name": "Digital Footprint Management",
+            "description": "Review and clean up your online presence to minimize exposure",
+            "importance": "critical",
+            "order": 1,
+            "recommendations": [
+                {
+                    "name": "Review & Clean Up Social Media",
+                    "description": "Systematically review and clean up your social media presence to reduce exposure",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Redact",
+                            "type": "product",
+                            "description": "Mass-delete old social media posts across multiple platforms with manual review",
+                            "cost": "7.99",
+                            "cost_duration": "monthly",
+                            "implementation_difficulty": "low",
+                            "learning_curve": "low",
+                            "implementation_time": "25 minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "download_link": "https://redact.dev/download",
+                            "order": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
