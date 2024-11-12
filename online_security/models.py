@@ -89,28 +89,12 @@ class Solution(OrderedModelMixin, models.Model):
         ('lifetime', 'Lifetime')
     ]
 
-    IMPLEMENTATION_DIFFICULTY_CHOICES = [
-        ('plug_and_play', 'Plug-and-Play'),
-        ('smooth_setup', 'Smooth Setup'),
-        ('moderate_integration', 'Moderate Integration'),
-        ('complex_configuration', 'Complex Configuration'),
-        ('heavy_lifting', 'Heavy Lifting')
-    ]
-
-    MANAGEMENT_DIFFICULTY_CHOICES = [
-        ('hands_off', 'Hands-Off'),
-        ('low_maintenance', 'Low Maintenance'),
-        ('steady_oversight', 'Steady Oversight'),
-        ('high_touch', 'High Touch'),
-        ('constant_vigilance', 'Constant Vigilance')
-    ]
-
-    LEARNING_CURVE_CHOICES = [
-        ('intuitive', 'Intuitive'),
-        ('familiar_territory', 'Familiar Territory'),
-        ('gradual_learning', 'Gradual Learning'),
-        ('steep_climb', 'Steep Climb'),
-        ('expert_only', 'Expert-Only')
+    DIFFICULTY_CHOICES = [
+        ('very_easy', 'Very Easy'),
+        ('easy', 'Easy'),
+        ('medium', 'Medium'),
+        ('hard', 'Hard'),
+        ('very_hard', 'Very Hard')
     ]
 
     name = models.CharField(max_length=200)
@@ -137,20 +121,20 @@ class Solution(OrderedModelMixin, models.Model):
         blank=True
     )
     implementation_difficulty = models.CharField(
-        max_length=25,
-        choices=IMPLEMENTATION_DIFFICULTY_CHOICES,
+        max_length=10,
+        choices=DIFFICULTY_CHOICES,
         null=True, 
         blank=True
     )
     management_difficulty = models.CharField(
-        max_length=25,
-        choices=MANAGEMENT_DIFFICULTY_CHOICES,
+        max_length=10,
+        choices=DIFFICULTY_CHOICES,
         null=True, 
         blank=True
     )
     learning_curve = models.CharField(
-        max_length=25,
-        choices=LEARNING_CURVE_CHOICES,
+        max_length=10,
+        choices=DIFFICULTY_CHOICES,
         null=True, 
         blank=True
     )
@@ -172,19 +156,13 @@ class Solution(OrderedModelMixin, models.Model):
         return self.name
 
 class Tutorial(OrderedModelMixin, models.Model):
-    TUTORIAL_DIFFICULTY_CHOICES = [
-        ('easy', 'Easy'),
-        ('medium', 'Medium'),
-        ('difficult', 'Difficult')
-    ]
-
     solution = models.ForeignKey(Solution, on_delete=models.CASCADE, related_name='tutorials')
     name = models.CharField(max_length=200)
     description = models.TextField()
     estimated_time = models.CharField(max_length=100)
     difficulty = models.CharField(
         max_length=10,
-        choices=TUTORIAL_DIFFICULTY_CHOICES
+        choices=Solution.DIFFICULTY_CHOICES
     )
     order = models.IntegerField(default=0)
 
