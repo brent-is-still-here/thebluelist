@@ -640,7 +640,7 @@
                             "strengths": "Zero-knowledge encryption.",
                             "weaknesses": "Higher cost than alternatives.",
                             "order": 2
-                        },
+                        }
                     ]
                 }
             ]
