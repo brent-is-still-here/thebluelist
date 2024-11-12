@@ -97,6 +97,12 @@ class Solution(OrderedModelMixin, models.Model):
         ('very_hard', 'Very Hard')
     ]
 
+    TIME_UNITS = [
+        ('minutes', 'Minutes'),
+        ('hours', 'Hours'),
+        ('days', 'Days')
+    ]
+
     name = models.CharField(max_length=200)
     logo_icon = models.ImageField(upload_to='solution_logos/', null=True, blank=True)
     description = models.TextField()
@@ -139,6 +145,12 @@ class Solution(OrderedModelMixin, models.Model):
         blank=True
     )
     implementation_time = models.CharField(max_length=100, null=True, blank=True)
+    implementation_time_unit = models.CharField(
+        max_length=10,
+        choices=TIME_UNITS,
+        null=True,
+        blank=True
+    )
     supported_platforms = ArrayField(
         models.CharField(max_length=50),
         validators=[validate_platforms],

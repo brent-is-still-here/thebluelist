@@ -1,8 +1,8 @@
 {
     "categories": [
         {
-            "name": "Review & Clean Up Your Online Presence",
-            "description": "Review your digital footprint to reduce exposure.",
+            "name": "Digital Footprint & Online Presence",
+            "description": "Regularly reviewing your digital footprint helps minimize the risk of being targeted for your online activities. By removing old posts and sensitive data, you reduce the chances of being identified or tracked for dissenting opinions.",
             "importance": "critical",
             "order": 1,
             "recommendations": [
@@ -19,8 +19,10 @@
                             "cost": "7.99",
                             "cost_duration": "monthly",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "25 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "20",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "download_link": "https://redact.dev/download",
                             "order": 1
@@ -32,10 +34,13 @@
                             "cost": "0",
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "10",
+                            "implementation_time_unit": "minutes",
                             "strengths": "Free Twitter history cleanup.",
                             "weaknesses": "Limited to Twitter only.",
+                            "download_link": null,
                             "order": 2
                         }
                     ]
@@ -43,8 +48,8 @@
             ]
         },
         {
-            "name": "Secure Your Social Media & Accounts",
-            "description": "Protect your accounts with strong passwords and 2FA.",
+            "name": "Passwords & Access Management",
+            "description": "Using strong passwords and enabling two-factor authentication (2FA) safeguards your accounts from unauthorized access by state actors. These measures are critical for keeping your communications and online activities private.",
             "importance": "critical",
             "order": 2,
             "recommendations": [
@@ -60,12 +65,15 @@
                             "description": "Secure open-source password manager.",
                             "cost": "10",
                             "cost_duration": "annual",
-                            "implementation_difficulty": "medium",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "1 hour",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Open-source, cross-platform, 2FA support.",
                             "weaknesses": "Steeper learning curve.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -75,11 +83,14 @@
                             "cost": "36",
                             "cost_duration": "annual",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "1 hour",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "User-friendly, strong encryption.",
                             "weaknesses": "Paid subscription required.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -89,11 +100,14 @@
                             "cost": "36",
                             "cost_duration": "annual",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "1 hour",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Easy to use.",
                             "weaknesses": "Recent security breaches.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -101,8 +115,8 @@
             ]
         },
         {
-            "name": "Secure Your Devices",
-            "description": "Protect your devices using encryption.",
+            "name": "Local Data Encryption",
+            "description": "Encrypting your devices ensures that even if they are seized or accessed, your data remains unreadable. This is essential for protecting sensitive information, including communication with trusted contacts.",
             "importance": "critical",
             "order": 3,
             "recommendations": [
@@ -118,12 +132,15 @@
                             "description": "Open-source disk encryption software for securing data.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "hard",
-                            "learning_curve": "high",
-                            "implementation_time": "2-3 hours",
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "3",
+                            "implementation_time_unit": "hours",
                             "supported_platforms": ["MacOS", "Windows", "Linux"],
                             "strengths": "Powerful encryption, versatile.",
                             "weaknesses": "Complex for non-technical users.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -133,11 +150,14 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
-                            "learning_curve": "medium",
-                            "implementation_time": "1 hour",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "1",
+                            "implementation_time_unit": "hours",
                             "supported_platforms": ["Windows"],
                             "strengths": "Windows integration, easy to use.",
                             "weaknesses": "Limited to certain Windows editions.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -147,11 +167,14 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "1 hour",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
                             "supported_platforms": ["MacOS"],
                             "strengths": "Native macOS integration.",
                             "weaknesses": "Limited to Apple ecosystem.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -159,8 +182,8 @@
             ]
         },
         {
-            "name": "Use Secure Browsing & Communication Tools",
-            "description": "Enhance your online privacy with secure tools.",
+            "name": "Secure Browsing & Communications",
+            "description": "Using privacy-focused browsers, VPNs, and secure messaging apps shields your online activity from 3rd-party monitoring. These tools help you stay anonymous, protect your location, and secure your conversations from hackers and surveillance.",
             "importance": "critical",
             "order": 4,
             "recommendations": [
@@ -177,11 +200,14 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Built-in ad/tracker blocking, Tor integration.",
                             "weaknesses": "Can break some websites.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -191,11 +217,14 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
-                            "learning_curve": "medium",
-                            "implementation_time": "1-2 hours",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Customizable, privacy-focused extensions.",
                             "weaknesses": "Requires manual setup.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -205,26 +234,21 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
-                            "learning_curve": "medium",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Full anonymity through Tor network.",
                             "weaknesses": "Slower speeds.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "name": "Use Secure Browsing & Communication Tools",
-            "description": "Protect your online privacy with secure tools.",
-            "importance": "critical",
-            "order": 4,
-            "recommendations": [
+                },
                 {
                     "name": "VPN Services",
-                    "description": "Use VPNs to secure your internet connection.",
+                    "description": "Use Virtual Private Networks (VPNs) to secure your internet connection.",
                     "importance": "critical",
                     "order": 2,
                     "solutions": [
@@ -234,12 +258,15 @@
                             "description": "A privacy-focused VPN with a no-logs policy.",
                             "cost": "5.31",
                             "cost_duration": "monthly",
-                            "implementation_difficulty": "medium",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "30 minutes",
+                            "implementation_time": "10",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "No-logs policy, anonymous payment.",
                             "weaknesses": "Smaller server network.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -249,11 +276,14 @@
                             "cost": "9.99",
                             "cost_duration": "monthly",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Swiss-based, strong privacy features.",
                             "weaknesses": "Higher premium costs.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -263,17 +293,20 @@
                             "cost": "12.95",
                             "cost_duration": "monthly",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Fast speeds, strong encryption.",
                             "weaknesses": "Recent questionable acquisition.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
                 },
                 {
-                    "name": "Secure Messaging",
+                    "name": "Secure Mobile Messaging",
                     "description": "Use secure messaging apps to protect communication.",
                     "importance": "critical",
                     "order": 3,
@@ -285,11 +318,14 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "15 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Minimal metadata, highly secure.",
                             "weaknesses": "Requires phone number.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -299,11 +335,14 @@
                             "cost": "0",
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "15 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "GDPR compliant, anonymous signup.",
                             "weaknesses": "Smaller user base.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -313,11 +352,14 @@
                             "cost": 3.99,
                             "cost_duration": "one-time",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "15 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "No phone number required.",
                             "weaknesses": "Paid app, small user base.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -325,8 +367,8 @@
             ]
         },
         {
-            "name": "Practice Safe Internet Usage",
-            "description": "Use tools that protect your privacy while browsing.",
+            "name": "Safe Internet Usage",
+            "description": "Using private search engines and adopting safe browsing practices minimizes the data you leave behind that could be used for tracking or profiling. This is especially important in environments where online searches and website visits are monitored by authorities.",
             "importance": "recommended",
             "order": 5,
             "recommendations": [
@@ -343,10 +385,13 @@
                             "cost": "0",
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "5 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
                             "strengths": "No tracking, simple to use.",
                             "weaknesses": "Limited results vs Google.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -356,10 +401,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "5 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
                             "strengths": "Google results without tracking.",
                             "weaknesses": "Slower than Google.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -368,11 +416,14 @@
                             "description": "Open-source search engine with customizable settings.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "hard",
-                            "learning_curve": "high",
-                            "implementation_time": "2-3 hours",
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "4",
+                            "implementation_time_unit": "hours",
                             "strengths": "Customizable, open-source.",
                             "weaknesses": "Requires technical setup.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -380,8 +431,8 @@
             ]
         },
         {
-            "name": "Reduce Digital Footprint & Metadata Exposure",
-            "description": "Manage and reduce your digital footprint to protect your privacy.",
+            "name": "Digital Footprint & Metadata Exposure",
+            "description": "Removing metadata from files like photos can prevent authorities from discovering your location or the identities of those you interact with. Ensuring your files are stripped of identifying data is critical when sharing information online, especially in repressive environments.",
             "importance": "recommended",
             "order": 6,
             "recommendations": [
@@ -397,12 +448,15 @@
                             "description": "Powerful command-line tool for removing metadata.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "hard",
-                            "learning_curve": "high",
-                            "implementation_time": "1-2 hours",
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
                             "supported_platforms": ["MacOS", "Windows"],
                             "strengths": "Highly versatile, handles many file formats.",
                             "weaknesses": "Requires technical knowledge.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -412,11 +466,14 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "15 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS"],
                             "strengths": "Drag-and-drop interface.",
                             "weaknesses": "macOS only.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -426,10 +483,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "1 hour",
+                            "implementation_time": "1",
+                            "implementation_time_unit": "hours",
                             "strengths": "Handles various file types.",
                             "weaknesses": "Primarily Linux-based.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -437,8 +497,8 @@
             ]
         },
         {
-            "name": "Be Cautious with Social Networks & Messaging Apps",
-            "description": "Consider using privacy-focused social media platforms.",
+            "name": "Social Networking Apps",
+            "description": "Switching to privacy-focused social platforms can help prevent your personal information and social connections from being exploited. These platforms offer better privacy controls, reducing the risk of your data being accessed or monitored.",
             "importance": "optional",
             "order": 7,
             "recommendations": [
@@ -455,10 +515,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
-                            "learning_curve": "medium",
-                            "implementation_time": "1 hour",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "strengths": "Decentralized, open-source.",
                             "weaknesses": "Smaller user base.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -468,10 +531,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
                             "strengths": "No ads, privacy-focused.",
                             "weaknesses": "Paid features.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -481,10 +547,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
-                            "learning_curve": "medium",
-                            "implementation_time": "1 hour",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "1",
+                            "implementation_time_unit": "hours",
                             "strengths": "Open-source, decentralized.",
                             "weaknesses": "Less user-friendly.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -492,8 +561,8 @@
             ]
         },
         {
-            "name": "Use Anonymous & Secure Payment Methods",
-            "description": "Adopt secure payment methods for enhanced privacy.",
+            "name": "Anonymous & Secure Payment Methods",
+            "description": "Using cryptocurrencies and secure payment methods allows for anonymous transactions, protecting you from financial surveillance. This can be crucial if you need to support causes without drawing unwanted attention.",
             "importance": "optional",
             "order": 8,
             "recommendations": [
@@ -509,11 +578,14 @@
                             "description": "Privacy-focused cryptocurrency.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "hard",
-                            "learning_curve": "high",
-                            "implementation_time": "2-3 hours",
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "3",
+                            "implementation_time_unit": "hours",
                             "strengths": "Best privacy features.",
                             "weaknesses": "Limited acceptance.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -523,10 +595,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "hard",
-                            "learning_curve": "high",
-                            "implementation_time": "2-3 hours",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
                             "strengths": "Optional transaction privacy.",
                             "weaknesses": "Requires shielded addresses.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -535,11 +610,14 @@
                             "description": "Use Bitcoin with privacy-focused CoinJoin technique.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "hard",
-                            "learning_curve": "high",
-                            "implementation_time": "2-3 hours",
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "3",
+                            "implementation_time_unit": "hours",
                             "strengths": "Widely accepted.",
                             "weaknesses": "Requires additional privacy tools.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -547,8 +625,8 @@
             ]
         },
         {
-            "name": "Be Aware of Phishing & Social Engineering Attacks",
-            "description": "Protect yourself from phishing attacks and social engineering.",
+            "name": "Phishing & Social Engineering Prevention",
+            "description": "Defending against phishing attacks and social engineering helps you avoid being tricked into revealing sensitive information that could be used against you. Staying vigilant reduces the risk of being targeted by attackers.",
             "importance": "critical",
             "order": 9,
             "recommendations": [
@@ -564,11 +642,14 @@
                             "description": "Open-source ad blocker that prevents tracking and blocks malicious domains.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "medium",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "30 minutes",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
                             "strengths": "Blocks malicious domains, highly customizable.",
                             "weaknesses": "Requires some configuration.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -578,10 +659,13 @@
                             "cost": 39.99,
                             "cost_duration": "annual",
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "30 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
                             "strengths": "Comprehensive tracking protection.",
                             "weaknesses": "Subscription required.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -591,10 +675,13 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "15 minutes",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
                             "strengths": "Free protection against phishing.",
                             "weaknesses": "May block legitimate sites.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -602,8 +689,8 @@
             ]
         },
         {
-            "name": "Backup Data Securely & Prepare for Worst-Case Scenarios",
-            "description": "Securely backup your data to prepare for potential data loss.",
+            "name": "Data Backup & Disaster Recovery",
+            "description": "Regularly backing up your data both locally and to the cloud ensures you have copies of critical files in case of device destruction, device seizure, or forced relocations. Having encrypted backups allows you to preserve important information and continue your work even if your equipment is compromised.",
             "importance": "critical",
             "order": 10,
             "recommendations": [
@@ -619,12 +706,15 @@
                             "description": "Encrypts cloud storage for secure backups.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "medium",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "1-2 hours",
+                            "implementation_time": "20",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Open-source, easy to use.",
                             "weaknesses": "Requires manual setup with cloud services.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -634,11 +724,14 @@
                             "cost": "6",
                             "cost_duration": "monthly",
                             "implementation_difficulty": "medium",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "1-2 hours",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
                             "supported_platforms": ["MacOS", "Windows", "Linux"],
                             "strengths": "Zero-knowledge encryption.",
                             "weaknesses": "Higher cost than alternatives.",
+                            "download_link": null,
                             "order": 2
                         }
                     ]
@@ -646,8 +739,8 @@
             ]
         },
         {
-            "name": "Increase Physical Security Measures for Devices",
-            "description": "Enhance physical security to protect your devices.",
+            "name": "Physical Security Measures for Devices",
+            "description": "Using tools like Faraday bags and signal blockers prevents your devices from being tracked or hacked wirelessly by authorities. This is crucial for those operating in high-risk areas or during protests where surveillance is prevalent.",
             "importance": "optional",
             "order": 11,
             "recommendations": [
@@ -663,11 +756,13 @@
                             "description": "High-quality Faraday bags for signal blocking.",
                             "cost": 49.99,
                             "cost_duration": "one-time",
-                            "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "immediate",
+                            "implementation_difficulty": "very_easy",
+                            "management_difficulty": null,
+                            "learning_curve": "very_easy",
+                            "implementation_time": null,
                             "strengths": "Effective signal blocking.",
                             "weaknesses": "Expensive.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -676,11 +771,13 @@
                             "description": "Faraday bags with multiple size options.",
                             "cost": 69.99,
                             "cost_duration": "one-time",
-                            "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "immediate",
+                            "implementation_difficulty": "very_easy",
+                            "management_difficulty": null,
+                            "learning_curve": "very_easy",
+                            "implementation_time": null,
                             "strengths": "Variety of sizes.",
                             "weaknesses": "Costly.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -689,11 +786,13 @@
                             "description": "Affordable signal-blocking solutions.",
                             "cost": 29.99,
                             "cost_duration": "one-time",
-                            "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "immediate",
+                            "implementation_difficulty": "very_easy",
+                            "management_difficulty": null,
+                            "learning_curve": "very_easy",
+                            "implementation_time": null,
                             "strengths": "Affordable.",
                             "weaknesses": "Less tested.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
@@ -701,8 +800,8 @@
             ]
         },
         {
-            "name": "Educate Yourself & Stay Updated",
-            "description": "Continuous education on digital security to stay protected.",
+            "name": "Continuous Education",
+            "description": "Staying informed about the latest digital security threats and privacy techniques helps you adapt to evolving surveillance tactics. Continuous learning empowers you to protect yourself and your community from state-sponsored attacks and repression.",
             "importance": "critical",
             "order": 12,
             "recommendations": [
@@ -718,11 +817,13 @@
                             "description": "Comprehensive guides on digital rights and privacy.",
                             "cost": null,
                             "cost_duration": null,
-                            "implementation_difficulty": "medium",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "ongoing",
+                            "implementation_time": null,
                             "strengths": "Free guides, trusted source.",
                             "weaknesses": "US-focused content.",
+                            "download_link": null,
                             "order": 1
                         },
                         {
@@ -732,10 +833,12 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
+                            "management_difficulty": null,
                             "learning_curve": "medium",
-                            "implementation_time": "ongoing",
+                            "implementation_time": null,
                             "strengths": "Comprehensive tool lists.",
                             "weaknesses": "Can overwhelm beginners.",
+                            "download_link": null,
                             "order": 2
                         },
                         {
@@ -745,10 +848,12 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "easy",
-                            "learning_curve": "low",
-                            "implementation_time": "ongoing",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": null,
                             "strengths": "Regular updates.",
                             "weaknesses": "Product-focused content.",
+                            "download_link": null,
                             "order": 3
                         }
                     ]
