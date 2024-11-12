@@ -1,4 +1,3 @@
-# online_security/models.py
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
