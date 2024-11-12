@@ -6,7 +6,7 @@ from django.db.models import F
 from django.contrib.postgres.fields import ArrayField
 
 def validate_platforms(value):
-    valid_platforms = {'Mac', 'Windows', 'Linux', 'Android', 'iOS'}
+    valid_platforms = {'Mac', 'Windows', 'Linux', 'Android', 'iOS', 'Browser'}
     invalid_platforms = [platform for platform in value if platform not in valid_platforms]
     if invalid_platforms:
         raise ValidationError(
