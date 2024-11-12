@@ -20,7 +20,7 @@ def security_browse(request):
     # Get all filter parameters
     query = request.GET.get('q', '').strip()
     category_id = request.GET.get('category')
-    difficulty = request.GET.get('difficulty')
+    severity = request.GET.get('severity')
     cost = request.GET.get('cost')
 
     # Start with all recommendations
@@ -37,8 +37,8 @@ def security_browse(request):
     if category_id:
         recommendations = recommendations.filter(categories__id=category_id)
 
-    if difficulty:
-        recommendations = recommendations.filter(importance=difficulty)
+    if severity:
+        recommendations = recommendations.filter(importance=severity)
 
     if cost:
         recommendations = recommendations.filter(solutions__cost_duration=cost)
@@ -53,7 +53,7 @@ def security_browse(request):
         'current_filters': {
             'query': query,
             'category': category_id,
-            'difficulty': difficulty,
+            'severity': severity,
             'cost': cost,
         }
     }

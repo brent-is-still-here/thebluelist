@@ -46,16 +46,16 @@
         </select>
       </div>
 
-      {# Difficulty Filter #}
+      {# Severity Filter #}
       <div>
         <select
-          name="difficulty"
+          name="severity"
           class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="">All Difficulties</option>
-          <option value="easy" {% if request.GET.difficulty == 'easy' %}selected{% endif %}>Easy</option>
-          <option value="medium" {% if request.GET.difficulty == 'medium' %}selected{% endif %}>Medium</option>
-          <option value="hard" {% if request.GET.difficulty == 'hard' %}selected{% endif %}>Hard</option>
+          <option value="">All Severities</option>
+          <option value="critical" {% if request.GET.importance == 'critical' %}selected{% endif %}>Critical</option>
+          <option value="recommended" {% if request.GET.importance == 'recommended' %}selected{% endif %}>Recommended</option>
+          <option value="optional" {% if request.GET.importance == 'optional' %}selected{% endif %}>Optional</option>
         </select>
       </div>
 
@@ -68,7 +68,6 @@
           <option value="">All Costs</option>
           <option value="free" {% if request.GET.cost == 'free' %}selected{% endif %}>Free</option>
           <option value="paid" {% if request.GET.cost == 'paid' %}selected{% endif %}>Paid</option>
-          <option value="subscription" {% if request.GET.cost == 'subscription' %}selected{% endif %}>Subscription</option>
         </select>
       </div>
     </div>
@@ -95,7 +94,7 @@
       </p>
       <div class="space-y-2 mb-4">
         <div class="flex items-center text-sm text-gray-500">
-          <span class="w-20">Difficulty:</span>
+          <span class="w-20">Severity:</span>
           <span class="{% if recommendation.importance == 'critical' %}text-red-600{% elif recommendation.importance == 'recommended' %}text-yellow-600{% else %}text-green-600{% endif %}">
             {{ recommendation.importance|title }}
           </span>
