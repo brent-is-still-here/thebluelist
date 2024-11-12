@@ -257,6 +257,14 @@
             productsSection.classList.toggle('hidden', !productsCheckbox.checked);
         });
     
+        // Function to create category display text
+        function getCategoryDisplayText(category) {
+            if (category.parent_name) {
+                return `${category.name} (in ${category.parent_name})`;
+            }
+            return category.name;
+        }
+    
         // Function to fetch categories via AJAX
         function fetchCategories(searchTerm, categoryType) {
             fetch(`/filter-categories/?q=${encodeURIComponent(searchTerm)}&type=${categoryType}`)
@@ -268,12 +276,28 @@
                     element.innerHTML = '';
     
                     if (data.results.length > 0) {
-                        data.results.forEach(item => {
+                        // Sort results to show parents first
+                        const sortedResults = data.results.sort((a, b) => {
+                            // Put parent categories first
+                            if (!a.parent_id && b.parent_id) return -1;
+                            if (a.parent_id && !b.parent_id) return 1;
+                            // Then sort alphabetically
+                            return a.name.localeCompare(b.name);
+                        });
+
+                        sortedResults.forEach(item => {
                             const label = document.createElement('label');
                             label.classList.add('flex', 'items-center', 'p-2', 'hover:bg-gray-50');
+                            label.setAttribute('data-category-id', item.id);
+                            label.setAttribute('data-parent-id', item.parent_id || '');
+                            
+                            const displayText = getCategoryDisplayText(item);
+                            
                             label.innerHTML = `
-                                <input type="checkbox" name="${categoryType}" value="${item.id}" class="rounded">
-                                <span class="ml-2 text-sm">${item.name}</span>
+                                <input type="checkbox" name="${categoryType}" 
+                                       value="${item.id}" 
+                                       class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                <span class="ml-2 text-sm text-gray-700">${displayText}</span>
                             `;
                             element.appendChild(label);
                         });
@@ -281,15 +305,33 @@
                     } else {
                         document.querySelector(noResults).classList.remove('hidden');
                     }
+                })
+                .catch(error => {
+                    console.error('Error fetching categories:', error);
                 });
         }
     
-        // Event listeners for search inputs
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    
+        // Event listeners for search inputs with debounce
+        const debouncedFetch = debounce(fetchCategories, 300);
+        
         document.getElementById('service-search').addEventListener('input', function () {
-            fetchCategories(this.value, 'services');
+            debouncedFetch(this.value, 'services');
         });
         document.getElementById('product-search').addEventListener('input', function () {
-            fetchCategories(this.value, 'products');
+            debouncedFetch(this.value, 'products');
         });
     });
 </script>
