@@ -1,0 +1,11 @@
+# templates/admin/companies/productcategory/change_list.html
+{% extends "admin/change_list.html" %}
+{% block object-tools %}
+    <div>
+        <form action="{% url 'admin:import_categories' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Import All Categories" style="margin-bottom: 10px;"/>
+        </form>
+    </div>
+    {{ block.super }}
+{% endblock %}
