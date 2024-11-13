@@ -1,23 +1,161 @@
-# thebluelist
+# The Blue List
 
-I bought up mybluelist.org and will be posting the site as soon as I have the scaffolding in place.  It’s an open source project that offers 4 main things:
+A privacy-focused web application helping users make informed decisions about businesses, online security, home safety, and relocation options.
 
-1. Businesses / shopping reference.
-    - This section will allow users to ensure their money doesn't go to companies that fund authoritarian regimes.
-    - Search by a business name or a category (groceries). It tells you the donation % over the past 2 years that went to R or D, and if they donated to Trump directly, the Save America PAC directly, or the America PAC directly. It then recommends alternatives companies that operate in the same space.
-    - Additionally, searches can be limited by inputting a zip code or city / town name and a radius to find options close to where you are / will be.  Location data must never be requested or stored / harvested by this app.
+## Overview
 
-2. Safety at Home reference.
-    - This section helps users stay safe at home by providing plans and references. Given the damage Trump did to our institutions last time and the assumed appointment of RFK to oversee the FDA and CDC, this will be a list of things you can do at home to ensure you have access to clean food, water, that you’re vaccinated ahead of time, etc.
-    - A general checklist can be downloaded.
-    - Users can fill in a questionnaire that asks about number of people, number of pets, amount of indoor space, access to private outdoor space, amount of private outdoor space, climate or zip code, allergies. Then it generates a recommended plan to ensure access to safe food, safe water, and medical care.
+The Blue List is an open-source platform providing resources and tools across four key areas:
 
-3. Safety Online reference.  
-    - This one is just a checklist of things that you should do ahead of this new regime. He already tore down net neutrality last time and Project 2025 is terrible. At the very least, people need E2E encrypted communication instead of standard messages, secure browsers instead of Chrome / Safari / Firefox / Edge, VPN and TOR setup instructions, etc.
+1. **Ethical Business Directory**: Track political donations and find ethical alternatives
+2. **Home Safety Guide**: Access personalized safety and preparedness recommendations
+3. **Online Security Center**: Get customized digital security checklists and guides
+4. **Relocation Resources**: Explore international relocation options and requirements
 
-4. Relocation reference. 
-    - This one will have a list of countries that are friendly to US expats and a checklist to help people choose and relocate. 
-    - An initial safety checklist will include items such as "ensure all family members have passports", "ensure all pets have vaccination records", "ensure all passports are valid for at least 3 years", etc.
-    - Users can fill out a questionnare including number of family members, number of pets, professional fields by family member, nationality -2 generations, etc. It will then make recommendations in order of best fit based on your answers. For each, it will output a guide to applying for a visa, a preparation checklist, a cost of living guide, a recommendation on finding work for that country, and an estimated budget.
+## PRIVACY DISCLAIMER
+The Blue List does not collect any user information. A valid email address is required to add or edit business listings on The Blue List, but no other PII or user data is collected at any time.
 
-The project will be open-source to ensure no single entity can fully shut it down. I'm looking at hosting outside the US once it's online.  To start it's in Github and going into GCP. I recommend that everyone clone this repo and keep it up to date so you have a local copy should it vanish.
+## Features
+
+### Ethical Business Directory
+- Search companies by name or category
+- View political donation history and percentages
+- Find ethical alternatives in the same business category
+- Location-based searching without tracking
+- Private and secure - no user location data stored
+
+### Home Safety Guide
+- Downloadable general safety checklists
+- Personalized recommendations based on:
+  - Household size
+  - Pets
+  - Living space
+  - Climate considerations
+  - Medical requirements
+- Focus on food safety, water access, and medical care
+
+### Online Security Center
+- Comprehensive security assessments
+- Customized security checklists
+- Recommendations for:
+  - Encrypted communications
+  - Secure browsers
+  - VPN configuration
+  - Network security
+  - Data protection
+
+### Relocation Resources
+- Country guides for US expats
+- Interactive questionnaires for personalized recommendations
+- Detailed checklists covering:
+  - Documentation requirements
+  - Visa applications
+  - Cost of living estimates
+  - Employment opportunities
+  - Preparation timelines
+
+## Privacy & Security
+
+- No user tracking
+- No location data collection
+- No personal data storage
+- Open-source for transparency
+
+## Installation
+
+### Prerequisites
+- Python 3.11+
+- PostgreSQL
+- Node.js & npm (for frontend assets)
+
+### Local Development Setup
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/thebluelist.git
+cd thebluelist
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your configurations
+
+# Run migrations
+python manage.py migrate
+
+# Start development server
+python manage.py runserver
+```
+
+### Configuration
+Key environment variables:
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+SECRET_KEY=your-secret-key
+DEBUG=True
+```
+
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) first.
+
+### Development Process
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
+
+### Code Style
+- Follow PEP 8 for Python code
+- Use Black for code formatting
+- Include docstrings for all functions
+
+## Testing
+
+```bash
+# Run all tests
+python manage.py test
+
+# Run specific test suite
+python manage.py test online_security
+```
+
+## Deployment
+
+The application is designed to be deployed on any Python-compatible hosting platform. Currently tested with:
+- Railway
+- Google Cloud Platform
+- AWS
+
+## Staying Updated
+
+To ensure you have the latest version:
+
+```bash
+git pull origin main
+pip install -r requirements.txt
+python manage.py migrate
+```
+
+## License
+
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3.0 - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+- [Open an issue](https://github.com/yourusername/thebluelist/issues)
+
+## Project Status
+
+Currently in active development. See our [project board](https://github.com/yourusername/thebluelist/projects) for current progress and upcoming features.
+
+## Acknowledgments
+
+- All contributors and maintainers
+- Open source community
+- Privacy and security advocates
