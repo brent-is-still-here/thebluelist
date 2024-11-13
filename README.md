@@ -56,7 +56,7 @@ The Blue List is an open-source platform providing resources and tools across fo
 - No user tracking
 - No location data collection
 - No personal data storage
-  - A valid email address is required only to add or update entries
+  - A valid email address is required to create an account, but is deleted after first login.
 - Open-source for transparency
 
 ## Installation
