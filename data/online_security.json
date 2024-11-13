@@ -1,14 +1,14 @@
 {
     "categories": [
         {
-            "name": "Digital Footprint Management",
-            "description": "Review and clean up your online presence to minimize exposure",
+            "name": "Digital Footprint & Online Presence",
+            "description": "Regularly reviewing your digital footprint helps minimize the risk of being targeted for your online activities. By removing old posts and sensitive data, you reduce the chances of being identified or tracked for dissenting opinions.",
             "importance": "critical",
             "order": 1,
             "recommendations": [
                 {
-                    "name": "Review & Clean Up Social Media",
-                    "description": "Systematically review and clean up your social media presence to reduce exposure",
+                    "name": "Social Media Review & Cleanup",
+                    "description": "Regularly review your social media accounts to delete sensitive posts or outdated content that could reveal your political opinions, location, or connections. This reduces the risk of your past online activity being used against you.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -17,13 +17,851 @@
                             "type": "product",
                             "description": "Mass-delete old social media posts across multiple platforms with manual review",
                             "cost": "7.99",
-                            "cost_duration": "monthly",
-                            "implementation_difficulty": "low",
-                            "learning_curve": "low",
-                            "implementation_time": "25 minutes",
+                            "cost_duration": "month",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "20",
+                            "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Automates deletion of past social media posts across multiple platforms.",
+                            "weaknesses": "Limited support for less popular or niche platforms.",
                             "download_link": "https://redact.dev/download",
                             "order": 1
+                        },
+                        {
+                            "name": "TweetDelete",
+                            "type": "service",
+                            "description": "Automated deletion of old tweets.",
+                            "cost": "0",
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "10",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["Browser"],
+                            "strengths": "Free Twitter history cleanup.",
+                            "weaknesses": "Limited to Twitter only.",
+                            "download_link": "https://tweetdelete.net/",
+                            "order": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Passwords & Access Management",
+            "description": "Using strong passwords and enabling two-factor authentication (2FA) safeguards your accounts from unauthorized access by state actors. These measures are critical for keeping your communications and online activities private.",
+            "importance": "critical",
+            "order": 2,
+            "recommendations": [
+                {
+                    "name": "Password & 2FA Management",
+                    "description": "Protect your online accounts by using strong, unique passwords and enabling two-factor authentication (2FA). This ensures that even if your passwords are exposed, attackers cannot easily access your accounts.",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Bitwarden",
+                            "type": "product",
+                            "description": "Secure open-source password manager.",
+                            "cost": "10",
+                            "cost_duration": "year",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Open-source, cross-platform, 2FA support.",
+                            "weaknesses": "Steeper learning curve.",
+                            "download_link": "https://bitwarden.com/download/",
+                            "order": 1
+                        },
+                        {
+                            "name": "1Password",
+                            "type": "product",
+                            "description": "User-friendly password manager.",
+                            "cost": "36",
+                            "cost_duration": "year",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": "easy",
+                            "learning_curve": "easy",
+                            "implementation_time": "20",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS", "Browser"],
+                            "strengths": "User-friendly, strong encryption.",
+                            "weaknesses": "Paid subscription required.",
+                            "download_link": "https://1password.com/",
+                            "order": 2
+                        },
+                        {
+                            "name": "LastPass",
+                            "type": "product",
+                            "description": "Widely supported password manager.",
+                            "cost": "36",
+                            "cost_duration": "year",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS", "Browser"],
+                            "strengths": "Easy to use.",
+                            "weaknesses": "Recent security breaches.",
+                            "download_link": "https://lastpass.com/misc_download2.php",
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Local Data Encryption",
+            "description": "Encrypting your devices ensures that even if they are seized or accessed, your data remains unreadable. This is essential for protecting sensitive information, including communication with trusted contacts.",
+            "importance": "critical",
+            "order": 3,
+            "recommendations": [
+                {
+                    "name": "Device Encryption",
+                    "description": "Encrypt the data on your devices to prevent others from accessing sensitive files on your device. This ensures that even if your devices are taken, your data remains protected.",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "VeraCrypt",
+                            "type": "product",
+                            "description": "Open-source disk encryption software for securing data.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "3",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["MacOS", "Windows", "Linux"],
+                            "strengths": "Powerful encryption, versatile.",
+                            "weaknesses": "Complex for non-technical users.",
+                            "download_link": "https://www.veracrypt.fr/en/Downloads.html",
+                            "order": 1
+                        },
+                        {
+                            "name": "BitLocker",
+                            "type": "product",
+                            "description": "Built-in encryption for Windows.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "1",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["Windows"],
+                            "strengths": "Windows integration, easy to use.",
+                            "weaknesses": "Limited to certain Windows editions.",
+                            "download_link": null,
+                            "order": 2
+                        },
+                        {
+                            "name": "FileVault",
+                            "type": "product",
+                            "description": "macOS native disk encryption.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["MacOS"],
+                            "strengths": "Native macOS integration.",
+                            "weaknesses": "Limited to Apple ecosystem.",
+                            "download_link": null,
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Secure Browsing & Communications",
+            "description": "Using privacy-focused browsers, VPNs, and secure messaging apps shields your online activity from 3rd-party monitoring. These tools help you stay anonymous, protect your location, and secure your conversations from hackers and surveillance.",
+            "importance": "critical",
+            "order": 4,
+            "recommendations": [
+                {
+                    "name": "Privacy-Focused Browsers",
+                    "description": "Use browsers designed to protect your privacy, such as Brave or Firefox with privacy extensions, to minimize tracking and block intrusive surveillance. This can prevent third parties from monitoring your browsing activities.",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Brave",
+                            "type": "product",
+                            "description": "Privacy-focused browser with built-in ad-blocker.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Built-in ad/tracker blocking, Tor integration.",
+                            "weaknesses": "Can break some websites.",
+                            "download_link": "https://brave.com/download/",
+                            "order": 1
+                        },
+                        {
+                            "name": "Firefox with Privacy Add-ons",
+                            "type": "product",
+                            "description": "Customizable browser with privacy extensions.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Customizable, privacy-focused extensions.",
+                            "weaknesses": "Requires manual setup.",
+                            "download_link": "https://www.mozilla.org/en-US/firefox/",
+                            "order": 2
+                        },
+                        {
+                            "name": "Tor Browser",
+                            "type": "product",
+                            "description": "Browser for anonymous internet usage.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": "medium",
+                            "learning_curve": "hard",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Full anonymity through Tor network.",
+                            "weaknesses": "Slower speeds.",
+                            "download_link": "https://www.torproject.org/download/tor/",
+                            "order": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "VPN Services",
+                    "description": "Use Virtual Private Networks (VPNs) to encrypt your internet traffic and hide your location. This is essential if you're accessing sensitive information or communicating with contacts in high-risk areas.",
+                    "importance": "critical",
+                    "order": 2,
+                    "solutions": [
+                        {
+                            "name": "Mullvad",
+                            "type": "service",
+                            "description": "A privacy-focused VPN with a no-logs policy.",
+                            "cost": "5.31",
+                            "cost_duration": "month",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "10",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "No-logs policy, anonymous payment.",
+                            "weaknesses": "Smaller server network.",
+                            "download_link": "https://mullvad.net/en/download/vpn/",
+                            "order": 1
+                        },
+                        {
+                            "name": "Proton VPN",
+                            "type": "service",
+                            "description": "A VPN service with strong privacy features.",
+                            "cost": "9.99",
+                            "cost_duration": "month",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Swiss-based, strong privacy features.",
+                            "weaknesses": "Higher premium costs.",
+                            "download_link": "https://protonvpn.com/download",
+                            "order": 2
+                        },
+                        {
+                            "name": "ExpressVPN",
+                            "type": "service",
+                            "description": "High-speed VPN service with strong encryption.",
+                            "cost": "12.95",
+                            "cost_duration": "month",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Fast speeds, strong encryption.",
+                            "weaknesses": "Recent questionable acquisition.",
+                            "download_link": "https://www.expressvpn.com/vpn-download",
+                            "order": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "Secure Mobile Messaging",
+                    "description": "Communicate using encrypted messaging apps like Signal, which ensure that only you and the recipient can read your conversations. This is crucial for protecting sensitive discussions from surveillance.",
+                    "importance": "critical",
+                    "order": 3,
+                    "solutions": [
+                        {
+                            "name": "Signal",
+                            "type": "product",
+                            "description": "End-to-end encrypted messaging app.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Minimal metadata, highly secure.",
+                            "weaknesses": "Requires phone number.",
+                            "download_link": "https://signal.org/download/",
+                            "order": 1
+                        },
+                        {
+                            "name": "Wire",
+                            "type": "product",
+                            "description": "Secure messaging with anonymous signup option.",
+                            "cost": "0",
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "GDPR compliant, anonymous signup.",
+                            "weaknesses": "Smaller user base.",
+                            "download_link": "https://wire.com/en/app-download",
+                            "order": 2
+                        },
+                        {
+                            "name": "Threema",
+                            "type": "product",
+                            "description": "Secure messaging without phone number requirement.",
+                            "cost": 3.99,
+                            "cost_duration": "one-time",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "No phone number required.",
+                            "weaknesses": "Paid app, small user base.",
+                            "download_link": "https://threema.ch/en/download",
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Safe Internet Usage",
+            "description": "Using private search engines and adopting safe browsing practices minimizes the data you leave behind that could be used for tracking or profiling. This is especially important in environments where online searches and website visits are monitored by authorities.",
+            "importance": "recommended",
+            "order": 5,
+            "recommendations": [
+                {
+                    "name": "Private Search Engines",
+                    "description": "Use search engines that don’t track your activity, like DuckDuckGo or Startpage. This reduces the risk of your searches being monitored and used to profile your behavior.",
+                    "importance": "recommended",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "DuckDuckGo",
+                            "type": "service",
+                            "description": "Privacy-focused search engine with no tracking.",
+                            "cost": "0",
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
+                            "strengths": "No tracking, simple to use.",
+                            "weaknesses": "Limited results vs Google.",
+                            "download_link": "https://duckduckgo.com/",
+                            "order": 1
+                        },
+                        {
+                            "name": "Startpage",
+                            "type": "service",
+                            "description": "Search engine with Google results but no tracking.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "5",
+                            "implementation_time_unit": "minutes",
+                            "strengths": "Google results without tracking.",
+                            "weaknesses": "Slower than Google.",
+                            "download_link": "https://www.startpage.com/",
+                            "order": 2
+                        },
+                        {
+                            "name": "Searx",
+                            "type": "product",
+                            "description": "Open-source search engine with customizable settings.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "4",
+                            "implementation_time_unit": "hours",
+                            "strengths": "Customizable, open-source.",
+                            "weaknesses": "Requires technical setup.",
+                            "download_link": "https://metasearx.com/",
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Digital Footprint & Metadata Exposure",
+            "description": "Removing metadata from files like photos can prevent authorities from discovering your location or the identities of those you interact with. Ensuring your files are stripped of identifying data is critical when sharing information online, especially in repressive environments.",
+            "importance": "recommended",
+            "order": 6,
+            "recommendations": [
+                {
+                    "name": "Photo Metadata Management",
+                    "description": "Strip metadata from your photos before sharing them online to prevent 3rd-parties from tracking your location or identifying individuals in the images. Tools like ExifTool can help ensure your photos do not reveal unintended details.",
+                    "importance": "recommended",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "ExifTool",
+                            "type": "product",
+                            "description": "Powerful command-line tool for removing metadata.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["MacOS", "Windows"],
+                            "strengths": "Highly versatile, handles many file formats.",
+                            "weaknesses": "Requires technical knowledge.",
+                            "download_link": "https://exiftool.org/",
+                            "order": 1
+                        },
+                        {
+                            "name": "ImageOptim",
+                            "type": "product",
+                            "description": "Simple tool for removing metadata and compressing images.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS"],
+                            "strengths": "Drag-and-drop interface.",
+                            "weaknesses": "macOS only.",
+                            "download_link": "https://imageoptim.com/versions.html",
+                            "order": 2
+                        },
+                        {
+                            "name": "MAT2",
+                            "type": "product",
+                            "description": "Metadata Anonymization Toolkit for Linux.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "1",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["Linux", "Browser"],
+                            "strengths": "Handles various file types.",
+                            "weaknesses": "Primarily Linux-based.",
+                            "download_link": "https://metadata.systemli.org/",
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Social Networking Apps",
+            "description": "Switching to privacy-focused social platforms can help prevent your personal information and social connections from being exploited. These platforms offer better privacy controls, reducing the risk of your data being accessed or monitored.",
+            "importance": "optional",
+            "order": 7,
+            "recommendations": [
+                {
+                    "name": "Privacy-Focused Social Platforms",
+                    "description": "Switch to decentralized or privacy-oriented social networks to avoid surveillance by mainstream platforms. These platforms prioritize user privacy, making it harder for authorities to monitor your social connections and activities.",
+                    "importance": "optional",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Mastodon",
+                            "type": "service",
+                            "description": "Decentralized Twitter alternative.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["Android", "iOS"],
+                            "strengths": "Decentralized, open-source.",
+                            "weaknesses": "Smaller user base.",
+                            "download_link": "https://joinmastodon.org/apps",
+                            "order": 1
+                        },
+                        {
+                            "name": "MeWe",
+                            "type": "service",
+                            "description": "Social media platform with no ads or tracking.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "30",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["Android", "iOS"],
+                            "strengths": "No ads, privacy-focused.",
+                            "weaknesses": "Paid features.",
+                            "download_link": "https://mewe.com/register",
+                            "order": 2
+                        },
+                        {
+                            "name": "Diaspora",
+                            "type": "service",
+                            "description": "Decentralized social network.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "1",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["Linux"],
+                            "strengths": "Open-source, decentralized.",
+                            "weaknesses": "Less user-friendly.",
+                            "download_link": "https://diasporafoundation.org/",
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Anonymous & Secure Payment Methods",
+            "description": "Using cryptocurrencies and secure payment methods allows for anonymous transactions, protecting you from financial surveillance. This can be crucial if you need to support causes without drawing unwanted attention.",
+            "importance": "optional",
+            "order": 8,
+            "recommendations": [
+                {
+                    "name": "Cryptocurrency Implementation",
+                    "description": "Consider using privacy-focused cryptocurrencies like Monero for anonymous transactions. This can help protect your financial privacy if you need to support causes or make purchases without drawing attention.",
+                    "importance": "optional",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Monero",
+                            "type": "product",
+                            "description": "Privacy-focused cryptocurrency.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "3",
+                            "implementation_time_unit": "hours",
+                            "strengths": "Best privacy features.",
+                            "weaknesses": "Limited acceptance.",
+                            "download_link": null,
+                            "order": 1
+                        },
+                        {
+                            "name": "Zcash",
+                            "type": "product",
+                            "description": "Cryptocurrency with optional transaction privacy.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "hard",
+                            "management_difficulty": null,
+                            "learning_curve": "hard",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
+                            "strengths": "Optional transaction privacy.",
+                            "weaknesses": "Requires shielded addresses.",
+                            "download_link": null,
+                            "order": 2
+                        },
+                        {
+                            "name": "Bitcoin with CoinJoin",
+                            "type": "product",
+                            "description": "Use Bitcoin with privacy-focused CoinJoin technique.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "very_hard",
+                            "management_difficulty": null,
+                            "learning_curve": "very_hard",
+                            "implementation_time": "3",
+                            "implementation_time_unit": "hours",
+                            "strengths": "Widely accepted.",
+                            "weaknesses": "Requires additional privacy tools.",
+                            "download_link": null,
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Phishing & Social Engineering Prevention",
+            "description": "Defending against phishing attacks and social engineering helps you avoid being tricked into revealing sensitive information that could be used against you. Staying vigilant reduces the risk of being targeted by attackers.",
+            "importance": "critical",
+            "order": 9,
+            "recommendations": [
+                {
+                    "name": "Anti-Phishing Protection",
+                    "description": "Protect yourself from phishing attacks that may attempt to steal sensitive information or impersonate trusted contacts. Tools like uBlock Origin can block malicious domains and prevent tracking.",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "uBlock Origin",
+                            "type": "product",
+                            "description": "Open-source ad blocker that prevents tracking and blocks malicious domains.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
+                            "strengths": "Blocks malicious domains, highly customizable.",
+                            "weaknesses": "Requires some configuration.",
+                            "download_link": null,
+                            "order": 1
+                        },
+                        {
+                            "name": "Avast AntiTrack",
+                            "type": "product",
+                            "description": "Tool to prevent tracking and protect privacy.",
+                            "cost": 39.99,
+                            "cost_duration": "year",
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
+                            "strengths": "Comprehensive tracking protection.",
+                            "weaknesses": "Subscription required.",
+                            "download_link": null,
+                            "order": 2
+                        },
+                        {
+                            "name": "Malwarebytes Browser Guard",
+                            "type": "product",
+                            "description": "Free browser extension to protect against phishing and malware.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": "15",
+                            "implementation_time_unit": "minutes",
+                            "strengths": "Free protection against phishing.",
+                            "weaknesses": "May block legitimate sites.",
+                            "download_link": null,
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Data Backup & Disaster Recovery",
+            "description": "Regularly backing up your data both locally and to the cloud ensures you have copies of critical files in case of device destruction, device seizure, or forced relocations. Having encrypted backups allows you to preserve important information and continue your work even if your equipment is compromised.",
+            "importance": "critical",
+            "order": 10,
+            "recommendations": [
+                {
+                    "name": "Secure Backup Solutions",
+                    "description": "Back up your critical data to encrypted cloud services or external drives to protect against data loss due to device confiscation or destruction. Encrypted backups ensure that only you have access to your files.",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Cryptomator",
+                            "type": "product",
+                            "description": "Encrypts cloud storage for secure backups.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "20",
+                            "implementation_time_unit": "minutes",
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "strengths": "Open-source, easy to use.",
+                            "weaknesses": "Requires manual setup with cloud services.",
+                            "download_link": null,
+                            "order": 1
+                        },
+                        {
+                            "name": "SpiderOak One Backup",
+                            "type": "service",
+                            "description": "Zero-knowledge cloud backup service.",
+                            "cost": "6",
+                            "cost_duration": "month",
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": "2",
+                            "implementation_time_unit": "hours",
+                            "supported_platforms": ["MacOS", "Windows", "Linux"],
+                            "strengths": "Zero-knowledge encryption.",
+                            "weaknesses": "Higher cost than alternatives.",
+                            "download_link": null,
+                            "order": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Physical Security Measures for Devices",
+            "description": "Using tools like Faraday bags and signal blockers prevents your devices from being tracked or hacked wirelessly by authorities. This is crucial for those operating in high-risk areas or during protests where surveillance is prevalent.",
+            "importance": "optional",
+            "order": 11,
+            "recommendations": [
+                {
+                    "name": "Signal-Blocking Protection",
+                    "description": "Use Faraday bags and signal blockers to prevent authorities from tracking your devices. These are essential for protecting your location and communications during sensitive activities.",
+                    "importance": "optional",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Mission Darkness Faraday Bags",
+                            "type": "product",
+                            "description": "High-quality Faraday bags for signal blocking.",
+                            "cost": 49.99,
+                            "cost_duration": "one-time",
+                            "implementation_difficulty": "very_easy",
+                            "management_difficulty": null,
+                            "learning_curve": "very_easy",
+                            "implementation_time": null,
+                            "strengths": "Effective signal blocking.",
+                            "weaknesses": "Expensive.",
+                            "download_link": null,
+                            "order": 1
+                        },
+                        {
+                            "name": "Silent Pocket",
+                            "type": "product",
+                            "description": "Faraday bags with multiple size options.",
+                            "cost": 69.99,
+                            "cost_duration": "one-time",
+                            "implementation_difficulty": "very_easy",
+                            "management_difficulty": null,
+                            "learning_curve": "very_easy",
+                            "implementation_time": null,
+                            "strengths": "Variety of sizes.",
+                            "weaknesses": "Costly.",
+                            "download_link": null,
+                            "order": 2
+                        },
+                        {
+                            "name": "Yshield",
+                            "type": "product",
+                            "description": "Affordable signal-blocking solutions.",
+                            "cost": 29.99,
+                            "cost_duration": "one-time",
+                            "implementation_difficulty": "very_easy",
+                            "management_difficulty": null,
+                            "learning_curve": "very_easy",
+                            "implementation_time": null,
+                            "strengths": "Affordable.",
+                            "weaknesses": "Less tested.",
+                            "download_link": null,
+                            "order": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Continuous Education",
+            "description": "Staying informed about the latest digital security threats and privacy techniques helps you adapt to evolving surveillance tactics. Continuous learning empowers you to protect yourself and your community from state-sponsored attacks and repression.",
+            "importance": "critical",
+            "order": 12,
+            "recommendations": [
+                {
+                    "name": "Digital Security Education",
+                    "description": "Stay informed about the latest security threats and privacy tools by following trusted resources like the Electronic Frontier Foundation (EFF). Continuous education can help you adapt to evolving surveillance tactics.",
+                    "importance": "critical",
+                    "order": 1,
+                    "solutions": [
+                        {
+                            "name": "Electronic Frontier Foundation (EFF)",
+                            "type": "service",
+                            "description": "Comprehensive guides on digital rights and privacy.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": null,
+                            "strengths": "Free guides, trusted source.",
+                            "weaknesses": "US-focused content.",
+                            "download_link": "https://www.eff.org/",
+                            "order": 1
+                        },
+                        {
+                            "name": "PrivacyTools.io",
+                            "type": "service",
+                            "description": "Lists of tools and resources for privacy.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "medium",
+                            "management_difficulty": null,
+                            "learning_curve": "medium",
+                            "implementation_time": null,
+                            "strengths": "Comprehensive tool lists.",
+                            "weaknesses": "Can overwhelm beginners.",
+                            "download_link": "privacytools.io",
+                            "order": 2
+                        },
+                        {
+                            "name": "ProtonMail Blog",
+                            "type": "service",
+                            "description": "Blog with privacy news and updates.",
+                            "cost": null,
+                            "cost_duration": null,
+                            "implementation_difficulty": "easy",
+                            "management_difficulty": null,
+                            "learning_curve": "easy",
+                            "implementation_time": null,
+                            "strengths": "Regular updates.",
+                            "weaknesses": "Product-focused content.",
+                            "download_link": "https://proton.me/blog/",
+                            "order": 3
                         }
                     ]
                 }

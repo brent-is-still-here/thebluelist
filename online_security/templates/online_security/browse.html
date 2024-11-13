@@ -1,0 +1,103 @@
+{% extends "users/base.html" %}
+
+{% block title %}Browse Security Resources - The Blue List{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  {# Header #}
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">
+      Security Resources & Recommendations
+    </h1>
+    <p class="text-gray-600">
+      Browse our comprehensive collection of security recommendations, tools, and best practices to keep you and your loved ones safe in the years ahead.
+    </p>
+  </div>
+
+  {# Search and Filters #}
+  <form method="GET" action="{% url 'security_browse' %}" class="bg-white rounded-lg shadow-sm p-4 mb-8">
+    <div class="flex flex-wrap items-center gap-4">
+      {# Search Bar #}
+      <div class="flex-grow basis-full md:basis-1/3 relative">
+        <svg class="h-5 w-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input
+          type="search"
+          name="q"
+          placeholder="Search resources..."
+          value="{{ request.GET.q|default:'' }}"
+          class="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+      </div>
+  
+      {# Category Filter #}
+      <div class="flex-grow basis-full md:basis-1/4">
+        <select
+          name="category"
+          class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">All Categories</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+  
+      {# Severity Filter #}
+      <div class="flex-grow basis-full md:basis-1/4">
+        <select
+          name="severity"
+          class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">All Severities</option>
+          <option value="critical" {% if request.GET.importance == 'critical' %}selected{% endif %}>Critical</option>
+          <option value="recommended" {% if request.GET.importance == 'recommended' %}selected{% endif %}>Recommended</option>
+          <option value="optional" {% if request.GET.importance == 'optional' %}selected{% endif %}>Optional</option>
+        </select>
+      </div>
+  
+      {# Submit Button #}
+      <div class="mt-4 md:mt-0 flex justify-end w-full md:w-auto">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+          Apply Filters
+        </button>
+      </div>
+    </div>
+  </form>
+
+  {# Resources Grid #}
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for recommendation in recommendations %}
+    <div class="bg-white rounded-lg shadow-sm p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 text-blue-600 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>        
+          <h3 class="text-lg font-semibold text-gray-900">{{ recommendation.name }}</h3>
+        </div>
+        <p class="text-gray-600 mb-4">
+          {{ recommendation.description }}
+        </p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+          <span class="font-semibold">Severity:</span>
+          <span class="ml-2 {% if recommendation.importance == 'critical' %}text-red-600{% elif recommendation.importance == 'recommended' %}text-yellow-600{% else %}text-green-600{% endif %}">
+            {{ recommendation.importance|title }}
+          </span>
+        </div>
+      </div>
+      <a href="{% url 'security_recommendation_detail' recommendation.id %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-auto">
+        View Details →
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12 text-gray-500">
+      No recommendations found matching your criteria.
+    </div>
+    {% endfor %}
+  </div>  
+</div>
+{% endblock %}
