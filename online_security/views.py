@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
 from .models import Category, Recommendation, Solution
@@ -55,25 +56,40 @@ def security_assessment_results(request):
         messages.error(request, 'Please complete the security assessment first.')
         return redirect('security_assessment')
     
-    # Fetch full recommendation objects
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        recommendation_id = request.POST.get('recommendation_id')
+        if recommendation_id:
+            # Move recommendation from needs_action to completed
+            recommendation_id = int(recommendation_id)
+            if recommendation_id in session_results['needs_action']:
+                session_results['needs_action'].remove(recommendation_id)
+                if 'completed' not in session_results:
+                    session_results['completed'] = []
+                session_results['completed'].append(recommendation_id)
+                request.session['assessment_results'] = session_results
+                
+                return JsonResponse({
+                    'status': 'success',
+                    'needs_action_count': len(session_results['needs_action']),
+                    'completed_count': len(session_results['completed'])
+                })
+        return JsonResponse({'status': 'error'}, status=400)
+    
+    # GET request - show results
     results = {
-        'needs_action': Recommendation.objects.prefetch_related(
-            'categories', 'solutions'
-        ).filter(id__in=session_results['needs_action']).order_by('importance', 'categories__order'),
-        'completed': Recommendation.objects.filter(id__in=session_results['completed']),
-        'not_applicable': Recommendation.objects.filter(id__in=session_results['not_applicable'])
+        'needs_action': Recommendation.objects.filter(
+            id__in=session_results['needs_action']
+        ).prefetch_related('categories', 'solutions'),
+        'completed': Recommendation.objects.filter(
+            id__in=session_results['completed']
+        ),
+        'not_applicable': Recommendation.objects.filter(
+            id__in=session_results.get('not_applicable', [])
+        )
     }
     
-    # Clear results from session
-    del request.session['assessment_results']
-    
     return render(request, 'online_security/assessment_results.html', {
-        'results': results,
-        'total_recommendations': (
-            len(session_results['needs_action']) + 
-            len(session_results['completed']) + 
-            len(session_results['not_applicable'])
-        )
+        'results': results
     })
 
 def security_browse(request):
