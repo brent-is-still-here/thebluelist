@@ -1,6 +1,7 @@
 # The Blue List
+### https://www.mybluelist.org
 
-A privacy-focused web application helping users make informed decisions about businesses, online security, home safety, and relocation options.
+A privacy-focused web application helping users make informed decisions about businesses, online security, home safety, and relocation options for the years ahead.
 
 ## Overview
 
