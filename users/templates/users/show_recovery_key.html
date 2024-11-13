@@ -1,0 +1,65 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Important: Save Your Recovery Key</h1>
+    
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+        <div class="flex">
+            <div class="ml-3">
+                <p class="text-yellow-700">
+                    This is your only chance to save your recovery key. You will need this key to reset your password if you forget it. 
+                    After you acknowledge saving this key, your email address will be permanently deleted from our system for privacy.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gray-100 p-6 rounded-lg mb-6">
+        <p class="font-mono text-lg break-all">{{ recovery_key }}</p>
+    </div>
+
+    <div class="mb-6">
+        <button onclick="downloadKey()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4">
+            Download Recovery Key
+        </button>
+    </div>
+
+    <form method="post" class="mb-6">
+        {% csrf_token %}
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            I have saved my recovery key
+        </button>
+    </form>
+
+    <div class="text-sm text-gray-600">
+        <p>Important tips for storing your recovery key:</p>
+        <ul class="list-disc ml-5 mt-2">
+            <li>Save it in a password manager</li>
+            <li>Write it down and store it in a secure location</li>
+            <li>Save the downloaded file in a secure location</li>
+            <li>Do not store it in your email</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+function downloadKey() {
+    const content = `The Blue List Project Account Recovery Kit
+https://mybluelist.org
+
+Username: {{ user.username }}
+Recovery Key: {{ recovery_key }}`;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'thebluelist-recovery-kit.txt';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
+</script>
+{% endblock %}

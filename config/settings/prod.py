@@ -90,10 +90,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Email settings (example with MailChimp)
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 MAILTRAP_API_TOKEN = os.environ.get('MAILTRAP_API_TOKEN')
 MAILTRAP_SENDER_EMAIL = 'noreply@mybluelist.org'
 
-# Add WhiteNoise Middleware
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+# maximum accounts from the same email to avoid spamming
+MAX_ACCOUNTS_PER_EMAIL = 5
