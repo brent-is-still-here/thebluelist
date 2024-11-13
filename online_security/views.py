@@ -1,18 +1,79 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
 from .models import Category, Recommendation, Solution
 
 def security_assessment(request):
     if request.method == 'POST':
-        # Handle form submission and generate recommendations
-        # We'll implement this next
-        pass
+        # Process form data
+        results = {
+            'needs_action': [],
+            'completed': [],
+            'not_applicable': []
+        }
+        
+        # Get all recommendations that were answered in the form
+        for key, value in request.POST.items():
+            if key.startswith('recommendation_'):
+                try:
+                    recommendation_id = int(key.split('_')[1])
+                    recommendation = Recommendation.objects.get(id=recommendation_id)
+                    
+                    if value == 'no':
+                        results['needs_action'].append(recommendation.id)
+                    elif value == 'yes':
+                        results['completed'].append(recommendation.id)
+                    elif value == 'na':
+                        results['not_applicable'].append(recommendation.id)
+                except Exception as e:
+                    messages.error(request, f"Error processing responses: {str(e)}")
+                    return redirect('security_assessment')
+
+        try:
+            # Store results in session
+            request.session['assessment_results'] = {
+                'needs_action': results['needs_action'],
+                'completed': results['completed'],
+                'not_applicable': results['not_applicable']
+            }
+            return redirect('security_assessment_results')
+        except Exception as e:
+            messages.error(request, f"Error saving results: {str(e)}")
+            return redirect('security_assessment')
     
+    # GET request - show the assessment form
     categories = Category.objects.prefetch_related('recommendations').all()
-    
     return render(request, 'online_security/assessment.html', {
         'categories': categories,
         'total_categories': categories.count(),
+    })
+
+def security_assessment_results(request):
+    # Get results from session
+    session_results = request.session.get('assessment_results')
+    if not session_results:
+        messages.error(request, 'Please complete the security assessment first.')
+        return redirect('security_assessment')
+    
+    # Fetch full recommendation objects
+    results = {
+        'needs_action': Recommendation.objects.prefetch_related(
+            'categories', 'solutions'
+        ).filter(id__in=session_results['needs_action']).order_by('importance', 'categories__order'),
+        'completed': Recommendation.objects.filter(id__in=session_results['completed']),
+        'not_applicable': Recommendation.objects.filter(id__in=session_results['not_applicable'])
+    }
+    
+    # Clear results from session
+    del request.session['assessment_results']
+    
+    return render(request, 'online_security/assessment_results.html', {
+        'results': results,
+        'total_recommendations': (
+            len(session_results['needs_action']) + 
+            len(session_results['completed']) + 
+            len(session_results['not_applicable'])
+        )
     })
 
 def security_browse(request):

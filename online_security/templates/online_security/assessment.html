@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <form method="post" id="assessment-form" class="space-y-8">
+    <form method="post" action="{% url 'security_assessment' %}" id="assessment-form" class="space-y-8">
         {% csrf_token %}
         
         {% for category in categories %}
@@ -29,29 +29,32 @@
                 <h3 class="text-lg font-medium text-gray-900 mb-2">{{ recommendation.name }}</h3>
                 <p class="text-gray-600 mb-4">{{ recommendation.description }}</p>
                 
-                <div class="flex items-center space-x-6">
-                    <label class="inline-flex items-center">
-                        <input type="radio" 
-                               name="recommendation_{{ recommendation.id }}" 
-                               value="yes"
-                               class="form-radio h-4 w-4 text-blue-600"
-                               required>
-                        <span class="ml-2 text-gray-700">Yes, I do this</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="radio" 
-                               name="recommendation_{{ recommendation.id }}" 
-                               value="no"
-                               class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700">No, I need to do this</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="radio" 
-                               name="recommendation_{{ recommendation.id }}" 
-                               value="na"
-                               class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700">Not applicable</span>
-                    </label>
+                <div class="mb-4">
+                    <p class="text-gray-800 font-semibold">Do you do this today?</p>
+                    <div class="flex items-center space-x-6">
+                        <label class="inline-flex items-center">
+                            <input type="radio" 
+                                name="recommendation_{{ recommendation.id }}" 
+                                value="yes"
+                                class="form-radio h-4 w-4 text-blue-600"
+                                required>
+                            <span class="ml-2 text-gray-700">Yes, I do this</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" 
+                                name="recommendation_{{ recommendation.id }}" 
+                                value="no"
+                                class="form-radio h-4 w-4 text-blue-600">
+                            <span class="ml-2 text-gray-700">No, I need to do this</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" 
+                                name="recommendation_{{ recommendation.id }}" 
+                                value="na"
+                                class="form-radio h-4 w-4 text-blue-600">
+                            <span class="ml-2 text-gray-700">Not applicable</span>
+                        </label>
+                    </div>
                 </div>
 
                 {% if recommendation.importance == 'critical' %}
@@ -94,26 +97,17 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('assessment-form');
-    const sections = document.querySelectorAll('.category-section');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const totalCategories = {{ total_categories }};
-    let currentSection = 0;
-
-    // Update progress
-    function updateProgress() {
-        const progress = ((currentSection + 1) / totalCategories) * 100;
-        progressBar.style.width = `${progress}%`;
-        progressText.textContent = `${currentSection + 1} of ${totalCategories} Categories`;
-    }
-
-    // Handle next button clicks
-    document.querySelectorAll('.next-category').forEach(button => {
-        button.addEventListener('click', () => {
-            // Validate current section
-            const currentInputs = sections[currentSection].querySelectorAll('input[type="radio"]');
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('assessment-form');
+        const sections = document.querySelectorAll('.category-section');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const totalCategories = {{ total_categories }};
+        let currentSection = 0;
+    
+        // Validate a single section
+        function validateSection(sectionElement) {
+            const currentInputs = sectionElement.querySelectorAll('input[type="radio"]');
             let allAnswered = true;
             currentInputs.forEach(input => {
                 const name = input.name;
@@ -121,33 +115,64 @@ document.addEventListener('DOMContentLoaded', function() {
                     allAnswered = false;
                 }
             });
-
-            if (!allAnswered) {
-                alert('Please answer all questions in this section before continuing.');
-                return;
+            return allAnswered;
+        }
+    
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentSection + 1) / totalCategories) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${currentSection + 1} of ${totalCategories} Categories`;
+        }
+    
+        // Handle form submission
+        form.addEventListener('submit', function(e) {
+            console.log('Online security form submission attempted');
+            const lastSection = sections[sections.length - 1];
+            if (!validateSection(lastSection)) {
+                e.preventDefault();
+                console.log('Validation failed for online security form');
+                alert('Please answer all questions in this section before submitting.');
+                return false;
             }
-
-            sections[currentSection].style.display = 'none';
-            currentSection++;
-            sections[currentSection].style.display = 'block';
-            updateProgress();
-            window.scrollTo(0, 0);
+            console.log('Validation passed, submitting online security form');
+            // Let's add a visual indicator that submission is happening
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Generating...';
+            return true;
+            // Form will submit naturally if validation passes
         });
-    });
-
-    // Handle previous button clicks
-    document.querySelectorAll('.prev-category').forEach(button => {
-        button.addEventListener('click', () => {
-            sections[currentSection].style.display = 'none';
-            currentSection--;
-            sections[currentSection].style.display = 'block';
-            updateProgress();
-            window.scrollTo(0, 0);
+    
+        // Handle next button clicks
+        document.querySelectorAll('.next-category').forEach(button => {
+            button.addEventListener('click', () => {
+                if (!validateSection(sections[currentSection])) {
+                    alert('Please answer all questions in this section before continuing.');
+                    return;
+                }
+    
+                sections[currentSection].style.display = 'none';
+                currentSection++;
+                sections[currentSection].style.display = 'block';
+                updateProgress();
+                window.scrollTo(0, 0);
+            });
         });
+    
+        // Handle previous button clicks
+        document.querySelectorAll('.prev-category').forEach(button => {
+            button.addEventListener('click', () => {
+                sections[currentSection].style.display = 'none';
+                currentSection--;
+                sections[currentSection].style.display = 'block';
+                updateProgress();
+                window.scrollTo(0, 0);
+            });
+        });
+    
+        // Initialize progress
+        updateProgress();
     });
-
-    // Initialize progress
-    updateProgress();
-});
-</script>
+    </script>
 {% endblock %}
