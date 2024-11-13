@@ -15,7 +15,10 @@ DATABASES = {
     }
 }
 
-# Email settings (example with MailChimp)
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
-MAILTRAP_API_TOKEN = os.environ.get('MAILTRAP_API_TOKEN')
+# Override email settings for local development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+MAILTRAP_API_TOKEN = 'dummy-token-for-local'  # Won't be used due to console backend
 MAILTRAP_SENDER_EMAIL = 'noreply@mybluelist.org'
+
+# maximum accounts from the same email to avoid spamming
+MAX_ACCOUNTS_PER_EMAIL = 2

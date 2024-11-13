@@ -11,8 +11,8 @@ from django.conf import settings
 from django.views.decorators.http import require_http_methods
 import secrets
 import logging
-from .forms import LoginForm, SignupForm
-from .models import User
+from .forms import LoginForm, PasswordResetForm, SignupForm
+from .models import RecoveryKey, User, HashedEmail
 from .services.mail import EmailService
 
 logger = logging.getLogger(__name__)
@@ -23,17 +23,44 @@ def get_involved(request):
 
 def login_view(request):
     if request.user.is_authenticated:
+        # Check if they need to see their recovery key
+        if not request.user.recovery_key_viewed:
+            return redirect('users:show_recovery_key')
         return redirect('home')
         
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
+
+            # Check if user's hashed_email is blocked
+            if user.hashed_email and user.hashed_email.is_blocked:
+                messages.error(request, 'This account has been disabled due to suspicious activity.')
+                return render(request, 'users/login.html', {'form': form})
+            
             login(request, user)
+            user.update_last_login()
             
             # Handle remember me
             if not form.cleaned_data.get('remember_me'):
                 request.session.set_expiry(0)
+            
+            # If this is their first time logging in, generate recovery key and redirect
+            if not user.recovery_key_viewed:
+                # Associate with HashedEmail if not already done
+                if not user.hashed_email and user.email:
+                    user.hashed_email = HashedEmail.get_or_create_hash(user.email)
+                    user.save()
+
+                recovery_key = RecoveryKey.generate_recovery_key()
+                recovery_key_obj = RecoveryKey(user=user)
+                recovery_key_obj.encrypt_recovery_key(recovery_key)
+                recovery_key_obj.save()
+                
+                # Store the plain recovery key in session for display
+                request.session['recovery_key'] = recovery_key
+                
+                return redirect('users:show_recovery_key')
                 
             next_url = request.GET.get('next', 'home')
             logger.info(f"User {user.username} logged in successfully")
@@ -79,6 +106,57 @@ def resend_verification(request):
             messages.error(request, 'An error occurred. Please try again.')
             
     return redirect('users:verification_sent')
+
+def reset_password(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            try:
+                user = User.objects.get(username=form.cleaned_data['username'])
+                recovery_key_obj = RecoveryKey.objects.get(user=user)
+                
+                if recovery_key_obj.verify_recovery_key(form.cleaned_data['recovery_key']):
+                    user.set_password(form.cleaned_data['new_password1'])
+                    user.save()
+                    messages.success(request, 'Password reset successfully. You can now log in.')
+                    return redirect('users:login')
+                else:
+                    messages.error(request, 'Invalid recovery key.')
+            except (User.DoesNotExist, RecoveryKey.DoesNotExist):
+                messages.error(request, 'Invalid username or recovery key.')
+    else:
+        form = PasswordResetForm()
+    
+    return render(request, 'users/reset_password.html', {'form': form})
+
+@login_required
+def show_recovery_key(request):
+    # Only show recovery key if they haven't seen it yet
+    if request.user.recovery_key_viewed:
+        messages.error(request, 'Recovery key has already been viewed.')
+        return redirect('home')
+    
+    recovery_key = request.session.get('recovery_key')
+    if not recovery_key:
+        messages.error(request, 'Recovery key not found.')
+        return redirect('home')
+    
+    if request.method == 'POST':
+        # Mark recovery key as viewed and purge email
+        request.user.recovery_key_viewed = True
+        request.user.email_purged = True
+        request.user.email = ''  # Purge email
+        request.user.save()
+        
+        # Remove recovery key from session
+        del request.session['recovery_key']
+        
+        messages.success(request, 'Your recovery key has been saved and your email has been purged.')
+        return redirect('home')
+    
+    return render(request, 'users/show_recovery_key.html', {
+        'recovery_key': recovery_key
+    })
 
 def signup(request):
     if request.method == 'POST':

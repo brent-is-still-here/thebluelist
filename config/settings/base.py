@@ -1,7 +1,19 @@
-from pathlib import Path
+from cryptography.fernet import Fernet
 from decouple import config
+from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Generate and save a new key if it doesn't exist
+if not os.path.exists('recovery_key.key'):
+    key = Fernet.generate_key()
+    with open('recovery_key.key', 'wb') as key_file:
+        key_file.write(key)
+
+# Read the encryption key
+with open('recovery_key.key', 'rb') as key_file:
+    RECOVERY_KEY_ENCRYPTION_KEY = key_file.read()
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -62,9 +74,11 @@ LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-# Email settings for Auth (Dev purposes only at the moment)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #for Dev purposes only at the moment
+# Default email settings (will be overridden in local.py and prod.py)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@mybluelist.org'
+MAILTRAP_API_TOKEN = None  # Default to None
+MAILTRAP_SENDER_EMAIL = 'noreply@mybluelist.org'  # Default sender
 
 AUTH_PASSWORD_VALIDATORS = [
     {
