@@ -8,7 +8,7 @@
             "recommendations": [
                 {
                     "name": "Social Media Review & Cleanup",
-                    "description": "Clean up old social media content.",
+                    "description": "Regularly review your social media accounts to delete sensitive posts or outdated content that could reveal your political opinions, location, or connections. This reduces the risk of your past online activity being used against you.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -38,9 +38,10 @@
                             "learning_curve": "easy",
                             "implementation_time": "10",
                             "implementation_time_unit": "minutes",
+                            "supported_platforms": ["Browser"],
                             "strengths": "Free Twitter history cleanup.",
                             "weaknesses": "Limited to Twitter only.",
-                            "download_link": null,
+                            "download_link": "https://tweetdelete.net/",
                             "order": 2
                         }
                     ]
@@ -55,7 +56,7 @@
             "recommendations": [
                 {
                     "name": "Password & 2FA Management",
-                    "description": "Use password managers and enable 2FA.",
+                    "description": "Protect your online accounts by using strong, unique passwords and enabling two-factor authentication (2FA). This ensures that even if your passwords are exposed, attackers cannot easily access your accounts.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -73,7 +74,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Open-source, cross-platform, 2FA support.",
                             "weaknesses": "Steeper learning curve.",
-                            "download_link": null,
+                            "download_link": "https://bitwarden.com/download/",
                             "order": 1
                         },
                         {
@@ -83,14 +84,14 @@
                             "cost": "36",
                             "cost_duration": "annual",
                             "implementation_difficulty": "easy",
-                            "management_difficulty": null,
+                            "management_difficulty": "easy",
                             "learning_curve": "easy",
-                            "implementation_time": "30",
+                            "implementation_time": "20",
                             "implementation_time_unit": "minutes",
-                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS", "Browser"],
                             "strengths": "User-friendly, strong encryption.",
                             "weaknesses": "Paid subscription required.",
-                            "download_link": null,
+                            "download_link": "https://1password.com/",
                             "order": 2
                         },
                         {
@@ -104,10 +105,10 @@
                             "learning_curve": "medium",
                             "implementation_time": "30",
                             "implementation_time_unit": "minutes",
-                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
+                            "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS", "Browser"],
                             "strengths": "Easy to use.",
                             "weaknesses": "Recent security breaches.",
-                            "download_link": null,
+                            "download_link": "https://lastpass.com/misc_download2.php",
                             "order": 3
                         }
                     ]
@@ -122,7 +123,7 @@
             "recommendations": [
                 {
                     "name": "Device Encryption",
-                    "description": "Encrypt sensitive data on your devices.",
+                    "description": "Encrypt the data on your devices to prevent others from accessing sensitive files on your device. This ensures that even if your devices are taken, your data remains protected.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -140,7 +141,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux"],
                             "strengths": "Powerful encryption, versatile.",
                             "weaknesses": "Complex for non-technical users.",
-                            "download_link": null,
+                            "download_link": "https://www.veracrypt.fr/en/Downloads.html",
                             "order": 1
                         },
                         {
@@ -189,7 +190,7 @@
             "recommendations": [
                 {
                     "name": "Privacy-Focused Browsers",
-                    "description": "Use browsers designed to protect your privacy.",
+                    "description": "Use browsers designed to protect your privacy, such as Brave or Firefox with privacy extensions, to minimize tracking and block intrusive surveillance. This can prevent third parties from monitoring your browsing activities.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -207,7 +208,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Built-in ad/tracker blocking, Tor integration.",
                             "weaknesses": "Can break some websites.",
-                            "download_link": null,
+                            "download_link": "https://brave.com/download/",
                             "order": 1
                         },
                         {
@@ -224,7 +225,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Customizable, privacy-focused extensions.",
                             "weaknesses": "Requires manual setup.",
-                            "download_link": null,
+                            "download_link": "https://www.mozilla.org/en-US/firefox/",
                             "order": 2
                         },
                         {
@@ -234,21 +235,21 @@
                             "cost": null,
                             "cost_duration": null,
                             "implementation_difficulty": "medium",
-                            "management_difficulty": null,
+                            "management_difficulty": "medium",
                             "learning_curve": "hard",
                             "implementation_time": "30",
                             "implementation_time_unit": "minutes",
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Full anonymity through Tor network.",
                             "weaknesses": "Slower speeds.",
-                            "download_link": null,
+                            "download_link": "https://www.torproject.org/download/tor/",
                             "order": 3
                         }
                     ]
                 },
                 {
                     "name": "VPN Services",
-                    "description": "Use Virtual Private Networks (VPNs) to secure your internet connection.",
+                    "description": "Use Virtual Private Networks (VPNs) to encrypt your internet traffic and hide your location. This is essential if you're accessing sensitive information or communicating with contacts in high-risk areas.",
                     "importance": "critical",
                     "order": 2,
                     "solutions": [
@@ -266,7 +267,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "No-logs policy, anonymous payment.",
                             "weaknesses": "Smaller server network.",
-                            "download_link": null,
+                            "download_link": "https://mullvad.net/en/download/vpn/",
                             "order": 1
                         },
                         {
@@ -283,7 +284,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Swiss-based, strong privacy features.",
                             "weaknesses": "Higher premium costs.",
-                            "download_link": null,
+                            "download_link": "https://protonvpn.com/download",
                             "order": 2
                         },
                         {
@@ -300,14 +301,14 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Fast speeds, strong encryption.",
                             "weaknesses": "Recent questionable acquisition.",
-                            "download_link": null,
+                            "download_link": "https://www.expressvpn.com/vpn-download",
                             "order": 3
                         }
                     ]
                 },
                 {
                     "name": "Secure Mobile Messaging",
-                    "description": "Use secure messaging apps to protect communication.",
+                    "description": "Communicate using encrypted messaging apps like Signal, which ensure that only you and the recipient can read your conversations. This is crucial for protecting sensitive discussions from surveillance.",
                     "importance": "critical",
                     "order": 3,
                     "solutions": [
@@ -325,7 +326,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "Minimal metadata, highly secure.",
                             "weaknesses": "Requires phone number.",
-                            "download_link": null,
+                            "download_link": "https://signal.org/download/",
                             "order": 1
                         },
                         {
@@ -342,7 +343,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "GDPR compliant, anonymous signup.",
                             "weaknesses": "Smaller user base.",
-                            "download_link": null,
+                            "download_link": "https://wire.com/en/app-download",
                             "order": 2
                         },
                         {
@@ -359,7 +360,7 @@
                             "supported_platforms": ["MacOS", "Windows", "Linux", "Android", "iOS"],
                             "strengths": "No phone number required.",
                             "weaknesses": "Paid app, small user base.",
-                            "download_link": null,
+                            "download_link": "https://threema.ch/en/download",
                             "order": 3
                         }
                     ]
@@ -374,7 +375,7 @@
             "recommendations": [
                 {
                     "name": "Private Search Engines",
-                    "description": "Use search engines that don’t track your activity.",
+                    "description": "Use search engines that don’t track your activity, like DuckDuckGo or Startpage. This reduces the risk of your searches being monitored and used to profile your behavior.",
                     "importance": "recommended",
                     "order": 1,
                     "solutions": [
@@ -391,7 +392,7 @@
                             "implementation_time_unit": "minutes",
                             "strengths": "No tracking, simple to use.",
                             "weaknesses": "Limited results vs Google.",
-                            "download_link": null,
+                            "download_link": "https://duckduckgo.com/",
                             "order": 1
                         },
                         {
@@ -407,7 +408,7 @@
                             "implementation_time_unit": "minutes",
                             "strengths": "Google results without tracking.",
                             "weaknesses": "Slower than Google.",
-                            "download_link": null,
+                            "download_link": "https://www.startpage.com/",
                             "order": 2
                         },
                         {
@@ -423,7 +424,7 @@
                             "implementation_time_unit": "hours",
                             "strengths": "Customizable, open-source.",
                             "weaknesses": "Requires technical setup.",
-                            "download_link": null,
+                            "download_link": "https://metasearx.com/",
                             "order": 3
                         }
                     ]
@@ -438,7 +439,7 @@
             "recommendations": [
                 {
                     "name": "Photo Metadata Management",
-                    "description": "Remove metadata from your photos to protect privacy.",
+                    "description": "Strip metadata from your photos before sharing them online to prevent 3rd-parties from tracking your location or identifying individuals in the images. Tools like ExifTool can help ensure your photos do not reveal unintended details.",
                     "importance": "recommended",
                     "order": 1,
                     "solutions": [
@@ -456,7 +457,7 @@
                             "supported_platforms": ["MacOS", "Windows"],
                             "strengths": "Highly versatile, handles many file formats.",
                             "weaknesses": "Requires technical knowledge.",
-                            "download_link": null,
+                            "download_link": "https://exiftool.org/",
                             "order": 1
                         },
                         {
@@ -473,7 +474,7 @@
                             "supported_platforms": ["MacOS"],
                             "strengths": "Drag-and-drop interface.",
                             "weaknesses": "macOS only.",
-                            "download_link": null,
+                            "download_link": "https://imageoptim.com/versions.html",
                             "order": 2
                         },
                         {
@@ -487,9 +488,10 @@
                             "learning_curve": "medium",
                             "implementation_time": "1",
                             "implementation_time_unit": "hours",
+                            "supported_platforms": ["Linux", "Browser"],
                             "strengths": "Handles various file types.",
                             "weaknesses": "Primarily Linux-based.",
-                            "download_link": null,
+                            "download_link": "https://metadata.systemli.org/",
                             "order": 3
                         }
                     ]
@@ -504,7 +506,7 @@
             "recommendations": [
                 {
                     "name": "Privacy-Focused Social Platforms",
-                    "description": "Switch to social media platforms with better privacy controls.",
+                    "description": "Switch to decentralized or privacy-oriented social networks to avoid surveillance by mainstream platforms. These platforms prioritize user privacy, making it harder for authorities to monitor your social connections and activities.",
                     "importance": "optional",
                     "order": 1,
                     "solutions": [
@@ -519,9 +521,10 @@
                             "learning_curve": "hard",
                             "implementation_time": "30",
                             "implementation_time_unit": "minutes",
+                            "supported_platforms": ["Android", "iOS"],
                             "strengths": "Decentralized, open-source.",
                             "weaknesses": "Smaller user base.",
-                            "download_link": null,
+                            "download_link": "https://joinmastodon.org/apps",
                             "order": 1
                         },
                         {
@@ -535,9 +538,10 @@
                             "learning_curve": "easy",
                             "implementation_time": "30",
                             "implementation_time_unit": "minutes",
+                            "supported_platforms": ["Android", "iOS"],
                             "strengths": "No ads, privacy-focused.",
                             "weaknesses": "Paid features.",
-                            "download_link": null,
+                            "download_link": "https://mewe.com/register",
                             "order": 2
                         },
                         {
@@ -551,9 +555,10 @@
                             "learning_curve": "hard",
                             "implementation_time": "1",
                             "implementation_time_unit": "hours",
+                            "supported_platforms": ["Linux"],
                             "strengths": "Open-source, decentralized.",
                             "weaknesses": "Less user-friendly.",
-                            "download_link": null,
+                            "download_link": "https://diasporafoundation.org/",
                             "order": 3
                         }
                     ]
@@ -568,7 +573,7 @@
             "recommendations": [
                 {
                     "name": "Cryptocurrency Implementation",
-                    "description": "Use cryptocurrencies for secure and anonymous transactions.",
+                    "description": "Consider using privacy-focused cryptocurrencies like Monero for anonymous transactions. This can help protect your financial privacy if you need to support causes or make purchases without drawing attention.",
                     "importance": "optional",
                     "order": 1,
                     "solutions": [
@@ -632,7 +637,7 @@
             "recommendations": [
                 {
                     "name": "Anti-Phishing Protection",
-                    "description": "Tools to prevent phishing and social engineering attacks.",
+                    "description": "Protect yourself from phishing attacks that may attempt to steal sensitive information or impersonate trusted contacts. Tools like uBlock Origin can block malicious domains and prevent tracking.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -696,7 +701,7 @@
             "recommendations": [
                 {
                     "name": "Secure Backup Solutions",
-                    "description": "Tools for securely backing up your data.",
+                    "description": "Back up your critical data to encrypted cloud services or external drives to protect against data loss due to device confiscation or destruction. Encrypted backups ensure that only you have access to your files.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -745,8 +750,8 @@
             "order": 11,
             "recommendations": [
                 {
-                    "name": "Signal Blocking Protection",
-                    "description": "Use Faraday bags and signal blockers for device protection.",
+                    "name": "Signal-Blocking Protection",
+                    "description": "Use Faraday bags and signal blockers to prevent authorities from tracking your devices. These are essential for protecting your location and communications during sensitive activities.",
                     "importance": "optional",
                     "order": 1,
                     "solutions": [
@@ -807,7 +812,7 @@
             "recommendations": [
                 {
                     "name": "Digital Security Education",
-                    "description": "Resources to learn about digital security.",
+                    "description": "Stay informed about the latest security threats and privacy tools by following trusted resources like the Electronic Frontier Foundation (EFF). Continuous education can help you adapt to evolving surveillance tactics.",
                     "importance": "critical",
                     "order": 1,
                     "solutions": [
@@ -823,7 +828,7 @@
                             "implementation_time": null,
                             "strengths": "Free guides, trusted source.",
                             "weaknesses": "US-focused content.",
-                            "download_link": null,
+                            "download_link": "https://www.eff.org/",
                             "order": 1
                         },
                         {
@@ -838,7 +843,7 @@
                             "implementation_time": null,
                             "strengths": "Comprehensive tool lists.",
                             "weaknesses": "Can overwhelm beginners.",
-                            "download_link": null,
+                            "download_link": "privacytools.io",
                             "order": 2
                         },
                         {
@@ -853,7 +858,7 @@
                             "implementation_time": null,
                             "strengths": "Regular updates.",
                             "weaknesses": "Product-focused content.",
-                            "download_link": null,
+                            "download_link": "https://proton.me/blog/",
                             "order": 3
                         }
                     ]
