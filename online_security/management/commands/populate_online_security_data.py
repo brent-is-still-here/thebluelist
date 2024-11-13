@@ -103,9 +103,13 @@ class Command(BaseCommand):
                 'cost': solution_data.get('cost'),
                 'cost_duration': solution_data.get('cost_duration'),
                 'implementation_difficulty': solution_data.get('implementation_difficulty'),
+                'management_difficulty': solution_data.get('management_difficulty'),
                 'learning_curve': solution_data.get('learning_curve'),
                 'implementation_time': solution_data.get('implementation_time'),
+                'implementation_time_unit': solution_data.get('implementation_time_unit'),
                 'supported_platforms': solution_data.get('supported_platforms', []),
+                'strengths': solution_data.get('strengths'),
+                'weaknesses': solution_data.get('weaknesses'),
                 'download_link': solution_data.get('download_link'),
                 'order': solution_data.get('order', 0)
             }

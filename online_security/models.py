@@ -84,9 +84,9 @@ class Recommendation(OrderedModelMixin, models.Model):
 
 class Solution(OrderedModelMixin, models.Model):
     COST_DURATION_CHOICES = [
-        ('monthly', 'Monthly'),
-        ('annual', 'Annual'),
-        ('lifetime', 'Lifetime')
+        ('month', 'Month'),
+        ('year', 'Year'),
+        ('one_time', 'One-Time')
     ]
 
     DIFFICULTY_CHOICES = [
@@ -157,6 +157,18 @@ class Solution(OrderedModelMixin, models.Model):
         null=True,
         blank=True
     )
+    strengths = models.TextField(null=True, blank=True)
+    weaknesses = models.TextField(null=True, blank=True)
+    def get_strengths_list(self):
+        if self.strengths:
+            return [item.strip() for item in self.strengths.split('\n') if item.strip()]
+        return []
+
+    def get_weaknesses_list(self):
+        if self.weaknesses:
+            return [item.strip() for item in self.weaknesses.split('\n') if item.strip()]
+        return []
+
     download_link = models.URLField(null=True, blank=True)
     recommendations = models.ManyToManyField(Recommendation, related_name='solutions')
     order = models.IntegerField(default=0)
