@@ -11,9 +11,6 @@ The Blue List is an open-source platform providing resources and tools across fo
 3. **Online Security Center**: Get customized digital security checklists and guides
 4. **Relocation Resources**: Explore international relocation options and requirements
 
-## PRIVACY DISCLAIMER
-The Blue List does not collect any user information. A valid email address is required to add or edit business listings on The Blue List, but no other PII or user data is collected at any time.
-
 ## Features
 
 ### Ethical Business Directory
@@ -58,14 +55,62 @@ The Blue List does not collect any user information. A valid email address is re
 - No user tracking
 - No location data collection
 - No personal data storage
+  - A valid email address is required only to add or update entries
 - Open-source for transparency
 
 ## Installation
 
 ### Prerequisites
 - Python 3.11+
-- PostgreSQL
+- PostgreSQL 16+
 - Node.js & npm (for frontend assets)
+
+### PostgreSQL Setup
+
+#### On macOS
+```bash
+# Using Homebrew
+brew install postgresql@14
+brew services start postgresql@14
+
+# Create database and user
+psql postgres
+CREATE DATABASE thebluelist;
+CREATE USER your_database_user WITH PASSWORD 'your_password';
+ALTER ROLE your_database_user SET client_encoding TO 'utf8';
+ALTER ROLE your_database_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE your_database_user SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE thebluelist TO your_database_user;
+\q
+```
+
+#### On Ubuntu/Debian
+```bash
+# Install PostgreSQL
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+# Start PostgreSQL service
+sudo service postgresql start
+
+# Create database and user
+sudo -u postgres psql
+CREATE DATABASE thebluelist;
+CREATE USER your_database_user WITH PASSWORD 'your_password';
+ALTER ROLE your_database_user SET client_encoding TO 'utf8';
+ALTER ROLE your_database_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE your_database_user SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE thebluelist TO your_database_user;
+\q
+```
+
+#### On Windows
+1. Download PostgreSQL installer from https://www.postgresql.org/download/windows/
+2. Run installer, noting down the password you set for the postgres user
+3. Open pgAdmin (installed with PostgreSQL)
+4. Create new database named 'thebluelist'
+5. Create new user 'your_database_user' with appropriate privileges
+
 
 ### Local Development Setup
 ```bash
