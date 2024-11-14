@@ -1,1 +1,2 @@
+-r base.txt
 whitenoise==6.8.2
