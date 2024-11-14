@@ -1,6 +1,6 @@
-import os
-import dj_database_url
 from .base import *
+
+DEBUG = False
 
 DATABASES = {
     'default': {
@@ -13,24 +13,12 @@ DATABASES = {
     }
 }
 
-# Make sure all required apps are included
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'users',
-]
-
-# Test-specific settings
-DEBUG = False
+# Test specific settings
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
-# Disable any expensive/unnecessary settings during testing
-PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.MD5PasswordHasher',
-]
+# Disable any resource-intensive settings
+MAX_ACCOUNTS_PER_EMAIL = 2  # If you use this setting
 
-# Add any other test-specific settings
+# Override any settings that require external services
+MAILTRAP_API_TOKEN = 'dummy-token-for-testing'
