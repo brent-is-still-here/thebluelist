@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from .models import User, HashedEmail
+import re
 
 User = get_user_model()
 
@@ -59,6 +60,22 @@ class SignupForm(UserCreationForm):
         model = User
         fields = ("username", "email", "password1", "password2")
     
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if len(username) < 3:
+            raise forms.ValidationError(
+                "Username must be at least 3 characters long."
+            )
+        if len(username) > 32:
+            raise forms.ValidationError(
+                "Username cannot be longer than 32 characters."
+            )
+        if not re.match(r'^[a-zA-Z0-9_-]+$', username):
+            raise forms.ValidationError(
+                "Username may only contain letters, numbers, underscores, and hyphens."
+            )
+        return username
+
     def clean_email(self):
         email = self.cleaned_data.get('email').lower().strip()
         if User.objects.filter(email=email).exists():
@@ -82,4 +99,3 @@ class SignupForm(UserCreationForm):
             pass
         
         return email
-    

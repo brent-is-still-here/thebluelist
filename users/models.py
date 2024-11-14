@@ -1,11 +1,22 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from django.utils import timezone
 from cryptography.fernet import Fernet
 from django.conf import settings
 import base64
 import hashlib
+import re
 import secrets
+
+def validate_username_characters(value):
+    """Custom validator to ensure username only contains allowed characters"""
+    if not re.match(r'^[a-zA-Z0-9_-]+$', value):
+        raise ValidationError(
+            'Username may only contain letters, numbers, underscores, and hyphens.'
+        )
 
 class HashedEmail(models.Model):
     """
@@ -55,6 +66,25 @@ class HashedEmail(models.Model):
         return self.users.count()
 
 class User(AbstractUser):
+    username = models.CharField(
+        max_length=32,
+        unique=True,
+        validators=[
+            MinLengthValidator(3),
+            RegexValidator(
+                regex=r'^[a-zA-Z0-9_-]+$',
+                message='Username may only contain letters, numbers, underscores, and hyphens.'
+            )
+        ],
+        error_messages={
+            'unique': 'A user with that username already exists.',
+            'min_length': 'Username must be at least 3 characters long.',
+            'max_length': 'Username cannot be longer than 32 characters.',
+            'invalid': 'Username may only contain letters, numbers, underscores, and hyphens.'
+        },
+        help_text='Required. 3-32 characters. Letters, numbers, underscores, and hyphens only.'
+    )
+
     email_verified = models.BooleanField(default=False)
     verification_token = models.CharField(max_length=100, blank=True)
     email_purged = models.BooleanField(default=False)

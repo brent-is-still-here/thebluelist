@@ -21,10 +21,10 @@ class TestRegistrationSecurity(TestCase):
         }
         response = self.client.post(self.signup_url, data)
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response.context['form'],
-            'username', 
-            'Enter a valid username. This value may contain only letters, '
-            'numbers, and @/./+/-/_ characters.'
+        self.assertFormError(
+            response.context['form'],
+            'username',
+            'Username may only contain letters, numbers, underscores, and hyphens.'
         )
 
     def test_sql_injection_email(self):
@@ -50,10 +50,10 @@ class TestRegistrationSecurity(TestCase):
         }
         response = self.client.post(self.signup_url, data)
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response.context['form'],
+        self.assertFormError(
+            response.context['form'],
             'username',
-            'Enter a valid username. This value may contain only letters, '
-            'numbers, and @/./+/-/_ characters.'
+            'Username may only contain letters, numbers, underscores, and hyphens.'
         )
 
 class TestSecurityMeasures(TestCase):
