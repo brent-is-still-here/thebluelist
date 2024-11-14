@@ -375,3 +375,83 @@ class TestRecoveryKeySystem(TestCase):
         self.assertTrue(self.user.email_purged)
         self.assertEqual(self.user.email, '')
         self.assertEqual(self.user.hashed_email, self.hashed_email)
+
+class TestPasswordReset(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.reset_url = reverse('users:reset_password')
+        self.email = "test@example.com"
+        self.password = "OldPass123!"
+        self.username = "testuser"
+        
+        # Create a verified user with a recovery key
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            email_verified=True
+        )
+        
+        # Generate and store recovery key
+        self.plain_recovery_key = RecoveryKey.generate_recovery_key()
+        self.recovery_key = RecoveryKey(user=self.user)
+        self.recovery_key.encrypt_recovery_key(self.plain_recovery_key)
+        self.recovery_key.save()
+
+    def test_successful_password_reset(self):
+        """Test successful password reset with valid recovery key"""
+        new_password = "NewSecurePass456!"
+        response = self.client.post(self.reset_url, {
+            'username': self.username,
+            'recovery_key': self.plain_recovery_key,
+            'new_password1': new_password,
+            'new_password2': new_password,
+        })
+        
+        self.assertRedirects(response, reverse('users:login'))
+        
+        # Verify password was changed
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+        
+        # Verify we can log in with new password
+        login_success = self.client.login(
+            username=self.username,
+            password=new_password
+        )
+        self.assertTrue(login_success)
+
+    def test_invalid_recovery_key(self):
+        """Test that invalid recovery keys are rejected"""
+        new_password = "NewSecurePass456!"
+        response = self.client.post(self.reset_url, {
+            'username': self.username,
+            'recovery_key': 'wrong-recovery-key',
+            'new_password1': new_password,
+            'new_password2': new_password,
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Invalid recovery key")
+        
+        # Verify password wasn't changed
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(self.password))
+
+    def test_nonexistent_username(self):
+        """Test reset attempt with non-existent username"""
+        response = self.client.post(self.reset_url, {
+            'username': 'nonexistentuser',
+            'recovery_key': self.plain_recovery_key,
+            'new_password1': 'NewPass123!',
+            'new_password2': 'NewPass123!',
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Invalid username or recovery key")
+
+    def test_get_reset_form(self):
+        """Test that GET request shows the reset form"""
+        response = self.client.get(self.reset_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/reset_password.html')
