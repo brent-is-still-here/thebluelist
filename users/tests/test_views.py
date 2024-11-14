@@ -218,3 +218,160 @@ class TestLoginSystem(TestCase):
         
         # Verify no recovery key in session
         self.assertNotIn('recovery_key', self.client.session)
+
+class TestRecoveryKeySystem(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.email = "test@example.com"
+        self.password = "SecurePass123!"
+        self.username = "testuser"
+        
+        # Create a verified user
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            email_verified=True
+        )
+        self.hashed_email = HashedEmail.get_or_create_hash(self.email)
+        self.user.hashed_email = self.hashed_email
+        self.user.save()
+        
+        self.recovery_key_url = reverse('users:show_recovery_key')
+        self.reset_password_url = reverse('users:reset_password')
+
+    def test_recovery_key_generation_and_encryption(self):
+        """Test that recovery keys are properly generated and encrypted"""
+        # Log in user
+        self.client.force_login(self.user)
+        
+        # Generate recovery key
+        recovery_key = RecoveryKey.generate_recovery_key()
+        recovery_key_obj = RecoveryKey(user=self.user)
+        recovery_key_obj.encrypt_recovery_key(recovery_key)
+        recovery_key_obj.save()
+        
+        # Verify key is encrypted
+        self.assertNotEqual(recovery_key_obj.encrypted_key, recovery_key)
+        self.assertTrue(recovery_key_obj.verify_recovery_key(recovery_key))
+        self.assertFalse(recovery_key_obj.verify_recovery_key("wrong-key"))
+
+    def test_recovery_key_viewing_flow(self):
+        """Test the complete recovery key viewing flow"""
+        # Log in user
+        self.client.force_login(self.user)
+        
+        # Generate and store recovery key
+        recovery_key = RecoveryKey.generate_recovery_key()
+        recovery_key_obj = RecoveryKey(user=self.user)
+        recovery_key_obj.encrypt_recovery_key(recovery_key)
+        recovery_key_obj.save()
+        
+        # Set up session
+        session = self.client.session
+        session['recovery_key'] = recovery_key
+        session.save()
+        
+        # First view should succeed
+        response = self.client.get(self.recovery_key_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/show_recovery_key.html')
+        self.assertContains(response, recovery_key)
+        
+        # Acknowledge viewing the key
+        response = self.client.post(self.recovery_key_url)
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify changes
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.recovery_key_viewed)
+        self.assertTrue(self.user.email_purged)
+        self.assertEqual(self.user.email, '')
+        
+        # Verify session cleanup
+        session = self.client.session
+        self.assertNotIn('recovery_key', session)
+
+    def test_prevent_multiple_recovery_key_views(self):
+        """Test that recovery key can't be viewed multiple times"""
+        self.client.force_login(self.user)
+        
+        # Mark as already viewed
+        self.user.recovery_key_viewed = True
+        self.user.save()
+        
+        # Attempt to view recovery key
+        response = self.client.get(self.recovery_key_url)
+        self.assertEqual(response.status_code, 302)  # Should redirect
+        self.assertRedirects(response, reverse('home'))
+        
+        messages = list(response.wsgi_request._messages)
+        self.assertTrue(any('already been viewed' in str(m) for m in messages))
+
+    def test_password_reset_with_recovery_key(self):
+        """Test password reset using recovery key"""
+        # Generate and store recovery key
+        plain_recovery_key = RecoveryKey.generate_recovery_key()
+        recovery_key_obj = RecoveryKey(user=self.user)
+        recovery_key_obj.encrypt_recovery_key(plain_recovery_key)
+        recovery_key_obj.save()
+        
+        # Attempt password reset
+        new_password = "NewSecurePass456!"
+        response = self.client.post(self.reset_password_url, {
+            'username': self.username,
+            'recovery_key': plain_recovery_key,
+            'new_password1': new_password,
+            'new_password2': new_password,
+        })
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('users:login'))
+        
+        # Verify password was changed
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+
+    def test_invalid_recovery_key_reset(self):
+        """Test that invalid recovery keys are rejected"""
+        recovery_key_obj = RecoveryKey(user=self.user)
+        recovery_key_obj.encrypt_recovery_key("correct-key")
+        recovery_key_obj.save()
+        
+        response = self.client.post(self.reset_password_url, {
+            'username': self.username,
+            'recovery_key': 'wrong-key',
+            'new_password1': 'NewPass123!',
+            'new_password2': 'NewPass123!',
+        })
+        
+        self.assertEqual(response.status_code, 200)  # Stays on same page
+        self.assertContains(response, "Invalid recovery key")
+        
+        # Verify password wasn't changed
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(self.password))
+
+    def test_hashed_email_maintained_after_purge(self):
+        """Test that hashed email association remains after email purge"""
+        self.client.force_login(self.user)
+        
+        # Generate and store recovery key
+        recovery_key = RecoveryKey.generate_recovery_key()
+        recovery_key_obj = RecoveryKey(user=self.user)
+        recovery_key_obj.encrypt_recovery_key(recovery_key)
+        recovery_key_obj.save()
+        
+        # Set up session and view recovery key
+        session = self.client.session
+        session['recovery_key'] = recovery_key
+        session.save()
+        
+        # Acknowledge viewing the key which triggers email purge
+        response = self.client.post(self.recovery_key_url)
+        
+        # Verify email is purged but hashed_email remains
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.email_purged)
+        self.assertEqual(self.user.email, '')
+        self.assertEqual(self.user.hashed_email, self.hashed_email)
