@@ -11,6 +11,17 @@ DATABASES = {
     }
 }
 
+# Make sure all required apps are included
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'users',
+]
+
 # Test-specific settings
 DEBUG = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
@@ -19,3 +30,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.MD5PasswordHasher',
 ]
+
+# Add any other test-specific settings
