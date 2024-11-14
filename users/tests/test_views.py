@@ -1,11 +1,13 @@
 from datetime import timedelta
 from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
 from django.core import mail
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from users.models import HashedEmail, User, RecoveryKey
 from unittest.mock import patch
+import secrets
 
 User = get_user_model()
 
@@ -375,3 +377,225 @@ class TestRecoveryKeySystem(TestCase):
         self.assertTrue(self.user.email_purged)
         self.assertEqual(self.user.email, '')
         self.assertEqual(self.user.hashed_email, self.hashed_email)
+
+class TestPasswordReset(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.reset_url = reverse('users:reset_password')
+        self.email = "test@example.com"
+        self.password = "OldPass123!"
+        self.username = "testuser"
+        
+        # Create a verified user with a recovery key
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            email_verified=True
+        )
+        
+        # Generate and store recovery key
+        self.plain_recovery_key = RecoveryKey.generate_recovery_key()
+        self.recovery_key = RecoveryKey(user=self.user)
+        self.recovery_key.encrypt_recovery_key(self.plain_recovery_key)
+        self.recovery_key.save()
+
+    def test_successful_password_reset(self):
+        """Test successful password reset with valid recovery key"""
+        new_password = "NewSecurePass456!"
+        response = self.client.post(self.reset_url, {
+            'username': self.username,
+            'recovery_key': self.plain_recovery_key,
+            'new_password1': new_password,
+            'new_password2': new_password,
+        })
+        
+        self.assertRedirects(response, reverse('users:login'))
+        
+        # Verify password was changed
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+        
+        # Verify we can log in with new password
+        login_success = self.client.login(
+            username=self.username,
+            password=new_password
+        )
+        self.assertTrue(login_success)
+
+    def test_invalid_recovery_key(self):
+        """Test that invalid recovery keys are rejected"""
+        new_password = "NewSecurePass456!"
+        response = self.client.post(self.reset_url, {
+            'username': self.username,
+            'recovery_key': 'wrong-recovery-key',
+            'new_password1': new_password,
+            'new_password2': new_password,
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Invalid recovery key")
+        
+        # Verify password wasn't changed
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(self.password))
+
+    def test_nonexistent_username(self):
+        """Test reset attempt with non-existent username"""
+        response = self.client.post(self.reset_url, {
+            'username': 'nonexistentuser',
+            'recovery_key': self.plain_recovery_key,
+            'new_password1': 'NewPass123!',
+            'new_password2': 'NewPass123!',
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Invalid username or recovery key")
+
+    def test_get_reset_form(self):
+        """Test that GET request shows the reset form"""
+        response = self.client.get(self.reset_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/reset_password.html')
+
+class TestEmailVerification(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.email = "test@example.com"
+        self.password = "testpass123"
+        self.username = "testuser"
+        
+        # Create an unverified user
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            email_verified=False
+        )
+        self.user.verification_token = secrets.token_urlsafe(32)
+        self.user.save()
+        
+        self.verification_url = reverse('users:verify_email', 
+                                      args=[self.user.verification_token])
+        self.resend_url = reverse('users:resend_verification')
+
+    def test_successful_verification(self):
+        """Test successful email verification with valid token"""
+        response = self.client.get(self.verification_url)
+        
+        # Check redirect to success page
+        self.assertRedirects(response, reverse('users:verification_success'))
+        
+        # Refresh user and verify changes
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.email_verified)
+        self.assertEqual(self.user.verification_token, '')
+
+    def test_invalid_verification_token(self):
+        """Test that invalid verification tokens are rejected"""
+        # Try with invalid token
+        invalid_url = reverse('users:verify_email', args=['invalid-token'])
+        response = self.client.get(invalid_url)
+        
+        # Should redirect to login with error
+        self.assertRedirects(response, reverse('users:login'))
+        
+        # Verify user remains unverified
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.email_verified)
+        self.assertNotEqual(self.user.verification_token, '')
+
+    def test_used_verification_token(self):
+        """Test that a used verification token cannot be used again"""
+        # First verification
+        self.client.get(self.verification_url)
+        
+        # Try to use same token again
+        response = self.client.get(self.verification_url)
+        
+        # Should redirect to login
+        self.assertRedirects(response, reverse('users:login'))
+        
+        # Message should indicate invalid link
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(any('Invalid verification link' in str(m) for m in messages))
+
+    @patch('users.views.email_service.send_verification_email')
+    def test_resend_verification_email(self, mock_send_email):
+        """Test resending verification email"""
+        # Login as unverified user
+        self.client.login(username=self.username, password=self.password)
+        
+        # Configure mock
+        mock_send_email.return_value = (True, "mock_message_id")
+        
+        # Request new verification email
+        response = self.client.post(self.resend_url)
+        
+        # Should redirect to verification sent page
+        self.assertRedirects(response, reverse('users:verification_sent'))
+        
+        # Verify email was "sent"
+        mock_send_email.assert_called_once()
+        
+        # Verify new token was generated
+        self.user.refresh_from_db()
+        self.assertNotEqual(self.user.verification_token, '')
+
+    @patch('users.views.email_service.send_verification_email')
+    def test_resend_verification_email_failure(self, mock_send_email):
+        """Test handling of email sending failure"""
+        self.client.login(username=self.username, password=self.password)
+        
+        # Configure mock to simulate failure
+        mock_send_email.return_value = (False, None)
+        
+        # Request new verification email
+        response = self.client.post(self.resend_url)
+        
+        # Should still redirect to verification sent page
+        self.assertRedirects(response, reverse('users:verification_sent'))
+        
+        # But should have error message
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(any('Failed to send verification email' in str(m) for m in messages))
+
+    def test_verified_user_cannot_resend(self):
+        """Test that verified users still get redirected to verification sent"""
+        # Make user verified
+        self.user.email_verified = True
+        self.user.save()
+        
+        self.client.login(username=self.username, password=self.password)
+        
+        # Try to resend verification
+        response = self.client.post(self.resend_url)
+        
+        # Should redirect to verification sent
+        self.assertRedirects(response, reverse('users:verification_sent'))
+        
+        # Verify no new verification email was sent
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.email_verified)
+
+    def test_unverified_user_access_restrictions(self):
+        """Test that unverified users are restricted from certain pages"""
+        self.client.login(username=self.username, password=self.password)
+        
+        # Try to access a protected page
+        response = self.client.get(reverse('home'))
+        
+        # Should redirect to verification sent page
+        self.assertRedirects(response, reverse('users:verification_sent'))
+        
+        # Verify user can still access verification-related pages
+        verification_sent_response = self.client.get(reverse('users:verification_sent'))
+        self.assertEqual(verification_sent_response.status_code, 200)
+        
+        # Test resend verification
+        resend_response = self.client.post(reverse('users:resend_verification'))
+        self.assertRedirects(resend_response, reverse('users:verification_sent'))
+        
+        # Test logout
+        logout_response = self.client.post(reverse('users:logout'))
+        self.assertRedirects(logout_response, reverse('home'))
