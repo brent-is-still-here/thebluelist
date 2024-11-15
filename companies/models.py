@@ -122,8 +122,7 @@ class Business(models.Model):
 
             # Calculate political score (0 to 1, higher for more liberal businesses)
             try:
-                # Convert Decimal to float before calculation
-                conservative_pct = float(business.politicaldata.conservative_percentage)
+                conservative_pct = float(business.politicaldata.overall_conservative_percentage or 0)
                 political_score = (100 - conservative_pct) / 100
             except (AttributeError, ZeroDivisionError):
                 political_score = 0.5  # Default if no political data
@@ -136,7 +135,7 @@ class Business(models.Model):
                 'business': business,
                 'score': weighted_score,
                 'overlap_count': total_overlap,
-                'conservative_percentage': business.politicaldata.conservative_percentage if hasattr(business, 'politicaldata') else None
+                'conservative_percentage': business.politicaldata.overall_conservative_percentage if hasattr(business, 'politicaldata') else None
             })
 
         # Sort by weighted score
@@ -204,10 +203,10 @@ class EditRequest(models.Model):
     affiliated_pac_america_pac_donor = models.BooleanField(null=True)
     affiliated_pac_save_america_pac_donor = models.BooleanField(null=True)
     
-    # CEO donation changes
-    ceo_trump_donor = models.BooleanField(null=True)
-    ceo_america_pac_donor = models.BooleanField(null=True)
-    ceo_save_america_pac_donor = models.BooleanField(null=True)
+    # senior_employee donation changes
+    senior_employee_trump_donor = models.BooleanField(null=True)
+    senior_employee_america_pac_donor = models.BooleanField(null=True)
+    senior_employee_save_america_pac_donor = models.BooleanField(null=True)
     
     # Data source
     data_source = models.TextField(blank=True)
@@ -331,10 +330,13 @@ class PoliticalData(models.Model):
     affiliated_pac_america_pac_donor = models.BooleanField(default=False)
     affiliated_pac_save_america_pac_donor = models.BooleanField(default=False)
     
-    # CEO donation data
-    ceo_trump_donor = models.BooleanField(default=False)
-    ceo_america_pac_donor = models.BooleanField(default=False)
-    ceo_save_america_pac_donor = models.BooleanField(default=False)
+    # senior_employee donation data
+    senior_employee_conservative_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    senior_employee_liberal_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    senior_employee_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    senior_employee_trump_donor = models.BooleanField(default=False)
+    senior_employee_america_pac_donor = models.BooleanField(default=False)
+    senior_employee_save_america_pac_donor = models.BooleanField(default=False)
     
     # Metadata
     last_updated = models.DateTimeField(auto_now=True)
@@ -372,6 +374,20 @@ class PoliticalData(models.Model):
         if not self.affiliated_pac_total_donations:
             return None
         return (self.affiliated_pac_liberal_total_donations or 0) / self.affiliated_pac_total_donations * 100
+    
+    @property
+    def senior_employee_conservative_percentage(self):
+        """Calculate percentage of PAC conservative donations"""
+        if not self.senior_employee_total_donations:
+            return None
+        return (self.senior_employee_conservative_total_donations or 0) / self.senior_employee_total_donations * 100
+
+    @property
+    def senior_employeec_liberal_percentage(self):
+        """Calculate percentage of PAC liberal donations"""
+        if not self.senior_employee_total_donations:
+            return None
+        return (self.senior_employee_liberal_total_donations or 0) / self.senior_employee_total_donations * 100
 
     @property
     def overall_conservative_percentage(self):

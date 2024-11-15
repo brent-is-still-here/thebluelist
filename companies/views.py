@@ -58,10 +58,10 @@ def add_business(request):
                     affiliated_pac_america_pac_donor=request.POST.get('affiliated_pac_america_pac_donor') == 'on',
                     affiliated_pac_save_america_pac_donor=request.POST.get('affiliated_pac_save_america_pac_donor') == 'on',
                     
-                    # CEO donations
-                    ceo_trump_donor=request.POST.get('ceo_trump_donor') == 'on',
-                    ceo_america_pac_donor=request.POST.get('ceo_america_pac_donor') == 'on',
-                    ceo_save_america_pac_donor=request.POST.get('ceo_save_america_pac_donor') == 'on',
+                    # senior_employee donations
+                    senior_employee_trump_donor=request.POST.get('senior_employee_trump_donor') == 'on',
+                    senior_employee_america_pac_donor=request.POST.get('senior_employee_america_pac_donor') == 'on',
+                    senior_employee_save_america_pac_donor=request.POST.get('senior_employee_save_america_pac_donor') == 'on',
                 )
                 
                 # Handle data sources
@@ -112,22 +112,45 @@ def add_business(request):
 def business_detail(request, slug):
     business = get_object_or_404(
         Business.objects.prefetch_related(
-            'services', 
-            'products', 
+            'services',
+            'products',
             'subsidiaries'
         ).select_related(
             'parent_company',
-            'politicaldata'
-        ), 
+            'politicaldata'  # Add this
+        ),
         slug=slug
     )
-
+    
     # Get alternative businesses
     alternatives = business.get_alternative_businesses(limit=5)
+    
+    # Check if there is any political data to display
+    has_direct_donations = (
+        business.politicaldata and 
+        (business.politicaldata.direct_conservative_total_donations or 
+         business.politicaldata.direct_liberal_total_donations)
+    )
+    
+    has_pac_donations = (
+        business.politicaldata and
+        (business.politicaldata.affiliated_pac_conservative_total_donations or 
+         business.politicaldata.affiliated_pac_liberal_total_donations)
+    )
+
+    has_senior_employee_donations = (
+        business.politicaldata and
+        (business.politicaldata.senior_employee_trump_donor or
+         business.politicaldata.senior_employee_america_pac_donor or
+         business.politicaldata.senior_employee_save_america_pac_donor)
+    )
     
     return render(request, 'companies/business_detail.html', {
         'business': business,
         'alternatives': alternatives,
+        'has_direct_donations': has_direct_donations,
+        'has_pac_donations': has_pac_donations,
+        'has_senior_employee_donations': has_senior_employee_donations
     })
 
 def business_search(request):
@@ -275,14 +298,14 @@ def import_business(request):
                 csv_text = TextIOWrapper(csv_file, encoding='utf-8')
                 reader = csv.DictReader(csv_text)
                 
-                # Validate CSV structure
+                # Validate CSV structure    
                 required_fields = {'Recipient', 'View'}
                 if not required_fields.issubset(reader.fieldnames):
                     raise ValueError('CSV file missing required columns')
 
                 # At least one donation type column must exist
-                if 'From Organization' not in reader.fieldnames and 'From PACs' not in reader.fieldnames:
-                    raise ValueError('CSV must contain either "From Organization" or "From PACs" column')
+                if 'From Organization' not in reader.fieldnames and 'From Individuals' not in reader.fieldnames and 'From PACs' not in reader.fieldnames:
+                    raise ValueError('CSV must contain at least one of "From Organization","From Individuals", or "From PACs" columns')
                 
                 # At least one data source is required
                 if not form_data['data_sources']:
@@ -298,48 +321,77 @@ def import_business(request):
                 pac_liberal_total = Decimal('0')
                 pac_conservative_total = Decimal('0')
                 pac_total = Decimal('0')
+                senior_employee_liberal_total = Decimal('0')
+                senior_employee_conservative_total = Decimal('0')
+                senior_employee_total = Decimal('0')
                 
                 direct_america_pac = False
                 direct_save_america = False
                 pac_america_pac = False
                 pac_save_america = False
-                is_trump_donor = False
+                senior_employee_america_pac = False
+                senior_employee_save_america = False
+                senior_employee_trump_donor = False
 
-                # Process each row
                 for row in reader:
-                    # Process direct donations if column exists
+                    view = row['View'].lower()
+                    is_liberal = 'democrat' in view or 'liberal' in view
+                    is_conservative = 'republican' in view or 'conservative' in view
+
+                    # Process direct donations
                     if 'From Organization' in reader.fieldnames:
                         org_amount = Decimal(row['From Organization'].replace('$', '').replace(',', '') or '0')
+                        recipient = row['Recipient'].lower()
                         if org_amount > 0:
-                            if row['View'] == 'Democrat':
+                            if is_liberal:
                                 direct_liberal_total += org_amount
-                            elif row['View'] == 'Republican':
+                            elif is_conservative:
                                 direct_conservative_total += org_amount
                             direct_total += org_amount
-                            
-                            # Check direct PAC donations
-                            if row['Recipient'] == 'America PAC (Texas)':
-                                direct_america_pac = True
-                            elif 'Save America' in row['Recipient']:
-                                direct_save_america = True
-                            elif row['Recipient'] == 'Trump Donald':
-                                is_trump_donor = True
 
-                    # Process PAC donations if column exists
+                            # Check specific donations
+                            if 'america pac \(texas\)' in recipient:
+                                direct_america_pac = True
+                            elif 'save america' in recipient:
+                                direct_save_america = True
+                            
+                    # Process PAC donations 
                     if 'From PACs' in reader.fieldnames:
                         pac_amount = Decimal(row['From PACs'].replace('$', '').replace(',', '') or '0')
+                        recipient = row['Recipient'].lower()
                         if pac_amount > 0:
-                            if row['View'] == 'Democrat':
+                            if is_liberal:
                                 pac_liberal_total += pac_amount
-                            elif row['View'] == 'Republican':
+                            elif is_conservative:
                                 pac_conservative_total += pac_amount
                             pac_total += pac_amount
-                            
-                            # Check PAC donations
-                            if row['Recipient'] == 'America PAC (Texas)':
+
+                            # Check specific donations
+                            if 'trump' in recipient:
+                                pac_trump_donor = True
+                            elif 'america pac \(texas\)' in recipient:
                                 pac_america_pac = True
-                            elif 'Save America' in row['Recipient']:
+                            elif 'save america' in recipient:
                                 pac_save_america = True
+
+                    # Process senior employee donations
+                    if 'From Individuals' in reader.fieldnames:
+                        individual_amount = Decimal(row['From Individuals'].replace('$', '').replace(',', '') or '0')
+                        recipient = row['Recipient'].lower()
+                        if individual_amount > 0:
+                            if is_liberal:
+                                senior_employee_liberal_total += individual_amount
+                            elif is_conservative:
+                                senior_employee_conservative_total += individual_amount
+                            senior_employee_total += individual_amount
+
+                            # Check specific donations
+                            if 'trump' in recipient:
+                                senior_employee_trump_donor = True
+                            elif 'america pac \(texas\)' in recipient:
+                                senior_employee_america_pac = True
+                            elif 'save america' in recipient:
+                                senior_employee_save_america = True
 
                 # Create political data
                 PoliticalData.objects.create(
@@ -358,10 +410,13 @@ def import_business(request):
                     affiliated_pac_america_pac_donor=pac_america_pac,
                     affiliated_pac_save_america_pac_donor=pac_save_america,
                     
-                    # CEO donations - only setting Trump donor for now
-                    ceo_trump_donor=is_trump_donor,
-                    ceo_america_pac_donor=False,
-                    ceo_save_america_pac_donor=False,
+                    # senior_employee donations - only setting Trump donor for now
+                    senior_employee_conservative_total_donations=senior_employee_conservative_total,
+                    senior_employee_liberal_total_donations=senior_employee_liberal_total,
+                    senior_employee_total_donations=senior_employee_total,
+                    senior_employee_trump_donor=senior_employee_trump_donor,
+                    senior_employee_america_pac_donor=senior_employee_america_pac,
+                    senior_employee_save_america_pac_donor=senior_employee_save_america,
                 )
 
                 # Create the data source records

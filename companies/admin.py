@@ -69,7 +69,7 @@ class PoliticalDataAdmin(admin.ModelAdmin):
         'get_pac_liberal_pct',
         'direct_america_pac_donor',
         'direct_save_america_pac_donor',
-        'ceo_trump_donor',
+        'senior_employee_trump_donor',
         'last_updated'
     )
     search_fields = ('business__name', 'data_source')
@@ -78,9 +78,9 @@ class PoliticalDataAdmin(admin.ModelAdmin):
         'direct_save_america_pac_donor',
         'affiliated_pac_america_pac_donor',
         'affiliated_pac_save_america_pac_donor',
-        'ceo_trump_donor',
-        'ceo_america_pac_donor',
-        'ceo_save_america_pac_donor'
+        'senior_employee_trump_donor',
+        'senior_employee_america_pac_donor',
+        'senior_employee_save_america_pac_donor'
     )
 
     def get_direct_conservative_pct(self, obj):
@@ -129,11 +129,11 @@ class EditRequestAdmin(admin.ModelAdmin):
                 'affiliated_pac_save_america_pac_donor',
             )
         }),
-        ('CEO Activity Changes', {
+        ('Senior Employee Activity Changes', {
             'fields': (
-                'ceo_trump_donor',
-                'ceo_america_pac_donor',
-                'ceo_save_america_pac_donor',
+                'senior_employee_trump_donor',
+                'senior_employee_america_pac_donor',
+                'senior_employee_save_america_pac_donor',
             )
         }),
         ('Service Changes', {
