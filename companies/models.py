@@ -377,60 +377,60 @@ class PoliticalData(models.Model):
         """Calculate percentage of direct conservative donations"""
         if not self.direct_total_donations:
             return None
-        return (self.direct_conservative_total_donations or 0) / self.direct_total_donations * 100
+        return round((self.direct_conservative_total_donations or 0) / self.direct_total_donations * 100, 2)
 
     @property
     def direct_liberal_percentage(self):
         """Calculate percentage of direct liberal donations"""
         if not self.direct_total_donations:
             return None
-        return (self.direct_liberal_total_donations or 0) / self.direct_total_donations * 100
+        return round((self.direct_liberal_total_donations or 0) / self.direct_total_donations * 100, 2)
 
     @property
     def affiliated_pac_conservative_percentage(self):
         """Calculate percentage of PAC conservative donations"""
         if not self.affiliated_pac_total_donations:
             return None
-        return (self.affiliated_pac_conservative_total_donations or 0) / self.affiliated_pac_total_donations * 100
+        return round((self.affiliated_pac_conservative_total_donations or 0) / self.affiliated_pac_total_donations * 100, 2)
 
     @property
     def affiliated_pac_liberal_percentage(self):
         """Calculate percentage of PAC liberal donations"""
         if not self.affiliated_pac_total_donations:
             return None
-        return (self.affiliated_pac_liberal_total_donations or 0) / self.affiliated_pac_total_donations * 100
+        return round((self.affiliated_pac_liberal_total_donations or 0) / self.affiliated_pac_total_donations * 100, 2)
     
     @property
     def senior_employee_conservative_percentage(self):
         """Calculate percentage of PAC conservative donations"""
         if not self.senior_employee_total_donations:
             return None
-        return (self.senior_employee_conservative_total_donations or 0) / self.senior_employee_total_donations * 100
+        return round((self.senior_employee_conservative_total_donations or 0) / self.senior_employee_total_donations * 100, 2)
 
     @property
     def senior_employeec_liberal_percentage(self):
         """Calculate percentage of PAC liberal donations"""
         if not self.senior_employee_total_donations:
             return None
-        return (self.senior_employee_liberal_total_donations or 0) / self.senior_employee_total_donations * 100
+        return round((self.senior_employee_liberal_total_donations or 0) / self.senior_employee_total_donations * 100, 2)
 
     @property
     def overall_conservative_percentage(self):
         """Calculate overall percentage of conservative donations across direct and PAC"""
-        total = (self.direct_total_donations or 0) + (self.affiliated_pac_total_donations or 0)
+        total = (self.direct_total_donations or 0) + (self.affiliated_pac_total_donations or 0) + (self.senior_employee_total_donations or 0)
         if not total:
             return None
-        conservative_total = (self.direct_conservative_total_donations or 0) + (self.affiliated_pac_conservative_total_donations or 0)
-        return conservative_total / total * 100
+        conservative_total = (self.direct_conservative_total_donations or 0) + (self.affiliated_pac_conservative_total_donations or 0) + (self.senior_employee_conservative_total_donations or 0)
+        return round(conservative_total / total * 100, 2)
 
     @property
     def overall_liberal_percentage(self):
         """Calculate overall percentage of liberal donations across direct and PAC"""
-        total = (self.direct_total_donations or 0) + (self.affiliated_pac_total_donations or 0)
+        total = (self.direct_total_donations or 0) + (self.affiliated_pac_total_donations or 0) + (self.senior_employee_total_donations or 0)
         if not total:
             return None
-        liberal_total = (self.direct_liberal_total_donations or 0) + (self.affiliated_pac_liberal_total_donations or 0)
-        return liberal_total / total * 100
+        liberal_total = (self.direct_liberal_total_donations or 0) + (self.affiliated_pac_liberal_total_donations or 0) + (self.senior_employee_liberal_total_donations or 0)
+        return round(liberal_total / total * 100, 2)
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100)
