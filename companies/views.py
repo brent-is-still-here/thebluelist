@@ -75,7 +75,10 @@ def add_business(request):
                 )
 
                 # Handle data sources
-                # data_sources = request.POST.getlist('data_sources[]')
+                form_data = {
+                    'data_sources': request.POST.getlist('data_sources[]'),
+                }
+
                 # Create the data source records
                 for source_url in form_data['data_sources']:
                     if source_url:
@@ -727,13 +730,15 @@ def submit_update(request, business_id):
                 # Handle new data sources
                 data_sources = request.POST.getlist('new_data_sources[]')
                 for source_url in data_sources:
-                    if source_url:  # Only create if URL is not empty
-                        DataSource.objects.create(
+                    if source_url:
+                        DataSource.objects.get_or_create(
                             business=business,
-                            reason='update',
-                            is_approved=False,
                             url=source_url,
-                            edit_request=edit_request
+                            defaults={
+                                'reason': 'update',
+                                'is_approved': False,
+                                'edit_request': edit_request
+                            }
                         )
 
                 # Handle services/products changes
