@@ -166,6 +166,14 @@ class CSVImportRateLimit(models.Model):
 class DataSource(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='data_sources')
     url = models.URLField()
+    reason = models.CharField(
+        max_length=20,
+        choices=[
+            ('import', 'Data Import'),
+            ('update', 'Manual Update'),
+            ('manual_addition', 'Manual Addition')
+        ]
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -54,7 +54,7 @@
     {% if business.politicaldata %}
         {% if has_direct_donations %}
         <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">Direct Political Donations</h2>
+            <h2 class="text-xl font-semibold mb-4">2022-2024 Direct Political Donations</h2>
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
                     <div class="text-2xl font-bold text-red-600">{{ business.politicaldata.direct_conservative_percentage|default:0|floatformat:1 }}%</div>
@@ -82,7 +82,7 @@
 
         {% if has_pac_donations %}
         <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">Affiliated PAC Donations</h2>
+            <h2 class="text-xl font-semibold mb-4">2022-2024 Affiliated PAC Donations</h2>
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
                     <div class="text-2xl font-bold text-red-600">{{ business.politicaldata.affiliated_pac_conservative_percentage|default:0|floatformat:1 }}%</div>
@@ -110,7 +110,7 @@
 
         {% if has_senior_employee_donations %}
         <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">Senior Employee Political Activity</h2>
+            <h2 class="text-xl font-semibold mb-4">2022-2024 Senior Employee Political Activity</h2>
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div class="text-center p-4 bg-gray-50 rounded-lg">
                     <div class="text-2xl font-bold text-red-600">{{ business.politicaldata.senior_employee_conservative_percentage|default:0|floatformat:1 }}%</div>
@@ -191,6 +191,32 @@
                 </h3>
                 <p>{{ alt.business.description|truncatewords:30 }}</p>
                 <p class="text-sm text-gray-500">Matches {{ alt.overlap_count }} product{{ alt.overlap_count|pluralize:",s" }}/service{{ alt.overlap_count|pluralize:",s" }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Data Source Listing -->
+    {% if business.data_sources.exists %}
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Data Sources</h2>
+        <div class="space-y-2">
+            {% for source in business.data_sources.all %}
+            <div class="flex justify-between items-center">
+                    <a href="{{ source.url }}" 
+                        class="text-blue-600 hover:text-blue-800" 
+                        target="_blank"
+                        title="{{ source.url }}"
+                        rel="noopener noreferrer">
+                            {{ source.url|truncatechars:32 }}
+                    </a>
+                <span class="text-sm text-gray-600">
+                    {{ source.get_reason_display }}
+                </span>
+                <span class="text-sm text-gray-600">
+                    {{ source.created_at|date:"F j, Y" }}
+                </span>
             </div>
             {% endfor %}
         </div>

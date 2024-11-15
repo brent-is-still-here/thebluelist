@@ -70,6 +70,7 @@ def add_business(request):
                     if source_url:  # Only create if URL is not empty
                         DataSource.objects.create(
                             business=business,
+                            reason='manual_addition',
                             url=source_url
                         )
                 
@@ -424,6 +425,7 @@ def import_business(request):
                     if source_url:
                         DataSource.objects.create(
                             business=business,
+                            reason='import',
                             url=form_data['data_sources']
                         )
 
