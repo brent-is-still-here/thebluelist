@@ -212,6 +212,9 @@ class EditRequest(models.Model):
     affiliated_pac_save_america_pac_donor = models.BooleanField(null=True)
     
     # senior_employee donation changes
+    senior_employee_conservative_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    senior_employee_liberal_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    senior_employee_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     senior_employee_trump_donor = models.BooleanField(null=True)
     senior_employee_america_pac_donor = models.BooleanField(null=True)
     senior_employee_save_america_pac_donor = models.BooleanField(null=True)
