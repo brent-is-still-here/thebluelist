@@ -238,7 +238,7 @@ def import_business(request):
             'name': request.POST.get('name'),
             'website': request.POST.get('website'),
             'description': request.POST.get('description'),
-            'data_source': request.POST.get('data_source'),
+            'data_sources': request.POST.get('data_sources[]'),
             'provides_services': request.POST.get('provides_services') == 'on',
             'provides_products': request.POST.get('provides_products') == 'on',
             'services': request.POST.getlist('services'),
@@ -276,42 +276,101 @@ def import_business(request):
                 reader = csv.DictReader(csv_text)
                 
                 # Validate CSV structure
-                required_fields = {'Recipient', 'From Organization', 'View'}
+                required_fields = {'Recipient', 'View'}
                 if not required_fields.issubset(reader.fieldnames):
                     raise ValueError('CSV file missing required columns')
 
-                # Calculate totals
-                liberal_total = Decimal('0')
-                conservative_total = Decimal('0')
+                # At least one donation type column must exist
+                if 'From Organization' not in reader.fieldnames and 'From PACs' not in reader.fieldnames:
+                    raise ValueError('CSV must contain either "From Organization" or "From PACs" column')
                 
-                for row in reader:
-                    amount = Decimal(row['From Organization'].replace('$', '').replace(',', ''))
-                    if row['View'] == 'Democrat':
-                        liberal_total += amount
-                    elif row['View'] == 'Republican':
-                        conservative_total += amount
+                # At least one data source is required
+                if not form_data['data_sources']:
+                    raise ValueError('At least one data source URL is required')
 
-                total_donations = liberal_total + conservative_total
+                if not any(url.strip() for url in form_data['data_sources']):
+                    raise ValueError('At least one non-empty data source URL is required')
+
+                # Initialize all counters and flags
+                direct_liberal_total = Decimal('0')
+                direct_conservative_total = Decimal('0')
+                direct_total = Decimal('0')
+                pac_liberal_total = Decimal('0')
+                pac_conservative_total = Decimal('0')
+                pac_total = Decimal('0')
                 
+                direct_america_pac = False
+                direct_save_america = False
+                pac_america_pac = False
+                pac_save_america = False
+                is_trump_donor = False
+
+                # Process each row
+                for row in reader:
+                    # Process direct donations if column exists
+                    if 'From Organization' in reader.fieldnames:
+                        org_amount = Decimal(row['From Organization'].replace('$', '').replace(',', '') or '0')
+                        if org_amount > 0:
+                            if row['View'] == 'Democrat':
+                                direct_liberal_total += org_amount
+                            elif row['View'] == 'Republican':
+                                direct_conservative_total += org_amount
+                            direct_total += org_amount
+                            
+                            # Check direct PAC donations
+                            if row['Recipient'] == 'America PAC (Texas)':
+                                direct_america_pac = True
+                            elif 'Save America' in row['Recipient']:
+                                direct_save_america = True
+                            elif row['Recipient'] == 'Trump Donald':
+                                is_trump_donor = True
+
+                    # Process PAC donations if column exists
+                    if 'From PACs' in reader.fieldnames:
+                        pac_amount = Decimal(row['From PACs'].replace('$', '').replace(',', '') or '0')
+                        if pac_amount > 0:
+                            if row['View'] == 'Democrat':
+                                pac_liberal_total += pac_amount
+                            elif row['View'] == 'Republican':
+                                pac_conservative_total += pac_amount
+                            pac_total += pac_amount
+                            
+                            # Check PAC donations
+                            if row['Recipient'] == 'America PAC (Texas)':
+                                pac_america_pac = True
+                            elif 'Save America' in row['Recipient']:
+                                pac_save_america = True
+
                 # Create political data
                 PoliticalData.objects.create(
                     business=business,
-                    conservative_total_donations=conservative_total,
-                    liberal_total_donations=liberal_total,
-                    conservative_percentage=((conservative_total / total_donations) * 100) if total_donations else None,
-                    liberal_percentage=((liberal_total / total_donations) * 100) if total_donations else None,
-                    america_pac_donor=any(
-                        row['Recipient'] == 'America PAC (Texas)' and 
-                        Decimal(row['From Organization'].replace('$', '').replace(',', '')) > 0 
-                        for row in reader
-                    ),
-                    save_america_pac_donor=any(
-                        'Save America' in row['Recipient'] and 
-                        Decimal(row['From Organization'].replace('$', '').replace(',', '')) > 0 
-                        for row in reader
-                    ),
-                    data_source=form_data['data_source']
+                    # Direct donations
+                    direct_conservative_total_donations=direct_conservative_total,
+                    direct_liberal_total_donations=direct_liberal_total,
+                    direct_total_donations=direct_total,
+                    direct_america_pac_donor=direct_america_pac,
+                    direct_save_america_pac_donor=direct_save_america,
+                    
+                    # PAC donations
+                    affiliated_pac_conservative_total_donations=pac_conservative_total,
+                    affiliated_pac_liberal_total_donations=pac_liberal_total,
+                    affiliated_pac_total_donations=pac_total,
+                    affiliated_pac_america_pac_donor=pac_america_pac,
+                    affiliated_pac_save_america_pac_donor=pac_save_america,
+                    
+                    # CEO donations - only setting Trump donor for now
+                    ceo_trump_donor=is_trump_donor,
+                    ceo_america_pac_donor=False,
+                    ceo_save_america_pac_donor=False,
                 )
+
+                # Create the data source records
+                for source_url in form_data['data_sources']:
+                    if source_url:
+                        DataSource.objects.create(
+                            business=business,
+                            url=form_data['data_sources']
+                        )
 
                 # Update rate limit
                 CSVImportRateLimit.objects.update_or_create(

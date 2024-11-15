@@ -1,8 +1,8 @@
-from datetime import timezone
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 from django.utils.text import slugify
 
 # Permission functions

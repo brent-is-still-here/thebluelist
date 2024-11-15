@@ -22,7 +22,7 @@
     <div class="bg-white p-6 rounded-lg shadow">
         <h2 class="text-2xl font-semibold mb-6">Add New Business</h2>
         
-        <form method="post" class="space-y-8">
+        <form method="post" enctype="multipart/form-data" class="space-y-8">
             {% csrf_token %}
             
             <!-- Basic Information -->
@@ -32,19 +32,21 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Business Name</label>
                     <input type="text" name="name" id="name" required
+                           value="{{ form_data.name|default:'' }}"
                            class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                 </div>
                 
                 <div>
                     <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
                     <input type="url" name="website" id="website"
+                           value="{{ form_data.website|default:'' }}"
                            class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                 </div>
                 
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                     <textarea name="description" id="description" rows="3" required
-                              class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                              class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ form_data.description|default:'' }}</textarea>
                 </div>
             </div>
 
@@ -55,153 +57,160 @@
                 <div>
                     <label for="parent_company" class="block text-sm font-medium text-gray-700">Parent Company</label>
                     <input type="text" name="parent_company" id="parent_company"
+                           value="{{ form_data.parent_company|default:'' }}"
                            class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     <p class="mt-1 text-sm text-gray-500">Leave blank if this is an independent company</p>
                 </div>
             </div>
 
-            <!-- Services & Products sections remain unchanged -->
-
-            <!-- Political Data - Direct Donations -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Direct Political Donations</h3>
-                <p class="text-sm text-gray-500">Donations made directly by the company</p>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="direct_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
-                        <input type="number" name="direct_conservative_total_donations" id="direct_conservative_total_donations" 
-                               min="0" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="direct_liberal_total_donations" class="block text-sm font-medium text-gray-700">Liberal Total ($)</label>
-                        <input type="number" name="direct_liberal_total_donations" id="direct_liberal_total_donations" 
-                               min="0" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                </div>
-
+            <!-- Services & Products -->
+            <div class="space-y-8">
+                <h3 class="text-lg font-medium text-gray-900">Company Offerings</h3>
+                <!-- Services Section -->
                 <div>
-                    <label for="direct_total_donations" class="block text-sm font-medium text-gray-700">Total Direct Donations ($)</label>
-                    <input type="number" name="direct_total_donations" id="direct_total_donations" 
-                           min="0" step="0.01"
-                           class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <p class="mt-1 text-sm text-gray-500">Total includes donations to independent candidates/causes</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="direct_america_pac_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">America PAC Donor</span>
-                        </label>
-                    </div>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="provides_services" id="provides_services"
+                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">This company provides services</span>
+                    </label>
                     
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="direct_save_america_pac_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Save America PAC Donor</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Political Data - PAC Donations -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Affiliated PAC Donations</h3>
-                <p class="text-sm text-gray-500">Donations made by company-affiliated Political Action Committees</p>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="affiliated_pac_conservative_total_donations" class="block text-sm font-medium text-gray-700">PAC Conservative Total ($)</label>
-                        <input type="number" name="affiliated_pac_conservative_total_donations" id="affiliated_pac_conservative_total_donations" 
-                               min="0" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="affiliated_pac_liberal_total_donations" class="block text-sm font-medium text-gray-700">PAC Liberal Total ($)</label>
-                        <input type="number" name="affiliated_pac_liberal_total_donations" id="affiliated_pac_liberal_total_donations" 
-                               min="0" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <!-- Services List with Search Bar -->
+                    <div id="services_section" class="mt-4 hidden">
+                        <h4 class="text-md font-medium text-gray-900">Select Services</h4>
+                        <!-- Search Input -->
+                        <input type="text" id="service-search" placeholder="Search services..."
+                            class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        
+                        <!-- Services List -->
+                        <div class="max-h-60 overflow-y-auto border rounded">
+                            <div id="services-container">
+                                {% for service in services %}
+                                <label class="service-item flex items-center p-2 hover:bg-gray-50" data-name="{{ service.name|lower }}">
+                                    <input type="checkbox" name="services" value="{{ service.id }}"
+                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                    <span class="ml-2 text-sm text-gray-700">{{ service.name }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <div id="no-services-message" class="hidden p-4 text-gray-500">No services match your search</div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Products Section -->
                 <div>
-                    <label for="affiliated_pac_total_donations" class="block text-sm font-medium text-gray-700">Total PAC Donations ($)</label>
-                    <input type="number" name="affiliated_pac_total_donations" id="affiliated_pac_total_donations" 
-                           min="0" step="0.01"
-                           class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <p class="mt-1 text-sm text-gray-500">Total includes donations to independent candidates/causes</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="affiliated_pac_america_pac_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">PAC to America PAC</span>
-                        </label>
-                    </div>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="provides_products" id="provides_products"
+                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">This company provides products</span>
+                    </label>
                     
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="affiliated_pac_save_america_pac_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">PAC to Save America PAC</span>
-                        </label>
+                    <!-- Products List with Search Bar -->
+                    <div id="products_section" class="mt-4 hidden">
+                        <h4 class="text-md font-medium text-gray-900">Select Products</h4>
+                        <!-- Search Input -->
+                        <input type="text" id="product-search" placeholder="Search products..."
+                            class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        
+                        <!-- Products List -->
+                        <div class="max-h-60 overflow-y-auto border rounded">
+                            <div id="products-container">
+                                {% for product in products %}
+                                <label class="product-item flex items-center p-2 hover:bg-gray-50" data-name="{{ product.name|lower }}">
+                                    <input type="checkbox" name="products" value="{{ product.id }}"
+                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                    <span class="ml-2 text-sm text-gray-700">{{ product.name }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <div id="no-products-message" class="hidden p-4 text-gray-500">No products match your search</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Political Data - CEO Donations -->
+            <!-- CSV Upload -->
             <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">CEO Political Activity</h3>
-                <p class="text-sm text-gray-500">Political activities of the company's CEO</p>
+                <h3 class="text-lg font-medium text-gray-900">Political Donation Data</h3>
                 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="border rounded p-4 space-y-4">
                     <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="ceo_trump_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Trump Donor</span>
-                        </label>
+                        <label class="block text-sm font-medium text-gray-700">Upload CSV File</label>
+                        <input type="file" name="csv_file" accept=".csv" required
+                               class="mt-1 block w-full text-sm text-gray-500
+                                      file:mr-4 file:py-2 file:px-4
+                                      file:rounded-full file:border-0
+                                      file:text-sm file:font-semibold
+                                      file:bg-blue-50 file:text-blue-700
+                                      hover:file:bg-blue-100">
+                        <p class="mt-1 text-sm text-gray-500">Please upload a CSV file containing political donation data</p>
                     </div>
+
+                    <div class="bg-gray-50 p-4 rounded-md space-y-4">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">OpenSecrets.org Data Export</h4>
+                            <p class="text-sm text-gray-600">This import tool is specifically designed to work with recipient data exported from OpenSecrets.org. Please follow these steps:</p>
+                            <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600 ml-4 mt-2">
+                                <li>Visit OpenSecrets.org</li>
+                                <li>Search for your business</li>
+                                <li>Navigate to the Recipients tab</li>
+                                <li>Click "Export" to download the CSV</li>
+                            </ol>
+                        </div>
                     
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="ceo_america_pac_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">America PAC Donor</span>
-                        </label>
-                    </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Expected CSV Format</h4>
+                            <p class="text-sm text-gray-600 mb-2">The CSV should include these columns:</p>
+                            <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                                <li>Recipient: Name of person/organization receiving the donation</li>
+                                <li>From Organization (or) From PACs: Donation amount including "$" and "," (e.g., "$1,000")</li>
+                                <li>View: Either "Democrat", "Republican", or other affiliation</li>
+                            </ul>
+                        </div>
                     
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="ceo_save_america_pac_donor" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Save America PAC Donor</span>
-                        </label>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Example Data</h4>
+                            <div class="bg-white p-2 rounded border text-xs font-mono overflow-x-auto">
+                                "Recipient","From Organization","View"<br/>
+                                "John Smith","$1,000","Democrat"<br/>
+                                "Jane Doe","$2,500","Republican"<br/>
+                                "America PAC (Texas)","$5,000","Republican"
+                            </div>
+                        </div>
+                    
+                        <div class="bg-blue-50 p-3 rounded-md">
+                            <p class="text-sm text-blue-700">
+                                <span class="font-medium">Note:</span> Some exports may have "From PACs" instead of "From Organization". 
+                                This is expected and will be handled automatically. The file may contain both columns.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Data Source -->
-            <div>
-                <label for="data_source" class="block text-sm font-medium text-gray-700">Data Source</label>
-                <input type="text" name="data_source" id="data_source" required
-                       class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <!-- Data Sources -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900">Data Sources</h3>
+                <div class="border rounded p-4">
+                    <div id="source-inputs" class="space-y-4">
+                        <div class="source-input">
+                            <input type="url" name="data_sources[]" required
+                                placeholder="https://www.opensecrets.org/..."
+                                class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    <button type="button" onclick="addSourceInput()" 
+                            class="mt-4 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Add Another Source
+                    </button>
+                </div>
+                
                 <div class="mt-1">
                     <button type="button" onclick="toggleSourceInfo()" class="text-sm text-gray-500 flex items-center focus:outline-none hover:text-gray-700">
                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path id="sourceArrow" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M19 9l-7 7-7-7" />
+                            <path id="sourceArrow" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
-                        Please provide links or references for the donation data
+                        Recommended Data Sources
                     </button>
                     
                     <div id="sourceInfo" class="hidden mt-2 p-3 bg-gray-50 rounded-md">
@@ -215,21 +224,62 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Submit Button -->
             <div>
                 <button type="submit" 
                         class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md
                                shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700
                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Submit Business
+                    Import Business Data
                 </button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- JavaScript Functions -->
 <script>
+    // Function to toggle source info
+    function toggleSourceInfo() {
+        const sourceInfo = document.getElementById('sourceInfo');
+        const arrow = document.getElementById('sourceArrow');
+        
+        if (sourceInfo.classList.contains('hidden')) {
+            sourceInfo.classList.remove('hidden');
+            arrow.setAttribute('d', 'M19 15l-7-7-7 7');  // Point up
+        } else {
+            sourceInfo.classList.add('hidden');
+            arrow.setAttribute('d', 'M19 9l-7 7-7-7');   // Point down
+        }
+    }
+
+    // Function to add new source input
+    function addSourceInput() {
+        const sourceInputs = document.getElementById('source-inputs');
+        const newInput = document.createElement('div');
+        newInput.className = 'source-input flex items-center space-x-2';
+        newInput.innerHTML = `
+            <input type="url" name="data_sources[]" required
+                placeholder="https://www.opensecrets.org/..."
+                class="flex-1 rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <button type="button" onclick="removeSourceInput(this)" 
+                    class="p-2 text-red-600 hover:text-red-800 focus:outline-none">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        `;
+        sourceInputs.appendChild(newInput);
+    }
+
+    // Function to remove source input
+    function removeSourceInput(button) {
+        button.parentElement.remove();
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        // Toggle visibility for services and products sections
         const servicesCheckbox = document.getElementById('provides_services');
         const servicesSection = document.getElementById('services_section');
         const productsCheckbox = document.getElementById('provides_products');
@@ -242,30 +292,81 @@
             productsSection.classList.toggle('hidden', !productsCheckbox.checked);
         });
     
-        function filterItems(searchInput, itemSelector) {
-            const searchTerm = searchInput.value.toLowerCase();
-            const items = document.querySelectorAll(itemSelector);
-            let hasVisibleItems = false;
-    
-            items.forEach(item => {
-                const name = item.getAttribute('data-name');
-                if (name.includes(searchTerm)) {
-                    item.style.display = '';
-                    hasVisibleItems = true;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-    
-            return hasVisibleItems;
+        // Function to create category display text
+        function getCategoryDisplayText(category) {
+            if (category.parent_name) {
+                return `${category.name} (in ${category.parent_name})`;
+            }
+            return category.name;
         }
     
-        document.getElementById('service-search').addEventListener('input', function() {
-            filterItems(this, '.service-item');
-        });
+        // Function to fetch categories via AJAX
+        function fetchCategories(searchTerm, categoryType) {
+            fetch(`/filter-categories/?q=${encodeURIComponent(searchTerm)}&type=${categoryType}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = categoryType === 'services' ? '#services-container' : '#products-container';
+                    const noResults = categoryType === 'services' ? '#no-services-message' : '#no-products-message';
+                    const element = document.querySelector(container);
+                    element.innerHTML = '';
     
-        document.getElementById('product-search').addEventListener('input', function() {
-            filterItems(this, '.product-item');
+                    if (data.results.length > 0) {
+                        // Sort results to show parents first
+                        const sortedResults = data.results.sort((a, b) => {
+                            // Put parent categories first
+                            if (!a.parent_id && b.parent_id) return -1;
+                            if (a.parent_id && !b.parent_id) return 1;
+                            // Then sort alphabetically
+                            return a.name.localeCompare(b.name);
+                        });
+
+                        sortedResults.forEach(item => {
+                            const label = document.createElement('label');
+                            label.classList.add('flex', 'items-center', 'p-2', 'hover:bg-gray-50');
+                            label.setAttribute('data-category-id', item.id);
+                            label.setAttribute('data-parent-id', item.parent_id || '');
+                            
+                            const displayText = getCategoryDisplayText(item);
+                            
+                            label.innerHTML = `
+                                <input type="checkbox" name="${categoryType}" 
+                                       value="${item.id}" 
+                                       class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                <span class="ml-2 text-sm text-gray-700">${displayText}</span>
+                            `;
+                            element.appendChild(label);
+                        });
+                        document.querySelector(noResults).classList.add('hidden');
+                    } else {
+                        document.querySelector(noResults).classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching categories:', error);
+                });
+        }
+    
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    
+        // Event listeners for search inputs with debounce
+        const debouncedFetch = debounce(fetchCategories, 300);
+        
+        document.getElementById('service-search').addEventListener('input', function () {
+            debouncedFetch(this.value, 'services');
+        });
+        document.getElementById('product-search').addEventListener('input', function () {
+            debouncedFetch(this.value, 'products');
         });
     });
 </script>
