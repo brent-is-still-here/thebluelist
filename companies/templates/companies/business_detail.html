@@ -197,20 +197,19 @@
     </div>
     {% endif %}
 
-    <!-- Data Source Listing -->
-    {% if business.data_sources.exists %}
+    {% if approved_sources.exists %}
     <div class="bg-white p-6 rounded-lg shadow">
         <h2 class="text-xl font-semibold mb-4">Data Sources</h2>
         <div class="space-y-2">
-            {% for source in business.data_sources.all %}
+            {% for source in approved_sources %}
             <div class="flex justify-between items-center">
-                    <a href="{{ source.url }}" 
-                        class="text-blue-600 hover:text-blue-800" 
-                        target="_blank"
-                        title="{{ source.url }}"
-                        rel="noopener noreferrer">
-                            {{ source.url|truncatechars:32 }}
-                    </a>
+                <a href="{{ source.url }}" 
+                    class="text-blue-600 hover:text-blue-800" 
+                    target="_blank"
+                    title="{{ source.url }}"
+                    rel="noopener noreferrer">
+                        {{ source.url|truncatechars:32 }}
+                </a>
                 <span class="text-sm text-gray-600">
                     {{ source.get_reason_display }}
                 </span>

@@ -80,8 +80,9 @@ def add_business(request):
                     if source_url:  # Only create if URL is not empty
                         DataSource.objects.create(
                             business=business,
-                            url=source_url,
-                            reason='manual_addition'
+                            reason='manual_addition',
+                            is_approved=True,
+                            url=source_url
                         )
                 
                 # Handle parent company if specified
@@ -129,6 +130,9 @@ def business_detail(request, slug):
         ),
         slug=slug
     )
+
+    # Get a list of approved data sources
+    approved_sources = business.data_sources.filter(is_approved=True)
     
     # Get alternative businesses
     alternatives = business.get_alternative_businesses(limit=5)
@@ -155,6 +159,7 @@ def business_detail(request, slug):
     
     return render(request, 'companies/business_detail.html', {
         'business': business,
+        'approved_sources': approved_sources,
         'alternatives': alternatives,
         'has_direct_donations': has_direct_donations,
         'has_pac_donations': has_pac_donations,
@@ -433,6 +438,7 @@ def import_business(request):
                         DataSource.objects.create(
                             business=business,
                             reason='import',
+                            is_approved=True,
                             url=form_data['data_sources']
                         )
 
@@ -506,6 +512,9 @@ def review_edit_request(request, edit_request_id):
                         if value is not None:
                             setattr(political_data, field, value)
                     political_data.save()
+
+                    # approve the data source
+                    edit_request.data_sources.all().update(is_approved=True)
                     
                     # Update services
                     if edit_request.services_to_add.exists():
@@ -716,8 +725,10 @@ def submit_update(request, business_id):
                     if source_url:  # Only create if URL is not empty
                         DataSource.objects.create(
                             business=business,
+                            reason='update',
+                            is_approved=False,
                             url=source_url,
-                            reason='update'
+                            edit_request=edit_request
                         )
 
                 # Handle services/products changes
