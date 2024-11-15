@@ -128,6 +128,10 @@
                                             {% if business.politicaldata.direct_save_america_pac_donor or business.politicaldata.affiliated_pac_save_america_pac_donor %}
                                                 <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
                                             {% endif %}
+
+                                            {% if business.politicaldata.direct_maga_inc_donor or business.politicaldata.affiliated_pac_maga_inc_donor or business.politicaldata.senior_employee_maga_inc_donor %}
+                                                <div class="text-sm text-red-600">⚠️ MAGA Inc Donor</div>
+                                            {% endif %}
                                         </div>
                                     {% endif %}
                                 </div>

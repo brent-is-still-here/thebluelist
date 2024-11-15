@@ -347,6 +347,7 @@ class PoliticalData(models.Model):
     direct_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     direct_america_pac_donor = models.BooleanField(default=False)
     direct_save_america_pac_donor = models.BooleanField(default=False)
+    direct_maga_inc_donor = models.BooleanField(default=False)
     
     # Affiliated PAC donation data
     affiliated_pac_conservative_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
@@ -354,6 +355,7 @@ class PoliticalData(models.Model):
     affiliated_pac_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     affiliated_pac_america_pac_donor = models.BooleanField(default=False)
     affiliated_pac_save_america_pac_donor = models.BooleanField(default=False)
+    affiliated_pac_maga_inc_donor = models.BooleanField(default=False)
     
     # senior_employee donation data
     senior_employee_conservative_total_donations = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
@@ -362,6 +364,7 @@ class PoliticalData(models.Model):
     senior_employee_trump_donor = models.BooleanField(default=False)
     senior_employee_america_pac_donor = models.BooleanField(default=False)
     senior_employee_save_america_pac_donor = models.BooleanField(default=False)
+    senior_employee_maga_inc_donor = models.BooleanField(default=False)
     
     # Metadata
     last_updated = models.DateTimeField(auto_now=True)
