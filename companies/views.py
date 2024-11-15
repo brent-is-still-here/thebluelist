@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.db import transaction
@@ -8,17 +9,27 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.text import slugify
 from django.views.decorators.http import require_GET
-
+from io import TextIOWrapper
 from .models import (
-    Business, 
+    Business,
+    CSVImportRateLimit,
+    DataSource,
     EditRequest, 
     PoliticalData, 
     ProductCategory, 
     ServiceCategory
 )
+import csv
 
 @login_required
 def add_business(request):
+    if request.method == 'GET' and request.user.has_perm('companies.can_import_business_csv'):
+        return render(request, 'companies/add_business.html', {
+            'can_import_csv': True,
+            'services': ServiceCategory.objects.all(),
+            'products': ProductCategory.objects.all(),
+        })
+    
     if request.method == 'POST':
         try:
             with transaction.atomic():
@@ -33,15 +44,34 @@ def add_business(request):
                 # Create the political data
                 PoliticalData.objects.create(
                     business=business,
-                    conservative_percentage=float(request.POST['conservative_percentage']),
-                    conservative_total_donations=float(request.POST['conservative_total_donations']),
-                    liberal_percentage=float(request.POST['liberal_percentage']),
-                    liberal_total_donations=float(request.POST['liberal_total_donations']),
-                    trump_donor=request.POST.get('trump_donor') == 'on',
-                    america_pac_donor=request.POST.get('america_pac_donor') == 'on',
-                    save_america_pac_donor=request.POST.get('save_america_pac_donor') == 'on',
-                    data_source=request.POST['data_source']
+                    # Direct donations
+                    direct_conservative_total_donations=float(request.POST.get('direct_conservative_total_donations', 0)),
+                    direct_liberal_total_donations=float(request.POST.get('direct_liberal_total_donations', 0)),
+                    direct_total_donations=float(request.POST.get('direct_total_donations', 0)),
+                    direct_america_pac_donor=request.POST.get('direct_america_pac_donor') == 'on',
+                    direct_save_america_pac_donor=request.POST.get('direct_save_america_pac_donor') == 'on',
+                    
+                    # PAC donations
+                    affiliated_pac_conservative_total_donations=float(request.POST.get('affiliated_pac_conservative_total_donations', 0)),
+                    affiliated_pac_liberal_total_donations=float(request.POST.get('affiliated_pac_liberal_total_donations', 0)),
+                    affiliated_pac_total_donations=float(request.POST.get('affiliated_pac_total_donations', 0)),
+                    affiliated_pac_america_pac_donor=request.POST.get('affiliated_pac_america_pac_donor') == 'on',
+                    affiliated_pac_save_america_pac_donor=request.POST.get('affiliated_pac_save_america_pac_donor') == 'on',
+                    
+                    # CEO donations
+                    ceo_trump_donor=request.POST.get('ceo_trump_donor') == 'on',
+                    ceo_america_pac_donor=request.POST.get('ceo_america_pac_donor') == 'on',
+                    ceo_save_america_pac_donor=request.POST.get('ceo_save_america_pac_donor') == 'on',
                 )
+                
+                # Handle data sources
+                data_sources = request.POST.getlist('data_sources[]')
+                for source_url in data_sources:
+                    if source_url:  # Only create if URL is not empty
+                        DataSource.objects.create(
+                            business=business,
+                            url=source_url
+                        )
                 
                 # Handle parent company if specified
                 parent_name = request.POST.get('parent_company')
@@ -195,6 +225,115 @@ def filter_categories(request):
 
 def home(request):
     return render(request, 'companies/home.html')
+
+@login_required
+@permission_required('companies.can_import_business_csv')
+def import_business(request):
+    if request.method == 'POST':
+        if not CSVImportRateLimit.can_import(request.user):
+            messages.error(request, 'Please wait 30 seconds between imports.')
+            return redirect('import_business')
+
+        form_data = {
+            'name': request.POST.get('name'),
+            'website': request.POST.get('website'),
+            'description': request.POST.get('description'),
+            'data_source': request.POST.get('data_source'),
+            'provides_services': request.POST.get('provides_services') == 'on',
+            'provides_products': request.POST.get('provides_products') == 'on',
+            'services': request.POST.getlist('services'),
+            'products': request.POST.getlist('products'),
+        }
+
+        # Validate file extension
+        csv_file = request.FILES.get('csv_file')
+        if not csv_file or not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Please upload a valid CSV file.')
+            return render(request, 'companies/import_business.html', {
+                'services': ServiceCategory.objects.all(),
+                'products': ProductCategory.objects.all(),
+                'form_data': form_data
+            })
+
+        try:
+            with transaction.atomic():
+                # Create business first
+                business = Business.objects.create(
+                    name=form_data['name'],
+                    website=form_data['website'],
+                    description=form_data['description'],
+                    provides_services=form_data['provides_services'],
+                    provides_products=form_data['provides_products'],
+                )
+
+                if form_data['provides_services']:
+                    business.services.set(form_data['services'])
+                if form_data['provides_products']:
+                    business.products.set(form_data['products'])
+
+                # Process CSV
+                csv_text = TextIOWrapper(csv_file, encoding='utf-8')
+                reader = csv.DictReader(csv_text)
+                
+                # Validate CSV structure
+                required_fields = {'Recipient', 'From Organization', 'View'}
+                if not required_fields.issubset(reader.fieldnames):
+                    raise ValueError('CSV file missing required columns')
+
+                # Calculate totals
+                liberal_total = Decimal('0')
+                conservative_total = Decimal('0')
+                
+                for row in reader:
+                    amount = Decimal(row['From Organization'].replace('$', '').replace(',', ''))
+                    if row['View'] == 'Democrat':
+                        liberal_total += amount
+                    elif row['View'] == 'Republican':
+                        conservative_total += amount
+
+                total_donations = liberal_total + conservative_total
+                
+                # Create political data
+                PoliticalData.objects.create(
+                    business=business,
+                    conservative_total_donations=conservative_total,
+                    liberal_total_donations=liberal_total,
+                    conservative_percentage=((conservative_total / total_donations) * 100) if total_donations else None,
+                    liberal_percentage=((liberal_total / total_donations) * 100) if total_donations else None,
+                    america_pac_donor=any(
+                        row['Recipient'] == 'America PAC (Texas)' and 
+                        Decimal(row['From Organization'].replace('$', '').replace(',', '')) > 0 
+                        for row in reader
+                    ),
+                    save_america_pac_donor=any(
+                        'Save America' in row['Recipient'] and 
+                        Decimal(row['From Organization'].replace('$', '').replace(',', '')) > 0 
+                        for row in reader
+                    ),
+                    data_source=form_data['data_source']
+                )
+
+                # Update rate limit
+                CSVImportRateLimit.objects.update_or_create(
+                    user=request.user,
+                    defaults={'last_import_attempt': timezone.now()}
+                )
+
+                messages.success(request, 'Business imported successfully!')
+                return redirect('business_detail', slug=business.slug)
+
+        except Exception as e:
+            messages.error(request, f'Error importing business: {str(e)}')
+            return render(request, 'companies/import_business.html', {
+                'services': ServiceCategory.objects.all(),
+                'products': ProductCategory.objects.all(),
+                'form_data': form_data
+            })
+
+    return render(request, 'companies/import_business.html', {
+        'services': ServiceCategory.objects.all(),
+        'products': ProductCategory.objects.all(),
+    })
 
 def is_reviewer(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)

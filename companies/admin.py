@@ -61,10 +61,43 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(PoliticalData)
 class PoliticalDataAdmin(admin.ModelAdmin):
-    list_display = ('business', 'conservative_percentage', 'liberal_percentage', 
-                   'trump_donor', 'america_pac_donor', 'save_america_pac_donor', 'last_updated')
+    list_display = (
+        'business', 
+        'get_direct_conservative_pct', 
+        'get_direct_liberal_pct',
+        'get_pac_conservative_pct',
+        'get_pac_liberal_pct',
+        'direct_america_pac_donor',
+        'direct_save_america_pac_donor',
+        'ceo_trump_donor',
+        'last_updated'
+    )
     search_fields = ('business__name', 'data_source')
-    list_filter = ('trump_donor', 'america_pac_donor', 'save_america_pac_donor')
+    list_filter = (
+        'direct_america_pac_donor',
+        'direct_save_america_pac_donor',
+        'affiliated_pac_america_pac_donor',
+        'affiliated_pac_save_america_pac_donor',
+        'ceo_trump_donor',
+        'ceo_america_pac_donor',
+        'ceo_save_america_pac_donor'
+    )
+
+    def get_direct_conservative_pct(self, obj):
+        return f"{obj.direct_conservative_percentage:.1f}%" if obj.direct_conservative_percentage else "N/A"
+    get_direct_conservative_pct.short_description = "Direct Cons %"
+
+    def get_direct_liberal_pct(self, obj):
+        return f"{obj.direct_liberal_percentage:.1f}%" if obj.direct_liberal_percentage else "N/A"
+    get_direct_liberal_pct.short_description = "Direct Lib %"
+
+    def get_pac_conservative_pct(self, obj):
+        return f"{obj.affiliated_pac_conservative_percentage:.1f}%" if obj.affiliated_pac_conservative_percentage else "N/A"
+    get_pac_conservative_pct.short_description = "PAC Cons %"
+
+    def get_pac_liberal_pct(self, obj):
+        return f"{obj.affiliated_pac_liberal_percentage:.1f}%" if obj.affiliated_pac_liberal_percentage else "N/A"
+    get_pac_liberal_pct.short_description = "PAC Lib %"
 
 @admin.register(EditRequest)
 class EditRequestAdmin(admin.ModelAdmin):
@@ -73,3 +106,43 @@ class EditRequestAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     filter_horizontal = ('services_to_add', 'services_to_remove', 'products_to_add', 'products_to_remove')
     readonly_fields = ('created_at', 'reviewed_at')
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('business', 'submitted_by', 'status', 'justification', 'supporting_links')
+        }),
+        ('Direct Donation Changes', {
+            'fields': (
+                'direct_conservative_total_donations',
+                'direct_liberal_total_donations',
+                'direct_total_donations',
+                'direct_america_pac_donor',
+                'direct_save_america_pac_donor',
+            )
+        }),
+        ('PAC Donation Changes', {
+            'fields': (
+                'affiliated_pac_conservative_total_donations',
+                'affiliated_pac_liberal_total_donations',
+                'affiliated_pac_total_donations',
+                'affiliated_pac_america_pac_donor',
+                'affiliated_pac_save_america_pac_donor',
+            )
+        }),
+        ('CEO Activity Changes', {
+            'fields': (
+                'ceo_trump_donor',
+                'ceo_america_pac_donor',
+                'ceo_save_america_pac_donor',
+            )
+        }),
+        ('Service Changes', {
+            'fields': ('provides_services', 'services_to_add', 'services_to_remove')
+        }),
+        ('Product Changes', {
+            'fields': ('provides_products', 'products_to_add', 'products_to_remove')
+        }),
+        ('Review Information', {
+            'fields': ('reviewed_by', 'reviewed_at', 'review_notes')
+        }),
+    )
