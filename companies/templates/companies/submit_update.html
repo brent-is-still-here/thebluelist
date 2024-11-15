@@ -222,7 +222,7 @@
                         class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                     <label for="provides_services" class="ml-2 text-sm text-gray-700">This company provides services</label>
                 </div>
-        
+
                 <div id="services_section" class="space-y-4 {% if not form_data.provides_services %}hidden{% endif %}">
                     {% if business.services.exists %}
                     <div>
@@ -239,19 +239,30 @@
                         <p class="mt-1 text-sm text-gray-500">Check services to remove them</p>
                     </div>
                     {% endif %}
-        
+
                     <div>
                         <h3 class="font-medium text-gray-900">Add Services</h3>
-                        <div class="mt-2">
-                            {% for service in available_services %}
-                            {% if service not in business.services.all %}
-                            <div class="flex items-center">
-                                <input type="checkbox" name="services_to_add" value="{{ service.id }}"
-                                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <label class="ml-2 text-sm text-gray-700">{{ service.name }}</label>
+                        <div class="relative">
+                            <input type="text" 
+                                id="service-search-input" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                placeholder="Search services...">
+                        </div>
+                        <div class="mt-2 max-h-60 overflow-y-auto border border-gray-200 rounded-md">
+                            <div id="services-container">
+                                {% for service in available_services %}
+                                {% if service not in business.services.all %}
+                                <div class="service-option p-2 hover:bg-gray-50" data-name="{{ service.name|lower }}">
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" name="services_to_add" value="{{ service.id }}"
+                                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-700">{{ service.name }}</span>
+                                    </label>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
                             </div>
-                            {% endif %}
-                            {% endfor %}
+                            <div id="no-services-message" class="hidden p-4 text-gray-500">No services match your search</div>
                         </div>
                     </div>
                 </div>
@@ -265,7 +276,7 @@
                         class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                     <label for="provides_products" class="ml-2 text-sm text-gray-700">This company provides products</label>
                 </div>
-        
+
                 <div id="products_section" class="space-y-4 {% if not form_data.provides_products %}hidden{% endif %}">
                     {% if business.products.exists %}
                     <div>
@@ -282,24 +293,34 @@
                         <p class="mt-1 text-sm text-gray-500">Check products to remove them</p>
                     </div>
                     {% endif %}
-        
+
                     <div>
                         <h3 class="font-medium text-gray-900">Add Products</h3>
-                        <div class="mt-2">
-                            {% for product in available_products %}
-                            {% if product not in business.products.all %}
-                            <div class="flex items-center">
-                                <input type="checkbox" name="products_to_add" value="{{ product.id }}"
-                                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <label class="ml-2 text-sm text-gray-700">{{ product.name }}</label>
+                        <div class="relative">
+                            <input type="text" 
+                                id="product-search-input" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                placeholder="Search products...">
+                        </div>
+                        <div class="mt-2 max-h-60 overflow-y-auto border border-gray-200 rounded-md">
+                            <div id="products-container">
+                                {% for product in available_products %}
+                                {% if product not in business.products.all %}
+                                <div class="product-option p-2 hover:bg-gray-50" data-name="{{ product.name|lower }}">
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" name="products_to_add" value="{{ product.id }}"
+                                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-700">{{ product.name }}</span>
+                                    </label>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
                             </div>
-                            {% endif %}
-                            {% endfor %}
+                            <div id="no-products-message" class="hidden p-4 text-gray-500">No products match your search</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
         <!-- Update Justification and Submit -->
         <div class="space-y-4">
@@ -326,6 +347,7 @@
     </form>
     
     <script>
+
         // Toggle services section
         document.getElementById('provides_services').addEventListener('change', function() {
             document.getElementById('services_section').classList.toggle('hidden', !this.checked);
@@ -334,6 +356,34 @@
         // Toggle products section
         document.getElementById('provides_products').addEventListener('change', function() {
             document.getElementById('products_section').classList.toggle('hidden', !this.checked);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            function filterItems(searchInputId, containerId, messageId) {
+                const searchValue = document.getElementById(searchInputId).value.toLowerCase();
+                const items = document.querySelectorAll(`#${containerId} .service-option, #${containerId} .product-option`);
+                let hasResults = false;
+
+                items.forEach(item => {
+                    const itemName = item.dataset.name;
+                    if (itemName.includes(searchValue)) {
+                        item.classList.remove('hidden');
+                        hasResults = true;
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+
+                document.getElementById(messageId).classList.toggle('hidden', hasResults);
+            }
+
+            document.getElementById('service-search-input').addEventListener('input', function () {
+                filterItems('service-search-input', 'services-container', 'no-services-message');
+            });
+
+            document.getElementById('product-search-input').addEventListener('input', function () {
+                filterItems('product-search-input', 'products-container', 'no-products-message');
+            });
         });
     
         // Toggle source info
