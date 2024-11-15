@@ -411,7 +411,7 @@ class PoliticalData(models.Model):
         return round((self.senior_employee_conservative_total_donations or 0) / self.senior_employee_total_donations * 100, 2)
 
     @property
-    def senior_employeec_liberal_percentage(self):
+    def senior_employee_liberal_percentage(self):
         """Calculate percentage of PAC liberal donations"""
         if not self.senior_employee_total_donations:
             return None
