@@ -75,14 +75,17 @@ def add_business(request):
                 )
 
                 # Handle data sources
-                data_sources = request.POST.getlist('data_sources[]')
-                for source_url in data_sources:
-                    if source_url:  # Only create if URL is not empty
-                        DataSource.objects.create(
+                # data_sources = request.POST.getlist('data_sources[]')
+                # Create the data source records
+                for source_url in form_data['data_sources']:
+                    if source_url:
+                        DataSource.objects.get_or_create(
                             business=business,
-                            reason='manual_addition',
-                            is_approved=True,
-                            url=source_url
+                            url=source_url,
+                            defaults={
+                                'reason': 'manual_addition',
+                                'is_approved': True
+                            }
                         )
                 
                 # Handle parent company if specified
@@ -274,7 +277,7 @@ def import_business(request):
             'name': request.POST.get('name'),
             'website': request.POST.get('website'),
             'description': request.POST.get('description'),
-            'data_sources': request.POST.get('data_sources[]'),
+            'data_sources': request.POST.getlist('data_sources[]'),
             'provides_services': request.POST.get('provides_services') == 'on',
             'provides_products': request.POST.get('provides_products') == 'on',
             'services': request.POST.getlist('services'),
@@ -435,11 +438,13 @@ def import_business(request):
                 # Create the data source records
                 for source_url in form_data['data_sources']:
                     if source_url:
-                        DataSource.objects.create(
+                        DataSource.objects.get_or_create(
                             business=business,
-                            reason='import',
-                            is_approved=True,
-                            url=form_data['data_sources']
+                            url=source_url,
+                            defaults={
+                                'reason': 'import',
+                                'is_approved': True
+                            }
                         )
 
                 # Update rate limit

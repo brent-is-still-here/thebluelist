@@ -164,31 +164,37 @@ class CSVImportRateLimit(models.Model):
         return time_since_last.total_seconds() > 30
 
 class DataSource(models.Model):
-    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='data_sources')
-    url = models.URLField()
-    reason = models.CharField(
-        max_length=20,
-        choices=[
-            ('import', 'Data Import'),
-            ('update', 'Manual Update'),
-            ('manual_addition', 'Manual Addition')
-        ]
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_approved = models.BooleanField(default=False)
-    edit_request = models.ForeignKey(
-        'EditRequest',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='data_sources'
-    )
+   business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='data_sources')
+   url = models.URLField() 
+   reason = models.CharField(
+       max_length=20,
+       choices=[
+           ('import', 'Data Import'),
+           ('update', 'Manual Update'),
+           ('manual_addition', 'Manual Addition')
+       ]
+   )
+   created_at = models.DateTimeField(auto_now_add=True)
+   is_approved = models.BooleanField(default=False)
+   edit_request = models.ForeignKey(
+       'EditRequest',
+       on_delete=models.SET_NULL,
+       null=True,
+       blank=True,
+       related_name='data_sources'
+   )
 
-    class Meta:
-        ordering = ['-created_at']
+   class Meta:
+       ordering = ['-created_at']
+       constraints = [
+           models.UniqueConstraint(
+               fields=['business', 'url'],
+               name='unique_business_url'
+           )
+       ]
 
-    def __str__(self):
-        return f"Data source for {self.business.name}"
+   def __str__(self):
+       return f"Data source for {self.business.name}"
 
 class EditRequest(models.Model):
     STATUS_CHOICES = [
