@@ -8,6 +8,7 @@ urlpatterns = [
     path('business/<slug:slug>/', views.business_detail, name='business_detail'),
     path('edit-requests/', views.edit_requests, name='edit_requests'),
     path('filter-categories/', views.filter_categories, name='filter_categories'),
+    path('import/', views.import_business, name='import_business'),
     path('review/', views.review_edit_requests, name='review_edit_requests'),
     path('review/<int:edit_request_id>/', views.review_edit_request, name='review_edit_request'),
     path('search/', views.business_search, name='business_search'),

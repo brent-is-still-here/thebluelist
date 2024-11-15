@@ -109,16 +109,23 @@
                                     {% if business.politicaldata %}
                                         <div class="mt-2">
                                             <div class="text-sm">
-                                                <span class="text-red-600">{{ business.politicaldata.conservative_percentage }}% Conservative</span> / 
-                                                <span class="text-blue-600">{{ business.politicaldata.liberal_percentage }}% Liberal</span>
+                                                <span class="text-red-600">
+                                                    {{ business.politicaldata.overall_conservative_percentage|default:"0" }}% Conservative
+                                                </span> / 
+                                                <span class="text-blue-600">
+                                                    {{ business.politicaldata.overall_liberal_percentage|default:"0" }}% Liberal
+                                                </span>
                                             </div>
-                                            {% if business.politicaldata.trump_donor %}
+                                            
+                                            {% if business.politicaldata.senior_employee_trump_donor %}
                                                 <div class="text-sm text-red-600">⚠️ Trump Donor</div>
                                             {% endif %}
-                                            {% if business.politicaldata.america_pac_donor %}
+                                            
+                                            {% if business.politicaldata.direct_america_pac_donor or business.politicaldata.affiliated_pac_america_pac_donor %}
                                                 <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
                                             {% endif %}
-                                            {% if business.politicaldata.save_america_pac_donor %}
+                                            
+                                            {% if business.politicaldata.direct_save_america_pac_donor or business.politicaldata.affiliated_pac_save_america_pac_donor %}
                                                 <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
                                             {% endif %}
                                         </div>
@@ -127,7 +134,7 @@
                                 
                                 <div class="flex space-x-2">
                                     <a href="{% url 'submit_update' business.id %}" 
-                                       class="text-sm text-blue-600 hover:text-blue-800">
+                                    class="text-sm text-blue-600 hover:text-blue-800">
                                         Submit Update
                                     </a>
                                 </div>

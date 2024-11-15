@@ -4,7 +4,7 @@ from django.urls import path, reverse
 from django.core.management import call_command
 from .models import (
     ServiceCategory, ProductCategory, Location,
-    Business, PoliticalData, EditRequest
+    Business, PoliticalData, EditRequest, DataSource
 )
 
 class CategoryImportMixin:
@@ -33,24 +33,24 @@ class CategoryImportMixin:
         
         return HttpResponseRedirect(reverse('admin:companies_productcategory_changelist'))
 
-@admin.register(ProductCategory)
-class ProductCategoryAdmin(CategoryImportMixin, admin.ModelAdmin):
-    list_display = ('name', 'parent', 'slug')
-    search_fields = ('name', 'parent__name')
-    list_filter = ('parent',)
 
-@admin.register(ServiceCategory)
-class ServiceCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'slug')
-    search_fields = ('name', 'parent__name')
-    list_filter = ('parent',)
+# Step 1: Add PoliticalDataInline for editing political data within a business
+class PoliticalDataInline(admin.StackedInline):
+    model = PoliticalData
+    extra = 0
+    can_delete = False
+    readonly_fields = ('overall_conservative_percentage', 'overall_liberal_percentage')
 
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ('city', 'state', 'zip_code', 'latitude', 'longitude')
-    search_fields = ('city', 'state', 'zip_code')
-    list_filter = ('state',)
 
+# Step 2: Add EditRequestInline for identifying update requests within a business
+class EditRequestInline(admin.TabularInline):
+    model = EditRequest
+    extra = 0
+    fields = ('submitted_by', 'status', 'justification', 'created_at', 'reviewed_at')
+    readonly_fields = ('created_at', 'reviewed_at')
+
+
+# Step 3: Updated BusinessAdmin to include inlines
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
     list_display = ('name', 'website', 'provides_services', 'provides_products', 'created_at', 'updated_at')
@@ -58,13 +58,49 @@ class BusinessAdmin(admin.ModelAdmin):
     list_filter = ('provides_services', 'provides_products', 'locations')
     filter_horizontal = ('services', 'products', 'locations')
     prepopulated_fields = {'slug': ('name',)}
+    inlines = [PoliticalDataInline, EditRequestInline]  # Added inlines here
+
 
 @admin.register(PoliticalData)
 class PoliticalDataAdmin(admin.ModelAdmin):
-    list_display = ('business', 'conservative_percentage', 'liberal_percentage', 
-                   'trump_donor', 'america_pac_donor', 'save_america_pac_donor', 'last_updated')
+    list_display = (
+        'business', 
+        'get_direct_conservative_pct', 
+        'get_direct_liberal_pct',
+        'get_pac_conservative_pct',
+        'get_pac_liberal_pct',
+        'direct_america_pac_donor',
+        'direct_save_america_pac_donor',
+        'senior_employee_trump_donor',
+        'last_updated'
+    )
     search_fields = ('business__name', 'data_source')
-    list_filter = ('trump_donor', 'america_pac_donor', 'save_america_pac_donor')
+    list_filter = (
+        'direct_america_pac_donor',
+        'direct_save_america_pac_donor',
+        'affiliated_pac_america_pac_donor',
+        'affiliated_pac_save_america_pac_donor',
+        'senior_employee_trump_donor',
+        'senior_employee_america_pac_donor',
+        'senior_employee_save_america_pac_donor'
+    )
+
+    def get_direct_conservative_pct(self, obj):
+        return f"{obj.direct_conservative_percentage:.1f}%" if obj.direct_conservative_percentage else "N/A"
+    get_direct_conservative_pct.short_description = "Direct Cons %"
+
+    def get_direct_liberal_pct(self, obj):
+        return f"{obj.direct_liberal_percentage:.1f}%" if obj.direct_liberal_percentage else "N/A"
+    get_direct_liberal_pct.short_description = "Direct Lib %"
+
+    def get_pac_conservative_pct(self, obj):
+        return f"{obj.affiliated_pac_conservative_percentage:.1f}%" if obj.affiliated_pac_conservative_percentage else "N/A"
+    get_pac_conservative_pct.short_description = "PAC Cons %"
+
+    def get_pac_liberal_pct(self, obj):
+        return f"{obj.affiliated_pac_liberal_percentage:.1f}%" if obj.affiliated_pac_liberal_percentage else "N/A"
+    get_pac_liberal_pct.short_description = "PAC Lib %"
+
 
 @admin.register(EditRequest)
 class EditRequestAdmin(admin.ModelAdmin):
@@ -73,3 +109,52 @@ class EditRequestAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     filter_horizontal = ('services_to_add', 'services_to_remove', 'products_to_add', 'products_to_remove')
     readonly_fields = ('created_at', 'reviewed_at')
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('business', 'submitted_by', 'status', 'justification', 'supporting_links')
+        }),
+        ('Direct Donation Changes', {
+            'fields': (
+                'direct_conservative_total_donations',
+                'direct_liberal_total_donations',
+                'direct_total_donations',
+                'direct_america_pac_donor',
+                'direct_save_america_pac_donor',
+            )
+        }),
+        ('PAC Donation Changes', {
+            'fields': (
+                'affiliated_pac_conservative_total_donations',
+                'affiliated_pac_liberal_total_donations',
+                'affiliated_pac_total_donations',
+                'affiliated_pac_america_pac_donor',
+                'affiliated_pac_save_america_pac_donor',
+            )
+        }),
+        ('Senior Employee Activity Changes', {
+            'fields': (
+                'senior_employee_trump_donor',
+                'senior_employee_america_pac_donor',
+                'senior_employee_save_america_pac_donor',
+            )
+        }),
+        ('Service Changes', {
+            'fields': ('provides_services', 'services_to_add', 'services_to_remove')
+        }),
+        ('Product Changes', {
+            'fields': ('provides_products', 'products_to_add', 'products_to_remove')
+        }),
+        ('Review Information', {
+            'fields': ('reviewed_by', 'reviewed_at', 'review_notes')
+        }),
+    )
+
+
+# Step 4: Register DataSource model
+@admin.register(DataSource)
+class DataSourceAdmin(admin.ModelAdmin):
+    list_display = ('business', 'url', 'reason', 'is_approved', 'created_at')
+    search_fields = ('business__name', 'url', 'reason')
+    list_filter = ('is_approved', 'reason')
+    ordering = ('-created_at',)

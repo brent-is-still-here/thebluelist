@@ -1,449 +1,411 @@
 {% extends "users/base.html" %}
-
 {% block title %}Update Business - The Blue List{% endblock %}
-
 {% block content %}
+
 <div class="max-w-3xl mx-auto">
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-2xl font-semibold mb-6">Update Business: {{ business.name }}</h2>
-        
-        <form method="post" class="space-y-8">
-            {% csrf_token %}
-            
-            <!-- Basic Information -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Basic Information</h3>
-                
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Business Name</label>
-                    <input type="text" name="name" id="name" 
-                           value="{{ form_data.name }}"
-                           class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                </div>
-                
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea name="description" id="description" rows="3"
-                              class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ form_data.description }}</textarea>
-                </div>
-            </div>
+    <form method="POST" class="bg-white p-6 rounded-lg shadow space-y-6">
+        {% csrf_token %}
 
-            <!-- Political Data -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Political Donations from Company and Senior Employees</h3>
-                <span class="text-xs text-gray-500 italic">* over the past 2-year campaign cycle</span>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="conservative_percentage" class="block text-sm font-medium text-gray-700">Conservative Donation %</label>
-                        <input type="number" name="conservative_percentage" id="conservative_percentage" 
-                               value="{{ form_data.conservative_percentage }}"
-                               min="0" max="100" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="liberal_percentage" class="block text-sm font-medium text-gray-700">Liberal Donation %</label>
-                        <input type="number" name="liberal_percentage" id="liberal_percentage" 
-                               value="{{ form_data.liberal_percentage }}"
-                               min="0" max="100" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
-                        <input type="number" name="conservative_total_donations" id="conservative_total_donations" 
-                               value="{{ form_data.conservative_total_donations }}"
-                               min="0" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="liberal_total_donations" class="block text-sm font-medium text-gray-700">Liberal Total ($)</label>
-                        <input type="number" name="liberal_total_donations" id="liberal_total_donations" 
-                               value="{{ form_data.liberal_total_donations }}"
-                               min="0" step="0.01"
-                               class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="trump_donor" 
-                                   {% if form_data.trump_donor %}checked{% endif %}
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Trump Donor</span>
-                        </label>
-                    </div>
-                    
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="america_pac_donor" 
-                                   {% if form_data.america_pac_donor %}checked{% endif %}
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">America PAC Donor</span>
-                        </label>
-                    </div>
-                    
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="save_america_pac_donor" 
-                                   {% if form_data.save_america_pac_donor %}checked{% endif %}
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Save America PAC Donor</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div>
-                    <label for="data_source" class="block text-sm font-medium text-gray-700">Data Source</label>
-                    <input type="text" name="data_source" id="data_source" 
-                           value="{{ form_data.data_source }}"
-                           class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <div class="mt-1">
-                        <button type="button" onclick="toggleInfo('sourceInfo1', 'sourceArrow1')" class="text-sm text-gray-500 flex items-center focus:outline-none hover:text-gray-700">
-                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path id="sourceArrow1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                        d="M19 9l-7 7-7-7" />
-                            </svg>
-                            Please provide links or references for the donation data
-                        </button>
-                        
-                        <div id="sourceInfo1" class="hidden mt-2 p-3 bg-gray-50 rounded-md">
-                            <p class="text-sm text-gray-600">
-                                I recommend 
-                                <a href="https://opensecrets.org" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    class="text-blue-600 hover:text-blue-800 underline">
-                                    OpenSecrets.org
-                                </a>, 
-                                <a href="https://followthemoney.org" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    class="text-blue-600 hover:text-blue-800 underline">
-                                    FollowTheMoney.org
-                                </a>, 
-                                and 
-                                <a href="https://www.goodsuniteus.com" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    class="text-blue-600 hover:text-blue-800 underline">
-                                    GoodsUniteUs.com
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-
-            <!-- Services and Products Section -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Services & Products</h3>
-                
-                <!-- Services -->
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <div class="mb-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="provides_services" 
-                                {% if business.provides_services %}checked{% endif %}
-                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">This company provides services</span>
-                        </label>
-                    </div>
-                    
-                    <div id="services_section" class="space-y-4 {% if not business.provides_services %}hidden{% endif %}">
-                        <!-- Current Services -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Current Services</label>
-                            <div class="mt-2 space-y-2">
-                                {% for service in business.services.all %}
-                                    <label class="inline-flex items-center">
-                                        <input type="checkbox" name="services_to_remove" value="{{ service.id }}"
-                                            class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-500 focus:ring-red-500">
-                                        <span class="ml-2 text-sm text-gray-700">{{ service.name }}</span>
-                                    </label>
-                                {% empty %}
-                                    <p class="text-sm text-gray-500 italic">No services currently listed</p>
-                                {% endfor %}
-                            </div>
-                            {% if business.services.exists %}
-                                <p class="mt-1 text-sm text-gray-500">Check services to remove them</p>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Add Services with Search -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Add Services</label>
-                            <div class="mt-2 space-y-4">
-                                <!-- Search Input -->
-                                <div class="flex gap-2">
-                                    <input type="text" 
-                                        id="service-search" 
-                                        placeholder="Search services..."
-                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                
-                                <!-- Services List Container -->
-                                <div class="max-h-60 overflow-y-auto border border-gray-200 rounded-md">
-                                    <div id="services-container" class="divide-y divide-gray-200">
-                                        {% for service in available_services %}
-                                            {% if service not in business.services.all %}
-                                                <label class="service-item flex items-center p-2 hover:bg-gray-50" 
-                                                    data-name="{{ service.name|lower }}" 
-                                                    data-description="{{ service.description|lower }}">
-                                                    <input type="checkbox" 
-                                                        name="services_to_add" 
-                                                        value="{{ service.id }}"
-                                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                                    <div class="ml-2">
-                                                        <span class="text-sm font-medium text-gray-700">{{ service.name }}</span>
-                                                        {% if service.description %}
-                                                            <p class="text-xs text-gray-500">{{ service.description }}</p>
-                                                        {% endif %}
-                                                    </div>
-                                                </label>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                
-                                <!-- No Results Message -->
-                                <div id="no-services-message" class="hidden p-4 text-center text-gray-500 text-sm">
-                                    No services match your search
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Products -->
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <div class="mb-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="provides_products" 
-                                {% if business.provides_products %}checked{% endif %}
-                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">This company provides products</span>
-                        </label>
-                    </div>
-                    
-                    <div id="products_section" class="space-y-4 {% if not business.provides_products %}hidden{% endif %}">
-                        <!-- Current Products -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Current Products</label>
-                            <div class="mt-2 space-y-2">
-                                {% for product in business.products.all %}
-                                    <label class="inline-flex items-center">
-                                        <input type="checkbox" name="products_to_remove" value="{{ product.id }}"
-                                            class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-500 focus:ring-red-500">
-                                        <span class="ml-2 text-sm text-gray-700">{{ product.name }}</span>
-                                    </label>
-                                {% empty %}
-                                    <p class="text-sm text-gray-500 italic">No products currently listed</p>
-                                {% endfor %}
-                            </div>
-                            {% if business.products.exists %}
-                                <p class="mt-1 text-sm text-gray-500">Check products to remove them</p>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Add Products with Search -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Add Products</label>
-                            <div class="mt-2 space-y-4">
-                                <!-- Search Input -->
-                                <div class="flex gap-2">
-                                    <input type="text" 
-                                        id="product-search" 
-                                        placeholder="Search products..."
-                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                
-                                <!-- Products List Container -->
-                                <div class="max-h-60 overflow-y-auto border border-gray-200 rounded-md">
-                                    <div id="products-container" class="divide-y divide-gray-200">
-                                        {% for product in available_products %}
-                                            {% if product not in business.products.all %}
-                                                <label class="product-item flex items-center p-2 hover:bg-gray-50" 
-                                                    data-name="{{ product.name|lower }}" 
-                                                    data-description="{{ product.description|lower }}">
-                                                    <input type="checkbox" 
-                                                        name="products_to_add" 
-                                                        value="{{ product.id }}"
-                                                        class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                                    <div class="ml-2">
-                                                        <span class="text-sm font-medium text-gray-700">{{ product.name }}</span>
-                                                        {% if product.description %}
-                                                            <p class="text-xs text-gray-500">{{ product.description }}</p>
-                                                        {% endif %}
-                                                    </div>
-                                                </label>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                
-                                <!-- No Results Message -->
-                                <div id="no-products-message" class="hidden p-4 text-center text-gray-500 text-sm">
-                                    No products match your search
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Update Justification -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">Update Justification</h3>
-                
-                <div>
-                    <label for="justification" class="block text-sm font-medium text-gray-700">Why are you submitting this update?</label>
-                    <textarea name="justification" id="justification" rows="3" required
-                              class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                </div>
-                
-                <div>
-                    <label for="supporting_links" class="block text-sm font-medium text-gray-700">Supporting Links</label>
-                    <textarea name="supporting_links" id="supporting_links" rows="2"
-                              class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                    
-                    <div class="mt-1">
-                        <button type="button" onclick="toggleInfo('sourceInfo2', 'sourceArrow2')" class="text-sm text-gray-500 flex items-center focus:outline-none hover:text-gray-700">
-                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path id="sourceArrow2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                        d="M19 9l-7 7-7-7" />
-                            </svg>
-                            Please provide any relevant links that support your updates
-                        </button>
-    
-                        <div id="sourceInfo2" class="hidden mt-2 p-3 bg-gray-50 rounded-md">
-                            <p class="text-sm text-gray-600">
-                                I recommend 
-                                <a href="https://opensecrets.org" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer" 
-                                   class="text-blue-600 hover:text-blue-800 underline">
-                                    OpenSecrets.org
-                                </a>, 
-                                <a href="https://followthemoney.org" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer" 
-                                   class="text-blue-600 hover:text-blue-800 underline">
-                                    FollowTheMoney.org
-                                </a>, 
-                                and 
-                                <a href="https://www.goodsuniteus.com" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer" 
-                                   class="text-blue-600 hover:text-blue-800 underline">
-                                    GoodsUniteUs.com
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Basic Information -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Basic Information</h2>
             
             <div>
-                <button type="submit" 
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md
-                               shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700
-                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Submit Update Request
-                </button>
+                <label for="name" class="block text-sm font-medium text-gray-700">Business Name</label>
+                <input type="text" name="name" id="name" 
+                       value="{{ form_data.name }}"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
             </div>
 
-            <!-- JavaScript for Dynamic Expansion of Citation Recommendations-->
-            <script>
-                function toggleInfo(infoId, arrowId) {
-                    const infoElement = document.getElementById(infoId);
-                    const arrow = document.getElementById(arrowId);
-                    
-                    if (infoElement.classList.contains('hidden')) {
-                        infoElement.classList.remove('hidden');
-                        arrow.setAttribute('d', 'M19 15l-7-7-7 7');  // Point up
-                    } else {
-                        infoElement.classList.add('hidden');
-                        arrow.setAttribute('d', 'M19 9l-7 7-7-7');   // Point down
-                    }
-                }
-                </script>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea name="description" id="description" rows="3"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ form_data.description }}</textarea>
+            </div>
+        </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Debounce function to limit the frequency of AJAX requests
-                    function debounce(func, delay) {
-                        let timer;
-                        return function(...args) {
-                            clearTimeout(timer);
-                            timer = setTimeout(() => func.apply(this, args), delay);
-                        };
-                    }
+        <!-- Current Data Sources -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Current Data Sources</h2>
+            <div class="space-y-2">
+                {% for source in current_data_sources %}
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                    <a href="{{ source.url }}" 
+                       class="text-blue-600 hover:text-blue-800" 
+                       target="_blank" 
+                       rel="noopener noreferrer">
+                        {{ source.url|truncatechars:50 }}
+                    </a>
+                    <div class="text-sm text-gray-600">
+                        {{ source.get_reason_display }} - {{ source.created_at|date:"F j, Y" }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Direct Political Donations -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Direct Political Donations</h2>
+            <p class="text-sm text-gray-600">Donations made directly by the company</p>
+            
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label for="direct_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
+                    <input type="number" step="0.01" name="direct_conservative_total_donations" id="direct_conservative_total_donations"
+                        value="{{ political_data.direct_conservative_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="direct_liberal_total_donations" class="block text-sm font-medium text-gray-700">Liberal Total ($)</label>
+                    <input type="number" step="0.01" name="direct_liberal_total_donations" id="direct_liberal_total_donations"
+                        value="{{ political_data.direct_liberal_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="direct_total_donations" class="block text-sm font-medium text-gray-700">Total Donations ($)</label>
+                    <input type="number" step="0.01" name="direct_total_donations" id="direct_total_donations"
+                        value="{{ political_data.direct_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+            </div>
+        
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex items-center">
+                    <input type="checkbox" name="direct_america_pac_donor" id="direct_america_pac_donor"
+                        {% if political_data.direct_america_pac_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="direct_america_pac_donor" class="ml-2 text-sm text-gray-700">America PAC Donor</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="direct_save_america_pac_donor" id="direct_save_america_pac_donor"
+                        {% if political_data.direct_save_america_pac_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="direct_save_america_pac_donor" class="ml-2 text-sm text-gray-700">Save America PAC Donor</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Affiliated PAC Donations -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Affiliated PAC Donations</h2>
+            <p class="text-sm text-gray-600">Donations made by company-affiliated Political Action Committees</p>
+            
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label for="affiliated_pac_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
+                    <input type="number" step="0.01" name="affiliated_pac_conservative_total_donations" id="affiliated_pac_conservative_total_donations"
+                        value="{{ political_data.affiliated_pac_conservative_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="affiliated_pac_liberal_total_donations" class="block text-sm font-medium text-gray-700">Liberal Total ($)</label>
+                    <input type="number" step="0.01" name="affiliated_pac_liberal_total_donations" id="affiliated_pac_liberal_total_donations"
+                        value="{{ political_data.affiliated_pac_liberal_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="affiliated_pac_total_donations" class="block text-sm font-medium text-gray-700">Total Donations ($)</label>
+                    <input type="number" step="0.01" name="affiliated_pac_total_donations" id="affiliated_pac_total_donations"
+                        value="{{ political_data.affiliated_pac_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+            </div>
+        
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex items-center">
+                    <input type="checkbox" name="affiliated_pac_america_pac_donor" id="affiliated_pac_america_pac_donor"
+                        {% if political_data.affiliated_pac_america_pac_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="affiliated_pac_america_pac_donor" class="ml-2 text-sm text-gray-700">America PAC Donor</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="affiliated_pac_save_america_pac_donor" id="affiliated_pac_save_america_pac_donor"
+                        {% if political_data.affiliated_pac_save_america_pac_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="affiliated_pac_save_america_pac_donor" class="ml-2 text-sm text-gray-700">Save America PAC Donor</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Senior Employee Donations -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Senior Employee Donations</h2>
+            <p class="text-sm text-gray-600">Political activities of company senior employees</p>
+            
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label for="senior_employee_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
+                    <input type="number" step="0.01" name="senior_employee_conservative_total_donations" id="senior_employee_conservative_total_donations"
+                        value="{{ political_data.senior_employee_conservative_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="senior_employee_liberal_total_donations" class="block text-sm font-medium text-gray-700">Liberal Total ($)</label>
+                    <input type="number" step="0.01" name="senior_employee_liberal_total_donations" id="senior_employee_liberal_total_donations"
+                        value="{{ political_data.senior_employee_liberal_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="senior_employee_total_donations" class="block text-sm font-medium text-gray-700">Total Donations ($)</label>
+                    <input type="number" step="0.01" name="senior_employee_total_donations" id="senior_employee_total_donations"
+                        value="{{ political_data.senior_employee_total_donations|default:'' }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+            </div>
+        
+            <div class="grid grid-cols-3 gap-4">
+                <div class="flex items-center">
+                    <input type="checkbox" name="senior_employee_trump_donor" id="senior_employee_trump_donor"
+                        {% if political_data.senior_employee_trump_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="senior_employee_trump_donor" class="ml-2 text-sm text-gray-700">Trump Donor</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="senior_employee_america_pac_donor" id="senior_employee_america_pac_donor"
+                        {% if political_data.senior_employee_america_pac_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="senior_employee_america_pac_donor" class="ml-2 text-sm text-gray-700">America PAC Donor</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="senior_employee_save_america_pac_donor" id="senior_employee_save_america_pac_donor"
+                        {% if political_data.senior_employee_save_america_pac_donor %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="senior_employee_save_america_pac_donor" class="ml-2 text-sm text-gray-700">Save America PAC Donor</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Data Sources -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Add New Data Sources</h2>
+            
+            <div class="border rounded p-4">
+                <div id="new-source-inputs" class="space-y-4">
+                    <div class="source-input">
+                        <input type="url" name="new_data_sources[]" required
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Enter new source URL">
+                    </div>
+                </div>
                 
-                    // Function to fetch filtered categories
-                    function fetchCategories(searchTerm, categoryType) {
-                        const containerId = categoryType === 'services' ? '#services-container' : '#products-container';
-                        const noResultsId = categoryType === 'services' ? '#no-services-message' : '#no-products-message';
-                        
-                        fetch(`/filter-categories/?q=${encodeURIComponent(searchTerm)}&type=${categoryType}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.results) {
-                                    const container = document.querySelector(containerId);
-                                    const noResults = document.querySelector(noResultsId);
-                                    
-                                    container.innerHTML = ''; // Clear existing items
-                
-                                    if (data.results.length > 0) {
-                                        data.results.forEach(item => {
-                                            const label = document.createElement('label');
-                                            label.classList.add('flex', 'items-center', 'p-2', 'hover:bg-gray-50');
-                                            
-                                            label.innerHTML = `
-                                                <input type="checkbox" name="${categoryType}_to_add" value="${item.id}"
-                                                    class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                                <div class="ml-2">
-                                                    <span class="text-sm font-medium text-gray-700">${item.name}</span>
-                                                    <p class="text-xs text-gray-500">${item.description || ''}</p>
-                                                </div>
-                                            `;
-                                            container.appendChild(label);
-                                        });
-                                        noResults.classList.add('hidden');
-                                    } else {
-                                        noResults.classList.remove('hidden');
-                                    }
-                                }
-                            })
-                            .catch(error => console.error('Error fetching categories:', error));
-                    }
-                
-                    // Add event listeners for the service and product search fields
-                    const serviceSearch = document.getElementById('service-search');
-                    const productSearch = document.getElementById('product-search');
-                
-                    if (serviceSearch) {
-                        serviceSearch.addEventListener('input', debounce(() => {
-                            fetchCategories(serviceSearch.value, 'services');
-                        }, 300));
-                    }
-                
-                    if (productSearch) {
-                        productSearch.addEventListener('input', debounce(() => {
-                            fetchCategories(productSearch.value, 'products');
-                        }, 300));
+                <button type="button" id="add-source" 
+                        class="mt-4 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Add Another Source
+                </button>
+            </div>
+        
+            <div class="mt-1">
+                <button type="button" id="toggle-source-info" class="flex items-center text-sm text-gray-600 hover:text-gray-900">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="sourceArrow" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    Recommended Data Sources
+                </button>
+        
+                <div id="sourceInfo" class="hidden mt-2 p-3 bg-gray-50 rounded-md">
+                    Recommended sources:
+                    <a href="https://opensecrets.org" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">OpenSecrets.org</a>,
+                    <a href="https://followthemoney.org" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">FollowTheMoney.org</a>, and
+                    <a href="https://www.goodsuniteus.com" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">GoodsUniteUs.com</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services & Products -->
+        <div class="space-y-6">
+            <!-- Services Section -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" name="provides_services" id="provides_services"
+                        {% if form_data.provides_services %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="provides_services" class="ml-2 text-sm text-gray-700">This company provides services</label>
+                </div>
+
+                <div id="services_section" class="space-y-4 {% if not form_data.provides_services %}hidden{% endif %}">
+                    {% if business.services.exists %}
+                    <div>
+                        <h3 class="font-medium text-gray-900">Current Services</h3>
+                        <div class="mt-2 space-y-2">
+                            {% for service in business.services.all %}
+                            <div class="flex items-center">
+                                <input type="checkbox" name="services_to_remove" value="{{ service.id }}"
+                                    class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                <label class="ml-2 text-sm text-gray-700">{{ service.name }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Check services to remove them</p>
+                    </div>
+                    {% endif %}
+
+                    <div>
+                        <h3 class="font-medium text-gray-900">Add Services</h3>
+                        <div class="relative">
+                            <input type="text" 
+                                id="service-search-input" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                placeholder="Search services...">
+                        </div>
+                        <div class="mt-2 max-h-60 overflow-y-auto border border-gray-200 rounded-md">
+                            <div id="services-container">
+                                {% for service in available_services %}
+                                {% if service not in business.services.all %}
+                                <div class="service-option p-2 hover:bg-gray-50" data-name="{{ service.name|lower }}">
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" name="services_to_add" value="{{ service.id }}"
+                                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-700">{{ service.name }}</span>
+                                    </label>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div id="no-services-message" class="hidden p-4 text-gray-500">No services match your search</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Products Section -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" name="provides_products" id="provides_products"
+                        {% if form_data.provides_products %}checked{% endif %}
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="provides_products" class="ml-2 text-sm text-gray-700">This company provides products</label>
+                </div>
+
+                <div id="products_section" class="space-y-4 {% if not form_data.provides_products %}hidden{% endif %}">
+                    {% if business.products.exists %}
+                    <div>
+                        <h3 class="font-medium text-gray-900">Current Products</h3>
+                        <div class="mt-2 space-y-2">
+                            {% for product in business.products.all %}
+                            <div class="flex items-center">
+                                <input type="checkbox" name="products_to_remove" value="{{ product.id }}"
+                                    class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                <label class="ml-2 text-sm text-gray-700">{{ product.name }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Check products to remove them</p>
+                    </div>
+                    {% endif %}
+
+                    <div>
+                        <h3 class="font-medium text-gray-900">Add Products</h3>
+                        <div class="relative">
+                            <input type="text" 
+                                id="product-search-input" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                placeholder="Search products...">
+                        </div>
+                        <div class="mt-2 max-h-60 overflow-y-auto border border-gray-200 rounded-md">
+                            <div id="products-container">
+                                {% for product in available_products %}
+                                {% if product not in business.products.all %}
+                                <div class="product-option p-2 hover:bg-gray-50" data-name="{{ product.name|lower }}">
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" name="products_to_add" value="{{ product.id }}"
+                                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-700">{{ product.name }}</span>
+                                    </label>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div id="no-products-message" class="hidden p-4 text-gray-500">No products match your search</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Update Justification and Submit -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-medium text-gray-900">Update Justification</h2>
+            
+            <div>
+                <label for="justification" class="block text-sm font-medium text-gray-700">Why are you submitting this update?</label>
+                <textarea name="justification" id="justification" rows="3" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+            </div>
+        
+            <div>
+                <label for="supporting_links" class="block text-sm font-medium text-gray-700">Supporting Links</label>
+                <textarea name="supporting_links" id="supporting_links" rows="2"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Add any additional supporting links..."></textarea>
+            </div>
+        </div>
+        
+        <button type="submit" 
+                class="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Submit Update Request
+        </button>
+    </form>
+    
+    <script>
+
+        // Toggle services section
+        document.getElementById('provides_services').addEventListener('change', function() {
+            document.getElementById('services_section').classList.toggle('hidden', !this.checked);
+        });
+    
+        // Toggle products section
+        document.getElementById('provides_products').addEventListener('change', function() {
+            document.getElementById('products_section').classList.toggle('hidden', !this.checked);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            function filterItems(searchInputId, containerId, messageId) {
+                const searchValue = document.getElementById(searchInputId).value.toLowerCase();
+                const items = document.querySelectorAll(`#${containerId} .service-option, #${containerId} .product-option`);
+                let hasResults = false;
+
+                items.forEach(item => {
+                    const itemName = item.dataset.name;
+                    if (itemName.includes(searchValue)) {
+                        item.classList.remove('hidden');
+                        hasResults = true;
+                    } else {
+                        item.classList.add('hidden');
                     }
                 });
-            </script>
 
-        </form>
-    </div>
+                document.getElementById(messageId).classList.toggle('hidden', hasResults);
+            }
+
+            document.getElementById('service-search-input').addEventListener('input', function () {
+                filterItems('service-search-input', 'services-container', 'no-services-message');
+            });
+
+            document.getElementById('product-search-input').addEventListener('input', function () {
+                filterItems('product-search-input', 'products-container', 'no-products-message');
+            });
+        });
+    
+        // Toggle source info
+        document.getElementById('toggle-source-info').addEventListener('click', function() {
+            const info = document.getElementById('sourceInfo');
+            const arrow = document.getElementById('sourceArrow');
+            info.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
+    
+        // Add new source input
+        document.getElementById('add-source').addEventListener('click', function() {
+            const container = document.getElementById('new-source-inputs');
+            const newInput = document.createElement('div');
+            newInput.className = 'source-input';
+            newInput.innerHTML = `
+                <input type="url" name="new_data_sources[]" required
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Enter new source URL">
+            `;
+            container.appendChild(newInput);
+        });
+    </script>
 </div>
-
 {% endblock %}
