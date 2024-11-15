@@ -346,10 +346,13 @@ def import_business(request):
                 
                 direct_america_pac = False
                 direct_save_america = False
+                direct_maga_inc = False
                 pac_america_pac = False
                 pac_save_america = False
+                pac_maga_inc = False
                 senior_employee_america_pac = False
                 senior_employee_save_america = False
+                senior_employee_maga_inc = False
                 senior_employee_trump_donor = False
 
                 for row in reader:
@@ -373,6 +376,8 @@ def import_business(request):
                                 direct_america_pac = True
                             elif 'save america' in recipient:
                                 direct_save_america = True
+                            elif 'make america great again inc' in recipient:
+                                direct_maga_inc = True
                             
                     # Process PAC donations 
                     if 'From PACs' in reader.fieldnames:
@@ -392,6 +397,8 @@ def import_business(request):
                                 pac_america_pac = True
                             elif 'save america' in recipient:
                                 pac_save_america = True
+                            elif 'make america great again inc' in recipient:
+                                pac_maga_inc = True
 
                     # Process senior employee donations
                     if 'From Individuals' in reader.fieldnames:
@@ -411,6 +418,8 @@ def import_business(request):
                                 senior_employee_america_pac = True
                             elif 'save america' in recipient:
                                 senior_employee_save_america = True
+                            elif 'make america great again inc' in recipient:
+                                senior_employee_maga_inc = True
 
                 # Create political data
                 PoliticalData.objects.create(
@@ -421,6 +430,7 @@ def import_business(request):
                     direct_total_donations=direct_total,
                     direct_america_pac_donor=direct_america_pac,
                     direct_save_america_pac_donor=direct_save_america,
+                    direct_maga_inc_donor=direct_maga_inc,
                     
                     # PAC donations
                     affiliated_pac_conservative_total_donations=pac_conservative_total,
@@ -428,6 +438,7 @@ def import_business(request):
                     affiliated_pac_total_donations=pac_total,
                     affiliated_pac_america_pac_donor=pac_america_pac,
                     affiliated_pac_save_america_pac_donor=pac_save_america,
+                    affiliated_pac_maga_inc_donor=pac_maga_inc,
                     
                     # senior_employee donations - only setting Trump donor for now
                     senior_employee_conservative_total_donations=senior_employee_conservative_total,
@@ -436,6 +447,7 @@ def import_business(request):
                     senior_employee_trump_donor=senior_employee_trump_donor,
                     senior_employee_america_pac_donor=senior_employee_america_pac,
                     senior_employee_save_america_pac_donor=senior_employee_save_america,
+                    senior_employee_maga_inc_donor=senior_employee_maga_inc,
                 )
 
                 # Create the data source records
