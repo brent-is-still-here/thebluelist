@@ -4,23 +4,9 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto">
-    {% if perms.companies.can_import_business_csv %}
-    <div class="mb-8 bg-blue-50 p-4 rounded-lg">
-        <div class="flex items-center">
-            <div class="flex-1">
-                <h3 class="text-lg font-medium text-blue-900">Power User Feature Available</h3>
-                <p class="text-sm text-blue-700">You can import business data directly from a CSV file.</p>
-            </div>
-            <a href="{% url 'import_business' %}" 
-               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Import from CSV
-            </a>
-        </div>
-    </div>
-    {% endif %}
 
     <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-2xl font-semibold mb-6">Add New Business</h2>
+        <h2 class="text-2xl font-semibold mb-6">Import New Business from CSV</h2>
         
         <form method="post" enctype="multipart/form-data" class="space-y-8">
             {% csrf_token %}

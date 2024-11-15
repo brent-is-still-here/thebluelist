@@ -30,6 +30,13 @@ def add_business(request):
             'products': ProductCategory.objects.all(),
         })
     
+    def safe_float(value, default=0.0):
+        """Convert string to float, returning default if empty or invalid"""
+        try:
+            return float(value) if value else default
+        except ValueError:
+            return default
+    
     if request.method == 'POST':
         try:
             with transaction.atomic():
@@ -45,33 +52,36 @@ def add_business(request):
                 PoliticalData.objects.create(
                     business=business,
                     # Direct donations
-                    direct_conservative_total_donations=float(request.POST.get('direct_conservative_total_donations', 0)),
-                    direct_liberal_total_donations=float(request.POST.get('direct_liberal_total_donations', 0)),
-                    direct_total_donations=float(request.POST.get('direct_total_donations', 0)),
+                    direct_conservative_total_donations=safe_float(request.POST.get('direct_conservative_total_donations', 0)),
+                    direct_liberal_total_donations=safe_float(request.POST.get('direct_liberal_total_donations', 0)),
+                    direct_total_donations=safe_float(request.POST.get('direct_total_donations', 0)),
                     direct_america_pac_donor=request.POST.get('direct_america_pac_donor') == 'on',
                     direct_save_america_pac_donor=request.POST.get('direct_save_america_pac_donor') == 'on',
                     
                     # PAC donations
-                    affiliated_pac_conservative_total_donations=float(request.POST.get('affiliated_pac_conservative_total_donations', 0)),
-                    affiliated_pac_liberal_total_donations=float(request.POST.get('affiliated_pac_liberal_total_donations', 0)),
-                    affiliated_pac_total_donations=float(request.POST.get('affiliated_pac_total_donations', 0)),
+                    affiliated_pac_conservative_total_donations=safe_float(request.POST.get('affiliated_pac_conservative_total_donations', 0)),
+                    affiliated_pac_liberal_total_donations=safe_float(request.POST.get('affiliated_pac_liberal_total_donations', 0)),
+                    affiliated_pac_total_donations=safe_float(request.POST.get('affiliated_pac_total_donations', 0)),
                     affiliated_pac_america_pac_donor=request.POST.get('affiliated_pac_america_pac_donor') == 'on',
                     affiliated_pac_save_america_pac_donor=request.POST.get('affiliated_pac_save_america_pac_donor') == 'on',
                     
-                    # senior_employee donations
+                    # Senior employee donations
+                    senior_employee_conservative_total_donations=safe_float(request.POST.get('senior_employee_conservative_total_donations', 0)),
+                    senior_employee_liberal_total_donations=safe_float(request.POST.get('senior_employee_liberal_total_donations', 0)),
+                    senior_employee_total_donations=safe_float(request.POST.get('senior_employee_total_donations', 0)),
                     senior_employee_trump_donor=request.POST.get('senior_employee_trump_donor') == 'on',
                     senior_employee_america_pac_donor=request.POST.get('senior_employee_america_pac_donor') == 'on',
                     senior_employee_save_america_pac_donor=request.POST.get('senior_employee_save_america_pac_donor') == 'on',
                 )
-                
+
                 # Handle data sources
                 data_sources = request.POST.getlist('data_sources[]')
                 for source_url in data_sources:
                     if source_url:  # Only create if URL is not empty
                         DataSource.objects.create(
                             business=business,
-                            reason='manual_addition',
-                            url=source_url
+                            url=source_url,
+                            reason='manual_addition'
                         )
                 
                 # Handle parent company if specified
@@ -84,18 +94,15 @@ def add_business(request):
                     business.parent_company = parent
                     business.save()
                 
-                # Handle services if company provides them
+                # Handle services and products
                 if business.provides_services:
-                    services = request.POST.getlist('services')
-                    business.services.set(services)
-                
-                # Handle products if company provides them
+                    business.services.set(request.POST.getlist('services'))
                 if business.provides_products:
-                    products = request.POST.getlist('products')
-                    business.products.set(products)
+                    business.products.set(request.POST.getlist('products'))
                 
                 messages.success(request, 'Business added successfully!')
                 return redirect('business_search')
+
         except Exception as e:
             messages.error(request, f'Error adding business: {str(e)}')
             return render(request, 'companies/add_business.html', {
