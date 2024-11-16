@@ -1,0 +1,184 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Browse Pack Items</h1>
+            
+            <!-- Filters -->
+            <form method="get" class="bg-white shadow-sm rounded-lg px-4 py-5 sm:p-6 mb-6">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select name="category" id="category" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">All Categories</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if current_filters.category|stringformat:"s" == cat.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="importance" class="block text-sm font-medium text-gray-700">Importance</label>
+                        <select name="importance" id="importance" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">All Items</option>
+                            <option value="critical" {% if current_filters.importance == "critical" %}selected{% endif %}>Critical</option>
+                            <option value="recommended" {% if current_filters.importance == "recommended" %}selected{% endif %}>Recommended</option>
+                            <option value="optional" {% if current_filters.importance == "optional" %}selected{% endif %}>Optional</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="special_need" class="block text-sm font-medium text-gray-700">Special Needs</label>
+                        <select name="special_need" id="special_need" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">All Items</option>
+                            <option value="children" {% if current_filters.special_need == "children" %}selected{% endif %}>Children</option>
+                            <option value="elderly" {% if current_filters.special_need == "elderly" %}selected{% endif %}>Elderly</option>
+                            <option value="pets" {% if current_filters.special_need == "pets" %}selected{% endif %}>Pets</option>
+                            <option value="disabled" {% if current_filters.special_need == "disabled" %}selected{% endif %}>Disabilities</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="q" class="block text-sm font-medium text-gray-700">Search</label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input type="text" name="q" id="q" value="{{ current_filters.query }}"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                                placeholder="Search items...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Apply Filters
+                    </button>
+                </div>
+            </form>
+
+            <!-- Results -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <ul class="divide-y divide-gray-200">
+                    {% for item in items %}
+                    <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900">{{ item.name }}</h3>
+                                <div class="mt-1">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        {% if item.importance == 'critical' %}
+                                            bg-red-100 text-red-800
+                                        {% elif item.importance == 'recommended' %}
+                                            bg-yellow-100 text-yellow-800
+                                        {% else %}
+                                            bg-green-100 text-green-800
+                                        {% endif %}">
+                                        {{ item.importance|title }}
+                                    </span>
+                                    {% if item.weight_note %}
+                                        <span class="ml-2 text-sm text-gray-500">({{ item.weight_note }})</span>
+                                    {% endif %}
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">{{ item.description|truncatewords:50 }}</p>
+                                {% if item.special_considerations %}
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        <span class="font-medium">Special considerations:</span> 
+                                        {{ item.special_considerations }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="ml-4">
+                                <a href="{% url 'item_detail' item.id %}" 
+                                   class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="px-4 py-8 sm:px-6 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="mt-4 text-gray-500 text-lg">No items found matching your criteria</p>
+                        <p class="mt-2 text-gray-400">Try adjusting your filters</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% if items.has_other_pages %}
+            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    {% if items.has_previous %}
+                        <a href="?page={{ items.previous_page_number }}{% for key, value in current_filters.items %}{% if value and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Previous
+                        </a>
+                    {% endif %}
+                    {% if items.has_next %}
+                        <a href="?page={{ items.next_page_number }}{% for key, value in current_filters.items %}{% if value and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Next
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Showing
+                            <span class="font-medium">{{ items.start_index }}</span>
+                            to
+                            <span class="font-medium">{{ items.end_index }}</span>
+                            of
+                            <span class="font-medium">{{ items.paginator.count }}</span>
+                            results
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            {% if items.has_previous %}
+                                <a href="?page={{ items.previous_page_number }}{% for key, value in current_filters.items %}{% if value and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                   class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Previous</span>
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            {% endif %}
+
+                            {% for num in items.paginator.page_range %}
+                                {% if items.number == num %}
+                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600">
+                                        {{ num }}
+                                    </span>
+                                {% elif num > items.number|add:'-3' and num < items.number|add:'3' %}
+                                    <a href="?page={{ num }}{% for key, value in current_filters.items %}{% if value and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        {{ num }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if items.has_next %}
+                                <a href="?page={{ items.next_page_number }}{% for key, value in current_filters.items %}{% if value and key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                   class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Next</span>
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

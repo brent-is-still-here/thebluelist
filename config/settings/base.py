@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # Local apps
     'companies.apps.CompaniesConfig',
     'online_security.apps.OnlineSecurityConfig',
+    'pack_planner.apps.PackPlannerConfig',
     'users.apps.UsersConfig',
 ]
 
