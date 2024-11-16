@@ -93,70 +93,73 @@
             
             {% if businesses %}
                 <div class="space-y-4">
-                    {% for business in businesses %}
+                    {% for result in businesses %}
                         <div class="border-b border-gray-200 pb-4 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <div>
                                     <h3 class="text-lg font-medium">
-                                        <a href="{% url 'business_detail' business.slug %}" class="hover:text-blue-600">
-                                            {{ business.name }}
+                                        <a href="{% url 'business_detail' result.business.slug %}" class="hover:text-blue-600">
+                                            {{ result.business.name }}
                                         </a>
                                     </h3>
-                                    <p class="text-sm text-gray-600">{{ business.description|truncatewords:30 }}</p>
+                                    <p class="text-sm text-gray-600">{{ result.business.description|truncatewords:30 }}</p>
                                     
-                                    {% if business.politicaldata %}
+                                    {% if result.political_data %}
                                         <div class="mt-2">
                                             <!-- Political Percentages -->
                                             <div class="text-sm">
                                                 {% if include_employee_data %}
                                                     <span class="text-red-600">
-                                                        [ {{ business.politicaldata.overall_conservative_percentage|default:"0" }}% Conservative ]
+                                                        [ {{ result.political_data.overall_conservative_percentage|default:"0" }}% Conservative ]
                                                     </span>
                                                     /
                                                     <span class="text-blue-600">
-                                                        [ {{ business.politicaldata.overall_liberal_percentage|default:"0" }}% Liberal ]
+                                                        [ {{ result.political_data.overall_liberal_percentage|default:"0" }}% Liberal ]
                                                     </span>
                                                 {% else %}
                                                     <span class="text-red-600">
-                                                        [ {{ business.politicaldata.conservative_percentage_without_employees|default:"0" }}% Conservative ]
+                                                        [ {{ result.political_data.conservative_percentage_without_employees|default:"0" }}% Conservative ]
                                                     </span>
                                                     /
                                                     <span class="text-blue-600">
-                                                        [ {{ business.politicaldata.liberal_percentage_without_employees|default:"0" }}% Liberal ]
+                                                        [ {{ result.political_data.liberal_percentage_without_employees|default:"0" }}% Liberal ]
                                                     </span>
+                                                {% endif %}
+                                                {% if result.inherited_from %}
+                                                    <span class="text-sm text-gray-600">*inherited from {{ result.inherited_from.name }}</span>
                                                 {% endif %}
                                             </div>
 
                                             <!-- Warning Indicators -->
                                             <div class="mt-1">
                                                 <!-- Always show direct and PAC warnings -->
-                                                {% if business.politicaldata.direct_america_pac_donor or business.politicaldata.affiliated_pac_america_pac_donor %}
+                                                {% if result.political_data.direct_america_pac_donor or result.political_data.affiliated_pac_america_pac_donor %}
                                                     <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
                                                 {% endif %}
                                                 
-                                                {% if business.politicaldata.direct_save_america_pac_donor or business.politicaldata.affiliated_pac_save_america_pac_donor %}
+                                                {% if result.political_data.direct_save_america_pac_donor or result.political_data.affiliated_pac_save_america_pac_donor %}
                                                     <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
                                                 {% endif %}
                                                 
-                                                {% if business.politicaldata.direct_maga_inc_donor or business.politicaldata.affiliated_pac_maga_inc_donor %}
+                                                {% if result.political_data.direct_maga_inc_donor or result.political_data.affiliated_pac_maga_inc_donor %}
                                                     <div class="text-sm text-red-600">⚠️ MAGA Inc Donor</div>
                                                 {% endif %}
 
                                                 <!-- Show employee-related warnings only when toggle is on -->
                                                 {% if include_employee_data %}
-                                                    {% if business.politicaldata.senior_employee_trump_donor %}
+                                                    {% if result.political_data.senior_employee_trump_donor %}
                                                         <div class="text-sm text-red-600">⚠️ Senior Employee Trump Donor</div>
                                                     {% endif %}
 
-                                                    {% if business.politicaldata.senior_employee_america_pac_donor %}
+                                                    {% if result.political_data.senior_employee_america_pac_donor %}
                                                         <div class="text-sm text-red-600">⚠️ Senior Employee America Pac Donor</div>
                                                     {% endif %}
 
-                                                    {% if business.politicaldata.senior_employee_save_america_pac_donor %}
+                                                    {% if result.political_data.senior_employee_save_america_pac_donor %}
                                                         <div class="text-sm text-red-600">⚠️ Senior Employee Save America Pac Donor</div>
                                                     {% endif %}
                                                     
-                                                    {% if business.politicaldata.senior_employee_maga_inc_donor %}
+                                                    {% if result.political_data.senior_employee_maga_inc_donor %}
                                                         <div class="text-sm text-red-600">⚠️ Senior Employee MAGA Inc Donor</div>
                                                     {% endif %}
                                                 {% endif %}
@@ -166,7 +169,7 @@
                                 </div>
                                 
                                 <div class="flex space-x-2">
-                                    <a href="{% url 'submit_update' business.id %}" 
+                                    <a href="{% url 'submit_update' result.business.id %}" 
                                     class="text-sm text-blue-600 hover:text-blue-800">
                                         Submit Update
                                     </a>
