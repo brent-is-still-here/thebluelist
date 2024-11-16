@@ -434,6 +434,24 @@ class PoliticalData(models.Model):
             return None
         liberal_total = (self.direct_liberal_total_donations or 0) + (self.affiliated_pac_liberal_total_donations or 0) + (self.senior_employee_liberal_total_donations or 0)
         return round(liberal_total / total * 100, 2)
+    
+    @property
+    def conservative_percentage_without_employees(self):
+        """Calculate overall percentage of conservative donations excluding employee data"""
+        total = (self.direct_total_donations or 0) + (self.affiliated_pac_total_donations or 0)
+        if not total:
+            return None
+        conservative_total = (self.direct_conservative_total_donations or 0) + (self.affiliated_pac_conservative_total_donations or 0)
+        return round(conservative_total / total * 100, 2)
+
+    @property
+    def liberal_percentage_without_employees(self):
+        """Calculate overall percentage of liberal donations excluding employee data"""
+        total = (self.direct_total_donations or 0) + (self.affiliated_pac_total_donations or 0)
+        if not total:
+            return None
+        liberal_total = (self.direct_liberal_total_donations or 0) + (self.affiliated_pac_liberal_total_donations or 0)
+        return round(liberal_total / total * 100, 2)
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100)
