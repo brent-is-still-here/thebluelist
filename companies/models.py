@@ -85,6 +85,70 @@ class Business(models.Model):
             return self
         return self.parent_company.ultimate_parent
     
+    def has_meaningful_political_data(self, political_data):
+        """Check if political data instance has any non-zero values"""
+        if not political_data:
+            return False
+            
+        # Check for any non-zero donation amounts
+        meaningful_fields = [
+            political_data.direct_conservative_total_donations,
+            political_data.direct_liberal_total_donations,
+            political_data.affiliated_pac_conservative_total_donations,
+            political_data.affiliated_pac_liberal_total_donations,
+            political_data.senior_employee_conservative_total_donations,
+            political_data.senior_employee_liberal_total_donations
+        ]
+        
+        # Check for any non-zero/non-None donation amounts
+        has_donations = any(field for field in meaningful_fields if field not in [None, 0, 0.0])
+        
+        # Check for any True boolean flags
+        boolean_fields = [
+            political_data.direct_america_pac_donor,
+            political_data.direct_save_america_pac_donor,
+            political_data.direct_maga_inc_donor,
+            political_data.affiliated_pac_america_pac_donor,
+            political_data.affiliated_pac_save_america_pac_donor,
+            political_data.affiliated_pac_maga_inc_donor,
+            political_data.senior_employee_trump_donor,
+            political_data.senior_employee_america_pac_donor,
+            political_data.senior_employee_save_america_pac_donor,
+            political_data.senior_employee_maga_inc_donor
+        ]
+        
+        has_flags = any(boolean_fields)
+        
+        return has_donations or has_flags
+
+    def get_political_data(self):
+        """Returns own political data or inherited data from parent companies"""
+        # Check own political data first
+        if hasattr(self, 'politicaldata') and self.has_meaningful_political_data(self.politicaldata):
+            return self.politicaldata, None
+        
+        # Look up through parent companies
+        current = self.parent_company
+        while current:
+            if hasattr(current, 'politicaldata') and self.has_meaningful_political_data(current.politicaldata):
+                return current.politicaldata, current
+            current = current.parent_company
+        
+        # If no meaningful data found anywhere, return own empty data
+        return self.politicaldata if hasattr(self, 'politicaldata') else None, None
+
+    @property
+    def has_political_data(self):
+        """Check if business has its own or inherited political data"""
+        political_data, _ = self.get_political_data()
+        return self.has_meaningful_political_data(political_data)
+
+    @property
+    def inherited_from(self):
+        """Returns the company from which political data is inherited, if any"""
+        _, inherited_from = self.get_political_data()
+        return inherited_from
+    
     def get_alternative_businesses(self, limit=10):
         """
         Find alternative businesses based on product/service similarity and political leanings.
