@@ -6,6 +6,14 @@ from companies.models import (
 
 def business_search(request):
     query = request.GET.get('q', '').strip()
+
+    # Check if include_employees exists in GET params at all
+    if 'include_employees' in request.GET:
+        include_employee_data = request.GET.get('include_employees').lower() == 'true'
+    else:
+        # Only set default false if parameter isn't present
+        include_employee_data = False
+    
     businesses = Business.objects.none()
     
     if query:
@@ -36,4 +44,5 @@ def business_search(request):
     return render(request, 'companies/business_search.html', {
         'query': query,
         'businesses': businesses,
+        'include_employee_data': include_employee_data,
     })
