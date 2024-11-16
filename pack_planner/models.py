@@ -1,5 +1,18 @@
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.core.validators import MinValueValidator
+
+# Permission functions
+def create_pack_upload_permission():
+    """Create custom permission for pack data uploads"""
+    content_type = ContentType.objects.get_for_model(Category)  # Using Category as the base model
+    permission, created = Permission.objects.get_or_create(
+        codename='pack_planner_data_upload_permission',
+        name='Can upload pack planning data',
+        content_type=content_type,
+    )
+    return permission
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -17,6 +30,9 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "categories"
         ordering = ['order', 'name']
+        permissions = [
+            ("pack_planner_data_upload_permission", "Can upload pack planning data"),
+        ]
 
 class Item(models.Model):
     name = models.CharField(max_length=200)

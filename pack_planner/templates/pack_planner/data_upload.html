@@ -1,0 +1,119 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Upload Pack Planning Data</h1>
+            <p class="mt-2 text-gray-600">Upload JSON files to update the pack planning database.</p>
+        </div>
+
+        {% if messages %}
+        <div class="mb-8">
+            {% for message in messages %}
+            <div class="rounded-md p-4 {% if message.tags == 'success' %}bg-green-50{% else %}bg-red-50{% endif %}">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        {% if message.tags == 'success' %}
+                        <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        {% else %}
+                        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm {% if message.tags == 'success' %}text-green-800{% else %}text-red-800{% endif %}">
+                            {{ message }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label for="{{ form.file.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                {{ form.file.label }}
+                            </label>
+                            <div class="mt-1">
+                                {{ form.file }}
+                            </div>
+                            {% if form.file.help_text %}
+                            <p class="mt-2 text-sm text-gray-500">{{ form.file.help_text }}</p>
+                            {% endif %}
+                            {% if form.file.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.file.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label for="{{ form.upload_type.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                Upload Type
+                            </label>
+                            <div class="mt-1">
+                                {{ form.upload_type }}
+                            </div>
+                            {% if form.upload_type.help_text %}
+                            <p class="mt-2 text-sm text-gray-500">{{ form.upload_type.help_text }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-md">
+                            <h3 class="text-sm font-medium text-gray-900">Expected JSON Format:</h3>
+                            <pre class="mt-2 text-xs text-gray-600 overflow-x-auto">
+{
+    "categories": [
+        {
+            "name": "Category Name",
+            "description": "Category Description",
+            "importance": "critical|recommended|optional",
+            "order": 1
+        }
+    ],
+    "items": [
+        {
+            "name": "Item Name",
+            "description": "Item Description",
+            "category": "Category Name",
+            "importance": "critical|recommended|optional",
+            "weight_note": "Optional weight note",
+            "special_considerations": "Optional considerations",
+            "alternatives": ["Alternative Item 1", "Alternative Item 2"],
+            "order": 1
+        }
+    ],
+    "products": [
+        {
+            "name": "Product Name",
+            "description": "Product Description",
+            "item": "Item Name",
+            "url": "Optional URL",
+            "notes": "Optional notes",
+            "is_available": true
+        }
+    ]
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Upload Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

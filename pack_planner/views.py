@@ -1,8 +1,50 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
-from .models import Category, Item, Product
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
+
+import json
+
+from pack_planner.forms import DataUploadForm
+from pack_planner.models import Category, Item, Product
+from pack_planner.services.data_processor import DataProcessor
+
+@login_required
+@permission_required('pack_planner.pack_planner_data_upload_permission', raise_exception=True)
+def data_upload(request):
+    """Handle data uploads for pack planner"""
+    if request.method == 'POST':
+        form = DataUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                file = form.cleaned_data['file']
+                upload_type = form.cleaned_data['upload_type']
+                data = json.load(file)
+                
+                with transaction.atomic():
+                    processor = DataProcessor(upload_type)
+                    result = processor.process_data(data)
+                    
+                    messages.success(
+                        request,
+                        f'Successfully processed data: {result["categories"]} categories, '
+                        f'{result["items"]} items, {result["products"]} products'
+                    )
+                    
+                return redirect('pack_upload')
+            except Exception as e:
+                messages.error(request, f'Error processing file: {str(e)}')
+    else:
+        form = DataUploadForm()
+    
+    return render(request, 'pack_planner/data_upload.html', {
+        'form': form
+    })
 
 def pack_landing(request):
     """Landing page with overview of packing preparation"""
@@ -12,6 +54,8 @@ def pack_landing(request):
     
     context = {
         'critical_categories': critical_categories,
+        'has_upload_permission': request.user.is_authenticated and
+            request.user.has_perm('pack_planner.pack_planner_data_upload_permission')
     }
     return render(request, 'pack_planner/landing.html', context)
 
