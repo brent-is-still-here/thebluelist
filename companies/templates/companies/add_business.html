@@ -2,10 +2,10 @@
 {% block title %}Add Business - The Blue List{% endblock %}
 {% block content %}
 
-<div class="max-w-3xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     {% if perms.companies.can_import_business_csv %}
     <div class="mb-8 bg-blue-50 p-4 rounded-lg">
-        <div class="flex items-center">
+        <div class="flex items-center justify-between">
             <div class="flex-1">
                 <h3 class="text-lg font-medium text-blue-900">Power User Feature Available</h3>
                 <p>You can import business data directly from a CSV file.</p>
@@ -18,71 +18,75 @@
     </div>
     {% endif %}
 
-    <form method="POST" class="bg-white p-6 rounded-lg shadow space-y-6">
+    <form method="POST" class="space-y-8">
         {% csrf_token %}
 
         <!-- Basic Information -->
-        <div class="space-y-4">
-            <h2 class="text-lg font-medium text-gray-900">Basic Information</h2>
-            
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Business Name</label>
-                <input type="text" name="name" id="name" required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-            </div>
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6">Basic Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-1 md:col-span-2">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Business Name</label>
+                    <input type="text" name="name" id="name" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
 
-            <div>
-                <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
-                <input type="url" name="website" id="website"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-            </div>
+                <div class="col-span-1 md:col-span-2">
+                    <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
+                    <input type="url" name="website" id="website"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
 
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea name="description" id="description" rows="3" required
-                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                <div class="col-span-1 md:col-span-2">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" id="description" rows="3" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                </div>
             </div>
         </div>
 
         <!-- Company Relationships -->
-        <div class="space-y-4">
+        <div class="bg-white shadow rounded-lg p-6">
             <h2 class="text-lg font-medium text-gray-900">Company Relationships</h2>
-            
-            <div>
-                <label for="parent_company" class="block text-sm font-medium text-gray-700">Parent Company</label>
-                <input type="text" name="parent_company" id="parent_company"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                <p class="mt-1 text-sm text-gray-500">Leave blank if this is an independent company</p>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="col-span-1 md:col-span-2">
+                    <label for="parent_company" class="block text-sm font-medium text-gray-700">Parent Company</label>
+                    <input type="text" name="parent_company" id="parent_company"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Leave blank if this is an independent company</p>
+                </div>
             </div>
         </div>
 
         <!-- Company Offerings -->
-        <div class="space-y-8">
+        <div class="bg-white shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900">Company Offerings</h3>
             <!-- Services Section -->
-            <div>
-                <label class="flex items-center">
+            <div class="mb-6">
+                <div class="flex items-center mb-4">
                     <input type="checkbox" name="provides_services" id="provides_services"
-                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <span class="ml-2 text-sm text-gray-700">This company provides services</span>
-                </label>
+                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="provides_services" class="ml-2 text-sm text-gray-700">
+                        This company provides services
+                    </label>
+                </div>
                 
                 <!-- Services List with Search Bar -->
-                <div id="services_section" class="mt-4 hidden">
-                    <h4 class="text-md font-medium text-gray-900">Select Services</h4>
+                <div id="services_section" class="ml-8 hidden">
+                    <h4 class="text-md font-medium text-gray-900 mb-2">Select Services</h4>
                     <!-- Search Input -->
                     <input type="text" id="service-search" placeholder="Search services..."
                         class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     
                     <!-- Services List -->
-                    <div class="max-h-60 overflow-y-auto border rounded">
+                    <div class="max-h-60 overflow-y-auto border rounded p-2">
                         <div id="services-container">
                             {% for service in services %}
-                            <label class="service-item flex items-center p-2 hover:bg-gray-50" data-name="{{ service.name|lower }}">
-                                <input type="checkbox" name="services" value="{{ service.id }}"
-                                    class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <span class="ml-2 text-sm text-gray-700">{{ service.name }}</span>
-                            </label>
+                                <div class="flex items-center py-1">
+                                    <input type="checkbox" name="services" value="{{ service.id }}"
+                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <label class="ml-2 text-sm text-gray-700">{{ service.name }}</label>
+                                </div>
                             {% endfor %}
                         </div>
                         <div id="no-services-message" class="hidden p-4 text-gray-500">No services match your search</div>
@@ -92,28 +96,30 @@
 
             <!-- Products Section -->
             <div>
-                <label class="flex items-center">
+                <label class="flex items-center mb-4">
                     <input type="checkbox" name="provides_products" id="provides_products"
-                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <span class="ml-2 text-sm text-gray-700">This company provides products</span>
+                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="provides_products" class="ml-2 text-sm text-gray-700">
+                        This company provides products
+                    </label>
                 </label>
                 
                 <!-- Products List with Search Bar -->
-                <div id="products_section" class="mt-4 hidden">
-                    <h4 class="text-md font-medium text-gray-900">Select Products</h4>
+                <div id="products_section" class="ml-8 hidden">
+                    <h4 class="text-md font-medium text-gray-900 mb-2">Select Products</h4>
                     <!-- Search Input -->
                     <input type="text" id="product-search" placeholder="Search products..."
                         class="w-full px-3 py-2 mb-4 border rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     
                     <!-- Products List -->
-                    <div class="max-h-60 overflow-y-auto border rounded">
+                    <div class="max-h-60 overflow-y-auto border rounded p-2">
                         <div id="products-container">
                             {% for product in products %}
-                            <label class="product-item flex items-center p-2 hover:bg-gray-50" data-name="{{ product.name|lower }}">
-                                <input type="checkbox" name="products" value="{{ product.id }}"
-                                    class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <span class="ml-2 text-sm text-gray-700">{{ product.name }}</span>
-                            </label>
+                                <div class="flex items-center py-1">
+                                    <input type="checkbox" name="products" value="{{ product.id }}"
+                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <label class="ml-2 text-sm text-gray-700">{{ product.name }}</label>
+                                </div>
                             {% endfor %}
                         </div>
                         <div id="no-products-message" class="hidden p-4 text-gray-500">No products match your search</div>
@@ -125,11 +131,11 @@
         <!-- Political Data -->
         <div class="space-y-6">
             <!-- Direct Political Donations -->
-            <div class="space-y-4">
-                <h2 class="text-lg font-medium text-gray-900">Direct Political Donations</h2>
-                <p class="text-sm text-gray-600">Donations made directly by the company</p>
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Direct Political Donations</h2>
+                <p class="text-sm text-gray-500 mb-4">Donations made directly by the company</p>
                 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
                         <label for="direct_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
                         <input type="number" step="0.01" name="direct_conservative_total_donations" id="direct_conservative_total_donations"
@@ -147,7 +153,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="flex items-center">
                         <input type="checkbox" name="direct_america_pac_donor" id="direct_america_pac_donor"
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
@@ -162,11 +168,11 @@
             </div>
 
             <!-- Affiliated PAC Donations -->
-            <div class="space-y-4">
-                <h2 class="text-lg font-medium text-gray-900">Affiliated PAC Donations</h2>
-                <p class="text-sm text-gray-600">Donations made by company-affiliated Political Action Committees</p>
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Affiliated PAC Donations</h2>
+                <p class="text-sm text-gray-500 mb-4">Donations made by company-affiliated Political Action Committees</p>
                 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
                         <label for="affiliated_pac_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
                         <input type="number" step="0.01" name="affiliated_pac_conservative_total_donations" id="affiliated_pac_conservative_total_donations"
@@ -184,7 +190,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="flex items-center">
                         <input type="checkbox" name="affiliated_pac_america_pac_donor" id="affiliated_pac_america_pac_donor"
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
@@ -199,11 +205,11 @@
             </div>
 
             <!-- Senior Employee Political Activity -->
-            <div class="space-y-4">
-                <h2 class="text-lg font-medium text-gray-900">Senior Employee Political Activity</h2>
-                <p class="text-sm text-gray-600">Political activities of company senior employees</p>
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Senior Employee Political Activity</h2>
+                <p class="text-sm text-gray-500 mb-4">Political activities of company senior employees</p>
                 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
                         <label for="senior_employee_conservative_total_donations" class="block text-sm font-medium text-gray-700">Conservative Total ($)</label>
                         <input type="number" step="0.01" name="senior_employee_conservative_total_donations" id="senior_employee_conservative_total_donations"
@@ -221,7 +227,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="flex items-center">
                         <input type="checkbox" name="senior_employee_trump_donor" id="senior_employee_trump_donor"
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
@@ -241,9 +247,9 @@
             </div>
         </div>
 
-            <!-- Data Sources -->
-        <div class="space-y-4">
-            <h2 class="text-lg font-medium text-gray-900">Data Sources</h2>
+        <!-- Data Sources -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6">Data Sources</h2>
             
             <div class="border rounded p-4">
                 <div id="source-inputs" class="space-y-4">
@@ -260,7 +266,7 @@
                 </button>
             </div>
 
-            <div class="mt-1">
+            <div class="mt-4">
                 <button type="button" id="toggle-source-info" class="flex items-center text-sm text-gray-600 hover:text-gray-900">
                     <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                         <path id="sourceArrow" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -278,9 +284,9 @@
         </div>
 
         <!-- Submit Button -->
-        <div>
+        <div class="flex justify-end">
             <button type="submit" 
-                    class="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 Submit Business
             </button>
         </div>

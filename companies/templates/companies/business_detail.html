@@ -4,9 +4,9 @@
 {% block title %}{{ business.name }} - The Blue List{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
     <!-- Basic Business Info -->
-    <div class="bg-white p-6 rounded-lg shadow">
+    <div class="bg-white shadow rounded-lg p-6">
         <div class="flex justify-between items-start">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">{{ business.name }}</h1>
@@ -14,17 +14,20 @@
                     <a href="{{ business.website }}" class="text-blue-600 hover:text-blue-800 text-sm" target="_blank" rel="noopener noreferrer">{{ business.website }}</a>
                 {% endif %}
             </div>
-            <a href="{% url 'submit_update' business.id %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+            <a href="{% url 'submit_update' business.id %}" 
+                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
                 Submit Update
             </a>
         </div>
-        <div class="mt-4 prose max-w-none">{{ business.description }}</div>
+        <div class="mt-4 prose max-w-none">
+            {{ business.description }}
+        </div>
     </div>
 
     <!-- Company Relationships -->
     {% if business.parent_company or business.subsidiaries.exists %}
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-semibold mb-4">Company Relationships</h2>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Company Relationships</h2>
         {% if business.parent_company %}
         <div class="mb-4">
             <h3 class="text-lg font-medium text-gray-900">Parent Company</h3>
@@ -36,10 +39,11 @@
         {% if business.subsidiaries.exists %}
         <div>
             <h3 class="text-lg font-medium text-gray-900">Subsidiaries</h3>
-            <ul>
+            <ul class="mt-2 space-y-2">
                 {% for subsidiary in business.subsidiaries.all %}
                 <li>
-                    <a href="{% url 'business_detail' subsidiary.slug %}" class="text-blue-600 hover:text-blue-800">
+                    <a href="{% url 'business_detail' subsidiary.slug %}"
+                        class="text-blue-600 hover:text-blue-800">
                         {{ subsidiary.name }}
                     </a>
                 </li>
@@ -51,31 +55,37 @@
     {% endif %}
 
     <!-- Political Data Sections -->
-    {% if business.politicaldata %}
+    {% if political_data %}
         {% if has_direct_donations %}
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">2022-2024 Direct Political Donations</h2>
-            <div class="grid grid-cols-2 gap-6 mb-6">
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <div class="text-2xl font-bold text-red-600">{{ business.politicaldata.direct_conservative_percentage|default:0|floatformat:1 }}%</div>
+        <div class="bg-white shadow rounded-lg p-6 ">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                2022-2024 Direct Political Donations
+                {% if inherited_from %}
+                    <span class="text-sm font-normal text-gray-600">*inherited from {{ inherited_from.name }}</span>
+                {% endif %}
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-red-600">{{ political_data.direct_conservative_percentage|default:0|floatformat:1 }}%</div>
                     <div class="text-sm text-gray-600">Conservative</div>
-                    <div class="mt-2 text-lg font-semibold">${{ business.politicaldata.direct_conservative_total_donations|floatformat:2|intcomma }}</div>
+                    <div class="mt-2 text-lg font-semibold">${{ political_data.direct_conservative_total_donations|floatformat:2|intcomma }}</div>
                 </div>
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <div class="text-2xl font-bold text-blue-600">{{ business.politicaldata.direct_liberal_percentage|default:0|floatformat:1 }}%</div>
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">{{ political_data.direct_liberal_percentage|default:0|floatformat:1 }}%</div>
                     <div class="text-sm text-gray-600">Liberal</div>
-                    <div class="mt-2 text-lg font-semibold">${{ business.politicaldata.direct_liberal_total_donations|floatformat:2|intcomma }}</div>
+                    <div class="mt-2 text-lg font-semibold">${{ political_data.direct_liberal_total_donations|floatformat:2|intcomma }}</div>
                 </div>
             </div>
-            {% if business.politicaldata.direct_america_pac_donor or business.politicaldata.direct_save_america_pac_donor %}
-            <div class="mt-4">
-                {% if business.politicaldata.direct_america_pac_donor %}
-                <div class="text-sm text-red-600 mb-1">⚠️ America PAC Donor</div>
+            {% if political_data.direct_america_pac_donor or political_data.direct_save_america_pac_donor %}
+            <div class="mt-4 space-y-2">
+                {% if political_data.direct_america_pac_donor %}
+                <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
                 {% endif %}
-                {% if business.politicaldata.direct_save_america_pac_donor %}
+                {% if political_data.direct_save_america_pac_donor %}
                 <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
                 {% endif %}
-                {% if business.politicaldata.direct_maga_inc_donor %}
+                {% if political_data.direct_maga_inc_donor %}
                 <div class="text-sm text-red-600">⚠️ MAGA Inc Donor</div>
                 {% endif %}
             </div>
@@ -84,29 +94,34 @@
         {% endif %}
 
         {% if has_pac_donations %}
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">2022-2024 Affiliated PAC Donations</h2>
-            <div class="grid grid-cols-2 gap-6 mb-6">
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <div class="text-2xl font-bold text-red-600">{{ business.politicaldata.affiliated_pac_conservative_percentage|default:0|floatformat:1 }}%</div>
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                2022-2024 Business-Affiliated PAC Political Donations
+                {% if inherited_from %}
+                    <span class="text-sm font-normal text-gray-600">*inherited from {{ inherited_from.name }}</span>
+                {% endif %}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-red-600">{{ political_data.affiliated_pac_conservative_percentage|default:0|floatformat:1 }}%</div>
                     <div class="text-sm text-gray-600">Conservative</div>
-                    <div class="mt-2 text-lg font-semibold">${{ business.politicaldata.affiliated_pac_conservative_total_donations|floatformat:2|intcomma }}</div>
+                    <div class="mt-2 text-lg font-semibold">${{ political_data.affiliated_pac_conservative_total_donations|floatformat:2|intcomma }}</div>
                 </div>
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <div class="text-2xl font-bold text-blue-600">{{ business.politicaldata.affiliated_pac_liberal_percentage|default:0|floatformat:1 }}%</div>
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">{{ political_data.affiliated_pac_liberal_percentage|default:0|floatformat:1 }}%</div>
                     <div class="text-sm text-gray-600">Liberal</div>
-                    <div class="mt-2 text-lg font-semibold">${{ business.politicaldata.affiliated_pac_liberal_total_donations|floatformat:2|intcomma }}</div>
+                    <div class="mt-2 text-lg font-semibold">${{ political_data.affiliated_pac_liberal_total_donations|floatformat:2|intcomma }}</div>
                 </div>
             </div>
-            {% if business.politicaldata.affiliated_pac_america_pac_donor or business.politicaldata.affiliated_pac_save_america_pac_donor %}
-            <div class="mt-4">
-                {% if business.politicaldata.affiliated_pac_america_pac_donor %}
-                <div class="text-sm text-red-600 mb-1">⚠️ Affiliated America PAC Donor</div>
+            {% if political_data.affiliated_pac_america_pac_donor or political_data.affiliated_pac_save_america_pac_donor %}
+            <div class="mt-4 space-y-2">
+                {% if political_data.affiliated_pac_america_pac_donor %}
+                <div class="text-sm text-red-600">⚠️ Affiliated America PAC Donor</div>
                 {% endif %}
-                {% if business.politicaldata.affiliated_pac_save_america_pac_donor %}
+                {% if political_data.affiliated_pac_save_america_pac_donor %}
                 <div class="text-sm text-red-600">⚠️ Affiliated Save America PAC Donor</div>
                 {% endif %}
-                {% if business.politicaldata.affiliated_pac_maga_inc_donor %}
+                {% if political_data.affiliated_pac_maga_inc_donor %}
             <div class="text-sm text-red-600">⚠️ Affiliated MAGA Inc Donor</div>
             {% endif %}
             </div>
@@ -115,30 +130,35 @@
         {% endif %}
 
         {% if has_senior_employee_donations %}
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">2022-2024 Senior Employee Political Activity</h2>
-            <div class="grid grid-cols-2 gap-6 mb-6">
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <div class="text-2xl font-bold text-red-600">{{ business.politicaldata.senior_employee_conservative_percentage|default:0|floatformat:1 }}%</div>
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                2022-2024 Senior Employee Political Donations
+                {% if inherited_from %}
+                    <span class="text-sm font-normal text-gray-600">*inherited from {{ inherited_from.name }}</span>
+                {% endif %}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-red-600">{{ political_data.senior_employee_conservative_percentage|default:0|floatformat:1 }}%</div>
                     <div class="text-sm text-gray-600">Conservative</div>
-                    <div class="mt-2 text-lg font-semibold">${{ business.politicaldata.senior_employee_conservative_total_donations|floatformat:2|intcomma }}</div>
+                    <div class="mt-2 text-lg font-semibold">${{ political_data.senior_employee_conservative_total_donations|floatformat:2|intcomma }}</div>
                 </div>
-                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                    <div class="text-2xl font-bold text-blue-600">{{ business.politicaldata.senior_employee_liberal_percentage|default:0|floatformat:1 }}%</div>
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">{{ political_data.senior_employee_liberal_percentage|default:0|floatformat:1 }}%</div>
                     <div class="text-sm text-gray-600">Liberal</div>
-                    <div class="mt-2 text-lg font-semibold">${{ business.politicaldata.senior_employee_liberal_total_donations|floatformat:2|intcomma }}</div>
+                    <div class="mt-2 text-lg font-semibold">${{ political_data.senior_employee_liberal_total_donations|floatformat:2|intcomma }}</div>
                 </div>
             </div>
-            {% if business.politicaldata.senior_employee_trump_donor %}
-            <div class="text-sm text-red-600 mb-1">⚠️ Senior employees donated to Donald Trump</div>
+            {% if political_data.senior_employee_trump_donor %}
+            <div class="text-sm text-red-600">⚠️ Senior employees donated to Donald Trump</div>
             {% endif %}
-            {% if business.politicaldata.senior_employee_america_pac_donor %}
-            <div class="text-sm text-red-600 mb-1">⚠️ Senior employees donated to America PAC</div>
+            {% if political_data.senior_employee_america_pac_donor %}
+            <div class="text-sm text-red-600">⚠️ Senior employees donated to America PAC</div>
             {% endif %}
-            {% if business.politicaldata.senior_employee_save_america_pac_donor %}
+            {% if political_data.senior_employee_save_america_pac_donor %}
             <div class="text-sm text-red-600">⚠️ Senior employees donated to Save America PAC</div>
             {% endif %}
-            {% if business.politicaldata.senior_employee_maga_inc_donor %}
+            {% if political_data.senior_employee_maga_inc_donor %}
             <div class="text-sm text-red-600">⚠️ Senior employees donated to MAGA Inc</div>
             {% endif %}
         </div>
@@ -147,20 +167,20 @@
 
     <!-- Products and Services -->
     {% if business.provides_services or business.provides_products %}
-    <div class="bg-white p-6 rounded-lg shadow space-y-6">
+    <div class="bg-white shadow rounded-lg shadow p-6 space-y-6">
         {% if business.provides_services %}
         <div>
-            <h2 class="text-xl font-semibold mb-4">Services Provided</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Services Provided</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for service in business.services.all %}
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <h3 class="font-medium text-gray-900">{{ service.name }}</h3>
                     {% if service.description %}
-                    <p>{{ service.description }}</p>
+                    <p class="mt-1 text-sm text-gray-600">{{ service.description }}</p>
                     {% endif %}
                 </div>
                 {% empty %}
-                <p>This business is marked as a service provider but no specific services are listed yet.</p>
+                <p class="text-gray-500">This business is marked as a service provider but no specific services are listed yet.</p>
                 {% endfor %}
             </div>
         </div>
@@ -168,17 +188,17 @@
 
         {% if business.provides_products %}
         <div>
-            <h2 class="text-xl font-semibold mb-4">Products Offered</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Products Offered</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for product in business.products.all %}
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <h3 class="font-medium text-gray-900">{{ product.name }}</h3>
                     {% if product.description %}
-                    <p>{{ product.description }}</p>
+                    <p class="mt-1 text-sm text-gray-600">{{ product.description }}</p>
                     {% endif %}
                 </div>
                 {% empty %}
-                <p>This business is marked as a product provider but no specific products are listed yet.</p>
+                <p class="text-gray-500">This business is marked as a product provider but no specific products are listed yet.</p>
                 {% endfor %}
             </div>
         </div>
@@ -188,8 +208,8 @@
 
     <!-- Alternative Businesses -->
     {% if alternatives %}
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-semibold mb-4">Alternative Businesses</h2>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Alternative Businesses</h2>
         <div class="space-y-4">
             {% for alt in alternatives %}
             <div class="border-b border-gray-200 pb-4 last:border-b-0">
@@ -198,17 +218,18 @@
                         {{ alt.business.name }}
                     </a>
                 </h3>
-                <p>{{ alt.business.description|truncatewords:30 }}</p>
-                <p class="text-sm text-gray-500">Matches {{ alt.overlap_count }} product{{ alt.overlap_count|pluralize:",s" }}/service{{ alt.overlap_count|pluralize:",s" }}</p>
+                <p class="text-gray-600">{{ alt.business.description|truncatewords:30 }}</p>
+                <p class="text-sm text-gray-500 mt-1">Matches {{ alt.overlap_count }} product{{ alt.overlap_count|pluralize:",s" }}/service{{ alt.overlap_count|pluralize:",s" }}</p>
             </div>
             {% endfor %}
         </div>
     </div>
     {% endif %}
 
+    <!-- Data Sources -->
     {% if approved_sources.exists %}
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-semibold mb-4">Data Sources</h2>
+    <div class="bg-white shadow rounded-lg pt-6">
+        <h2 class="text-xl font-semibold text-gray-900">Data Sources</h2>
         <div class="space-y-2">
             {% for source in approved_sources %}
             <div class="flex justify-between items-center">

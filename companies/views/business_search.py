@@ -35,14 +35,27 @@ def business_search(request):
             Q(name__icontains=query) |
             Q(description__icontains=query)
         ).select_related(
+            'parent_company',
             'politicaldata'
         ).order_by(
             '-search_priority',  # Sort by priority (highest first)
             'name'              # Then alphabetically by name
         )
+
+        # Get political data for each business
+        businesses_with_data = []
+        for business in businesses:
+            political_data, inherited_from = business.get_political_data()
+            businesses_with_data.append({
+                'business': business,
+                'political_data': political_data,
+                'inherited_from': inherited_from
+            })
+    else:
+        businesses_with_data = []
     
     return render(request, 'companies/business_search.html', {
         'query': query,
-        'businesses': businesses,
+        'businesses': businesses_with_data,
         'include_employee_data': include_employee_data,
     })
