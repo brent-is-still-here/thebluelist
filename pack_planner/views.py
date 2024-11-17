@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_http_methods
 from django.views.generic.edit import FormView
 
 import json
@@ -46,6 +47,21 @@ def data_upload(request):
     return render(request, 'pack_planner/data_upload.html', {
         'form': form
     })
+
+def item_detail(request, pk):
+    """Detailed view of an item with alternatives and products"""
+    item = get_object_or_404(
+        Item.objects.prefetch_related(
+            'alternatives',
+            'recommended_products'
+        ),
+        pk=pk
+    )
+    
+    context = {
+        'item': item,
+    }
+    return render(request, 'pack_planner/item_detail.html', context)
 
 def pack_landing(request):
     """Landing page with overview of packing preparation"""
@@ -141,21 +157,6 @@ def pack_browse(request):
     }
     return render(request, 'pack_planner/browse.html', context)
 
-def item_detail(request, pk):
-    """Detailed view of an item with alternatives and products"""
-    item = get_object_or_404(
-        Item.objects.prefetch_related(
-            'alternatives',
-            'recommended_products'
-        ),
-        pk=pk
-    )
-    
-    context = {
-        'item': item,
-    }
-    return render(request, 'pack_planner/item_detail.html', context)
-
 def print_checklist(request):
     """Generate printable checklist of items"""
     assessment_data = request.session.get('pack_assessment')
@@ -184,3 +185,20 @@ def print_checklist(request):
         'assessment': assessment_data,
     }
     return render(request, 'pack_planner/print_checklist.html', context)
+
+@require_http_methods(["POST"])
+def update_item_status(request):
+    """Handle AJAX updates for item status (packed/not applicable)"""
+    try:
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        status = data.get('status')
+        
+        # Get or create checklist in session
+        checklist = request.session.get('pack_checklist', {})
+        checklist[item_id] = status
+        request.session['pack_checklist'] = checklist
+        
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

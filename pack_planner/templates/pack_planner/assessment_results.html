@@ -1,39 +1,42 @@
 {% extends "users/base.html" %}
-
 {% block content %}
+
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
         <div class="mb-8">
             <div class="flex justify-between items-start">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Pack Recommendations</h1>
-                    <p class="text-gray-700">Based on your family composition:</p>
-                    <ul class="mt-2 text-gray-600">
+                    <p class="text-gray-600">Based on your family composition:</p>
+                    <ul class="list-disc ml-5 mt-2">
                         <li>{{ assessment.adults }} Adult{% if assessment.adults > 1 %}s{% endif %}</li>
                         {% if assessment.children %}
                             <li>{{ assessment.children }} Child{% if assessment.children > 1 %}ren{% endif %}</li>
                         {% endif %}
-                        {% if assessment.has_elderly %}
+                        {% if assessment.hasElderly %}
                             <li>Including elderly family members</li>
                         {% endif %}
-                        {% if assessment.has_disabled %}
+                        {% if assessment.hasDisabled %}
                             <li>Including family members with disabilities</li>
                         {% endif %}
-                        {% if assessment.has_pets %}
-                            <li>Including pets: {{ assessment.pet_types|join:", " }}</li>
+                        {% if assessment.hasPets %}
+                            <li>Including pets: {{ assessment.petTypes|join:", " }}</li>
                         {% endif %}
                     </ul>
                 </div>
+                
                 <div class="flex space-x-4">
-                    <a href="{% url 'print_checklist' %}" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <a href="{% url 'print_checklist' %}" target="_blank"
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z" />
                         </svg>
                         Print Checklist
                     </a>
-                    <a href="{% url 'pack_assessment' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <a href="{% url 'pack_assessment' %}"
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                         Modify Assessment
                     </a>
@@ -41,127 +44,125 @@
             </div>
         </div>
 
-        <!-- Critical Items -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                <h2 class="text-xl font-semibold text-gray-900">Critical Items</h2>
-                <p class="mt-1 text-sm text-gray-500">These items are essential for your situation</p>
-            </div>
-            <ul class="divide-y divide-gray-200">
-                {% for item in recommendations.critical %}
-                <li class="px-4 py-4 sm:px-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input type="checkbox" 
-                                   id="item_{{ item.id }}" 
-                                   class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                                   {% if item.id|stringformat:"s" in checklist %}checked{% endif %}
-                                   onchange="updateChecklist({{ item.id }}, this.checked)">
-                            <label for="item_{{ item.id }}" class="ml-3">
-                                <span class="text-sm font-medium text-gray-900">{{ item.name }}</span>
-                                {% if item.weight_note %}
-                                    <span class="text-sm text-gray-500">({{ item.weight_note }})</span>
-                                {% endif %}
-                            </label>
+        {% for pack_name, categories in recommendations.items %}
+            <div class="bg-white shadow rounded-lg mb-8">
+                <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                    <h2 class="text-xl font-semibold text-gray-900">{{ pack_name }}</h2>
+                </div>
+                
+                {% for category, items in categories %}
+                    <div class="category-section border-b border-gray-200 last:border-b-0" 
+                         data-category-id="{{ category.id }}">
+                        <div class="px-4 py-5 sm:px-6 {% if category.is_complete %}bg-green-50{% endif %}">
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ category.name }}</h3>
+                            <p class="text-sm text-gray-500">{{ category.description }}</p>
+                            
+                            <div class="mt-4 space-y-4">
+                                {% for item in items %}
+                                    <div class="flex items-center justify-between p-2 rounded {% if item.is_packed %}bg-green-50{% endif %}"
+                                         data-item-id="{{ item.id }}">
+                                        <div class="flex-grow">
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium text-gray-900">{{ item.name }}</span>
+                                                {% if item.weight_note %}
+                                                    <span class="ml-2 text-sm text-gray-500">({{ item.weight_note }})</span>
+                                                {% endif %}
+                                            </div>
+                                            {% if item.special_considerations %}
+                                                <p class="text-sm text-gray-500 mt-1">{{ item.special_considerations }}</p>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="flex items-center space-x-2">
+                                            <button onclick="markNotApplicable('{{ item.id }}')"
+                                                    class="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-50">
+                                                Not Applicable
+                                            </button>
+                                            <button onclick="markPacked('{{ item.id }}')"
+                                                    class="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-50">
+                                                Mark Packed
+                                            </button>
+                                            <a href="{% url 'item_detail' item.id %}"
+                                               class="px-3 py-1 text-sm border border-indigo-500 rounded text-indigo-500 hover:bg-indigo-50">
+                                                Get Recommendations
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                        <a href="{% url 'item_detail' item.id %}" class="text-indigo-600 hover:text-indigo-900 text-sm">
-                            Details
-                        </a>
                     </div>
-                    {% if item.special_considerations %}
-                        <p class="mt-1 text-sm text-gray-500 ml-7">{{ item.special_considerations }}</p>
-                    {% endif %}
-                </li>
                 {% endfor %}
-            </ul>
-        </div>
-
-        <!-- Recommended Items -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                <h2 class="text-xl font-semibold text-gray-900">Recommended Items</h2>
-                <p class="mt-1 text-sm text-gray-500">These items will significantly improve your preparedness</p>
             </div>
-            <ul class="divide-y divide-gray-200">
-                {% for item in recommendations.recommended %}
-                <li class="px-4 py-4 sm:px-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input type="checkbox" 
-                                   id="item_{{ item.id }}" 
-                                   class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                                   {% if item.id|stringformat:"s" in checklist %}checked{% endif %}
-                                   onchange="updateChecklist({{ item.id }}, this.checked)">
-                            <label for="item_{{ item.id }}" class="ml-3">
-                                <span class="text-sm font-medium text-gray-900">{{ item.name }}</span>
-                                {% if item.weight_note %}
-                                    <span class="text-sm text-gray-500">({{ item.weight_note }})</span>
-                                {% endif %}
-                            </label>
-                        </div>
-                        <a href="{% url 'item_detail' item.id %}" class="text-indigo-600 hover:text-indigo-900 text-sm">
-                            Details
-                        </a>
-                    </div>
-                    {% if item.special_considerations %}
-                        <p class="mt-1 text-sm text-gray-500 ml-7">{{ item.special_considerations }}</p>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- Optional Items -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                <h2 class="text-xl font-semibold text-gray-900">Optional Items</h2>
-                <p class="mt-1 text-sm text-gray-500">Consider these items if space and resources allow</p>
-            </div>
-            <ul class="divide-y divide-gray-200">
-                {% for item in recommendations.optional %}
-                <li class="px-4 py-4 sm:px-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input type="checkbox" 
-                                   id="item_{{ item.id }}" 
-                                   class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                                   {% if item.id|stringformat:"s" in checklist %}checked{% endif %}
-                                   onchange="updateChecklist({{ item.id }}, this.checked)">
-                            <label for="item_{{ item.id }}" class="ml-3">
-                                <span class="text-sm font-medium text-gray-900">{{ item.name }}</span>
-                                {% if item.weight_note %}
-                                    <span class="text-sm text-gray-500">({{ item.weight_note }})</span>
-                                {% endif %}
-                            </label>
-                        </div>
-                        <a href="{% url 'item_detail' item.id %}" class="text-indigo-600 hover:text-indigo-900 text-sm">
-                            Details
-                        </a>
-                    </div>
-                    {% if item.special_considerations %}
-                        <p class="mt-1 text-sm text-gray-500 ml-7">{{ item.special_considerations }}</p>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+        {% endfor %}
     </div>
 </div>
 
+{% endblock %}
+
 {% block extra_js %}
 <script>
-    function updateChecklist(itemId, checked) {
-        const checkbox = document.getElementById(`item_${itemId}`);
-        checkbox.disabled = true;
-        fetch("{% url 'pack_assessment_results' %}", {
+    function markNotApplicable(itemId) {
+        const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+        itemElement.style.display = 'none';
+        checkCategoryCompletion(itemElement);
+        
+        // Send to server
+        fetch('/pack-assessment/update-item/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': '{{ csrf_token }}'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
             },
-            body: `item_id=${itemId}&checked=${checked}`
-        }).then(() => checkbox.disabled = false);
+            body: JSON.stringify({
+                item_id: itemId,
+                status: 'not_applicable'
+            })
+        });
+    }
+
+    function markPacked(itemId) {
+        const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+        itemElement.classList.add('bg-green-50');
+        checkCategoryCompletion(itemElement);
+        
+        // Send to server
+        fetch('/pack-assessment/update-item/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                item_id: itemId,
+                status: 'packed'
+            })
+        });
+    }
+
+    function checkCategoryCompletion(itemElement) {
+        const categorySection = itemElement.closest('.category-section');
+        const visibleItems = categorySection.querySelectorAll('[data-item-id]:not([style*="display: none"])');
+        const packedItems = categorySection.querySelectorAll('.bg-green-50');
+        
+        if (visibleItems.length === packedItems.length) {
+            categorySection.classList.add('bg-green-50');
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 </script>
-{% endblock %}
 {% endblock %}

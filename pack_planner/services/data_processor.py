@@ -96,67 +96,81 @@ class DataProcessor:
 def generate_packs(assessment_data):
     """
     Generate packs based on the user's assessment data.
-    Returns a structured dictionary of recommendations organized by importance.
+    Returns a dictionary of packs, each containing categories and their items.
     """
-    recommendations = {
-        'critical': [],
-        'recommended': [],
-        'optional': []
-    }
+    packs = {}
     
-    # Base query for all items
-    items = Item.objects.select_related('category').all()
+    # Get base query for all items with their categories
+    base_items = Item.objects.select_related('category').all()
     
     # Apply transportation mode filter
     transport_type = assessment_data.get('transportType', 'walking')
     if transport_type == 'walking':
-        items = items.filter(for_on_foot=True)
+        base_items = base_items.filter(for_on_foot=True)
     elif transport_type == 'bicycle':
-        items = items.filter(for_bicycle=True)
+        base_items = base_items.filter(for_bicycle=True)
     elif transport_type == 'car':
-        items = items.filter(for_vehicle=True)
+        base_items = base_items.filter(for_vehicle=True)
     elif transport_type == 'public':
-        items = items.filter(for_public_transit=True)
-    
-    # Create base set of items for number of adults
+        base_items = base_items.filter(for_public_transit=True)
+
+    # Generate adult packs
     num_adults = assessment_data.get('adults', 1)
-    if num_adults > 0:
-        adult_items = items.filter(for_adults=True)
-        recommendations['critical'].extend(list(adult_items.filter(importance='critical')))
-        recommendations['recommended'].extend(list(adult_items.filter(importance='recommended')))
-        recommendations['optional'].extend(list(adult_items.filter(importance='optional')))
-    
-    # Add items for children if present
+    for i in range(num_adults):
+        pack_name = f"Adult pack {i + 1}"
+        adult_items = base_items.filter(for_adults=True)
+        
+        if assessment_data.get('hasElderly'):
+            adult_items = adult_items | base_items.filter(for_elderly=True)
+        if assessment_data.get('hasDisabled'):
+            adult_items = adult_items | base_items.filter(for_disabled=True)
+            
+        # Organize items by category
+        categories_dict = {}
+        for item in adult_items:
+            if item.category not in categories_dict:
+                categories_dict[item.category] = []
+            categories_dict[item.category].append(item)
+            
+        # Sort categories by order
+        sorted_categories = sorted(categories_dict.items(), key=lambda x: (x[0].order, x[0].name))
+        packs[pack_name] = sorted_categories
+
+    # Generate child packs
     num_children = assessment_data.get('children', 0)
-    if num_children > 0:
-        child_items = items.filter(for_children=True)
-        recommendations['critical'].extend(list(child_items.filter(importance='critical')))
-        recommendations['recommended'].extend(list(child_items.filter(importance='recommended')))
-        recommendations['optional'].extend(list(child_items.filter(importance='optional')))
-    
-    # Add items for elderly if present
-    if assessment_data.get('hasElderly'):
-        elderly_items = items.filter(for_elderly=True)
-        recommendations['critical'].extend(list(elderly_items.filter(importance='critical')))
-        recommendations['recommended'].extend(list(elderly_items.filter(importance='recommended')))
-        recommendations['optional'].extend(list(elderly_items.filter(importance='optional')))
-    
-    # Add items for disabled if present
-    if assessment_data.get('hasDisabled'):
-        disabled_items = items.filter(for_disabled=True)
-        recommendations['critical'].extend(list(disabled_items.filter(importance='critical')))
-        recommendations['recommended'].extend(list(disabled_items.filter(importance='recommended')))
-        recommendations['optional'].extend(list(disabled_items.filter(importance='optional')))
-    
-    # Add items for pets if present
+    for i in range(num_children):
+        pack_name = f"Child pack {i + 1}"
+        child_items = base_items.filter(for_children=True)
+        
+        if assessment_data.get('hasDisabled'):
+            child_items = child_items | base_items.filter(for_disabled=True, for_children=True)
+            
+        # Organize items by category
+        categories_dict = {}
+        for item in child_items:
+            if item.category not in categories_dict:
+                categories_dict[item.category] = []
+            categories_dict[item.category].append(item)
+            
+        # Sort categories by order
+        sorted_categories = sorted(categories_dict.items(), key=lambda x: (x[0].order, x[0].name))
+        packs[pack_name] = sorted_categories
+
+    # Generate pet packs
     if assessment_data.get('hasPets'):
-        pet_items = items.filter(for_pets=True)
-        recommendations['critical'].extend(list(pet_items.filter(importance='critical')))
-        recommendations['recommended'].extend(list(pet_items.filter(importance='recommended')))
-        recommendations['optional'].extend(list(pet_items.filter(importance='optional')))
-    
-    # Remove duplicates while preserving order
-    for importance in recommendations:
-        recommendations[importance] = list(dict.fromkeys(recommendations[importance]))
-    
-    return recommendations
+        for pet_type in assessment_data.get('petTypes', []):
+            pack_name = f"{pet_type.title()} pack 1"
+            pet_items = base_items.filter(for_pets=True)
+            
+            # Organize items by category
+            categories_dict = {}
+            for item in pet_items:
+                if item.category not in categories_dict:
+                    categories_dict[item.category] = []
+                categories_dict[item.category].append(item)
+                
+            # Sort categories by order
+            sorted_categories = sorted(categories_dict.items(), key=lambda x: (x[0].order, x[0].name))
+            packs[pack_name] = sorted_categories
+
+    return packs
