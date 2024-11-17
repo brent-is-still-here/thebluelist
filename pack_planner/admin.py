@@ -19,7 +19,7 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering = ('order', 'name')
     
     def item_count(self, obj):
-        count = obj.item_set.count()
+        count = obj.items.count()
         return format_html(
             '<a href="{}?category={}">{} items</a>',
             reverse('admin:pack_planner_item_changelist'),
@@ -36,9 +36,12 @@ class ItemAdmin(admin.ModelAdmin):
         'importance', 
         'weight_note',
         'product_count',
-        'has_special_considerations'
+        'has_special_considerations',
+        'for_adults',
+        'for_children',
+        'for_pets',
     )
-    list_filter = ('importance', 'category')
+    list_filter = ('importance', 'category', 'for_adults', 'for_children', 'for_pets', 'for_disabled', 'for_elderly')
     search_fields = ('name', 'description', 'uses', 'special_considerations')
     ordering = ('category', 'order', 'name')
     inlines = [ProductInline]
@@ -59,7 +62,9 @@ class ItemAdmin(admin.ModelAdmin):
             'fields': (
                 'weight_note', 
                 'special_considerations', 
-                'alternatives'
+                'alternatives',
+                'for_adults', 'for_children', 'for_pets', 'for_disabled', 'for_elderly',
+                'for_on_foot', 'for_bicycle', 'for_vehicle', 'for_public_transit'
             ),
             'classes': ('collapse',)
         })

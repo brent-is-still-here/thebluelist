@@ -25,6 +25,7 @@
             </ul>
         </div>
 
+        <!-- Quick Access Cards -->
         <div class="grid gap-6 mb-8 md:grid-cols-2">
             <div class="bg-white overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:p-6">
@@ -47,6 +48,8 @@
             </div>
         </div>
 
+        <!-- Critical Categories -->
+        {% if critical_categories %}
         <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
             <div class="px-4 py-5 sm:p-6">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Critical Categories</h2>
@@ -72,7 +75,9 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
+        <!-- Disclaimer -->
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
             <div class="flex">
                 <div class="flex-shrink-0">

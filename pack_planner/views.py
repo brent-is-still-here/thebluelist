@@ -10,7 +10,8 @@ from django.views.generic.edit import FormView
 
 import json
 
-from pack_planner.forms import DataUploadForm
+from pack_planner.services.data_processor import generate_packs
+from pack_planner.forms import AssessmentForm, DataUploadForm
 from pack_planner.models import Category, Item, Product
 from pack_planner.services.data_processor import DataProcessor
 
@@ -48,9 +49,7 @@ def data_upload(request):
 
 def pack_landing(request):
     """Landing page with overview of packing preparation"""
-    critical_categories = Category.objects.filter(
-        importance='critical'
-    ).prefetch_related('item_set')
+    critical_categories = Category.objects.prefetch_related('items').filter(importance='critical')
     
     context = {
         'critical_categories': critical_categories,
@@ -60,79 +59,45 @@ def pack_landing(request):
     return render(request, 'pack_planner/landing.html', context)
 
 def pack_assessment(request):
-    """Basic assessment form for family composition and needs"""
+    """
+    View for displaying the pack assessment form and saving user inputs to the session.
+    """
     if request.method == 'POST':
-        # Process assessment answers
-        assessment_data = {
-            'adults': int(request.POST.get('adults', 1)),
-            'children': int(request.POST.get('children', 0)),
-            'has_elderly': request.POST.get('has_elderly') == 'yes',
-            'has_disabled': request.POST.get('has_disabled') == 'yes',
-            'has_pets': request.POST.get('has_pets') == 'yes',
-            'pet_types': request.POST.getlist('pet_types', []),
-            'transport_type': request.POST.get('transport_type', 'walking'),
-        }
-        
-        # Store in session for results page
-        request.session['pack_assessment'] = assessment_data
-        return redirect('pack_assessment_results')
-    
-    return render(request, 'pack_planner/assessment.html')
+        form = AssessmentForm(request.POST)
+        if form.is_valid():
+            # Store the assessment data in the session
+            request.session['pack_assessment'] = form.cleaned_data
+            # Redirect to the results page
+            return redirect('pack_assessment_results')
+    else:
+        form = AssessmentForm()
+
+    return render(request, 'pack_planner/assessment.html', {'form': form})
 
 def pack_assessment_results(request):
-    """Show personalized packing recommendations based on assessment"""
+    """
+    Display personalized packing recommendations based on assessment.
+    """
     assessment_data = request.session.get('pack_assessment')
     if not assessment_data:
         messages.error(request, 'Please complete the pack assessment first.')
         return redirect('pack_assessment')
-    
-    # Handle AJAX updates for checklist
+
+    packs = generate_packs(assessment_data)
+    checklist = request.session.get('pack_checklist', {})
+
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         item_id = request.POST.get('item_id')
         checked = request.POST.get('checked') == 'true'
-        
-        # Update checklist in session
-        checklist = request.session.get('pack_checklist', {})
         checklist[item_id] = checked
         request.session['pack_checklist'] = checklist
-        
         return JsonResponse({'status': 'success'})
-    
-    # Get base recommendations
-    recommendations = {
-        'critical': Item.objects.filter(importance='critical'),
-        'recommended': Item.objects.filter(importance='recommended'),
-        'optional': Item.objects.filter(importance='optional')
-    }
-    
-    # Adjust based on assessment
-    if assessment_data['children']:
-        child_items = Item.objects.filter(
-            special_considerations__icontains='children'
-        )
-        recommendations['critical'] = recommendations['critical'].union(child_items)
-    
-    if assessment_data['has_elderly']:
-        elderly_items = Item.objects.filter(
-            special_considerations__icontains='elderly'
-        )
-        recommendations['critical'] = recommendations['critical'].union(elderly_items)
-    
-    if assessment_data['has_pets']:
-        pet_items = Item.objects.filter(
-            special_considerations__icontains='pets'
-        )
-        recommendations['critical'] = recommendations['critical'].union(pet_items)
-    
-    # Get checklist status from session
-    checklist = request.session.get('pack_checklist', {})
-    
-    context = {
+
+    return render(request, 'pack_planner/assessment_results.html', {
+        'packs': packs,
         'assessment': assessment_data,
-        'recommendations': recommendations,
-        'checklist': checklist,
-    }
-    return render(request, 'pack_planner/assessment_results.html', context)
+        'checklist': checklist
+    })
 
 def pack_browse(request):
     """Browse all packing recommendations with filtering"""

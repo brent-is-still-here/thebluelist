@@ -151,6 +151,8 @@
 {% block extra_js %}
 <script>
     function updateChecklist(itemId, checked) {
+        const checkbox = document.getElementById(`item_${itemId}`);
+        checkbox.disabled = true;
         fetch("{% url 'pack_assessment_results' %}", {
             method: 'POST',
             headers: {
@@ -158,7 +160,7 @@
                 'X-CSRFToken': '{{ csrf_token }}'
             },
             body: `item_id=${itemId}&checked=${checked}`
-        });
+        }).then(() => checkbox.disabled = false);
     }
 </script>
 {% endblock %}

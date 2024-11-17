@@ -18,20 +18,12 @@
                     <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                         <div>
                             <label for="adults" class="block text-sm font-medium text-gray-700">Number of Adults</label>
-                            <select name="adults" id="adults" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                {% for i in "12345"|make_list %}
-                                <option value="{{ i }}">{{ i }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="number" name="adults" id="adults" min="1" max="10" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md">
                         </div>
 
                         <div>
                             <label for="children" class="block text-sm font-medium text-gray-700">Number of Children</label>
-                            <select name="children" id="children" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                {% for i in "012345"|make_list %}
-                                <option value="{{ i }}">{{ i }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="number" name="children" id="children" min="0" max="10" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md">
                         </div>
                     </div>
                 </div>
@@ -41,23 +33,13 @@
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Special Considerations</h2>
                     <div class="space-y-4">
                         <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="has_elderly" name="has_elderly" type="checkbox" value="yes" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="has_elderly" class="font-medium text-gray-700">Elderly Family Members</label>
-                                <p class="text-gray-500">Include items specifically needed for elderly care</p>
-                            </div>
+                            <input id="has_elderly" name="has_elderly" type="checkbox" value="yes" class="h-4 w-4 text-indigo-600">
+                            <label for="has_elderly" class="ml-3 font-medium text-gray-700">Elderly Family Members</label>
                         </div>
 
                         <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="has_disabled" name="has_disabled" type="checkbox" value="yes" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="has_disabled" class="font-medium text-gray-700">Family Members with Disabilities</label>
-                                <p class="text-gray-500">Include items for specific mobility or medical needs</p>
-                            </div>
+                            <input id="has_disabled" name="has_disabled" type="checkbox" value="yes" class="h-4 w-4 text-indigo-600">
+                            <label for="has_disabled" class="ml-3 font-medium text-gray-700">Family Members with Disabilities</label>
                         </div>
                     </div>
                 </div>
@@ -65,53 +47,29 @@
                 <!-- Pets -->
                 <div>
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Pets</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="has_pets" name="has_pets" type="checkbox" value="yes" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="has_pets" class="font-medium text-gray-700">We have pets</label>
-                            </div>
-                        </div>
-
-                        <div id="pet_types_section" class="ml-7 space-y-2 hidden">
-                            <div class="flex items-center">
-                                <input type="checkbox" name="pet_types" value="dogs" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                <label class="ml-2 text-sm text-gray-700">Dogs</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" name="pet_types" value="cats" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                <label class="ml-2 text-sm text-gray-700">Cats</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" name="pet_types" value="other" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                <label class="ml-2 text-sm text-gray-700">Other Small Animals</label>
-                            </div>
-                        </div>
+                    <input id="has_pets" name="has_pets" type="checkbox" value="yes" class="h-4 w-4 text-indigo-600">
+                    <label for="has_pets" class="ml-3 font-medium text-gray-700">We have pets</label>
+                    <div id="pet_types_section" class="ml-7 space-y-2 hidden">
+                        <input type="checkbox" name="pet_types" value="dogs" class="h-4 w-4 text-indigo-600">
+                        <label class="ml-2 text-sm text-gray-700">Dogs</label>
+                        <input type="checkbox" name="pet_types" value="cats" class="h-4 w-4 text-indigo-600">
+                        <label class="ml-2 text-sm text-gray-700">Cats</label>
+                        <input type="checkbox" name="pet_types" value="other" class="h-4 w-4 text-indigo-600">
+                        <label class="ml-2 text-sm text-gray-700">Other Small Animals</label>
                     </div>
                 </div>
 
-                <!-- Transportation -->
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Transportation</h2>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Primary Mode of Transportation</label>
-                        <select name="transport_type" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="walking">Walking/On Foot</option>
-                            <option value="bicycle">Bicycle</option>
-                            <option value="car">Personal Vehicle</option>
-                            <option value="public">Public Transportation</option>
-                        </select>
-                    </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Primary Mode of Transportation</label>
+                    <select name="transport_type" class="block w-full py-2 border-gray-300 rounded-md">
+                        <option value="walking">Walking</option>
+                        <option value="bicycle">Bicycle</option>
+                        <option value="car">Car</option>
+                        <option value="public">Public Transportation</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="mt-8 flex justify-end">
-                <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Get Recommendations
-                </button>
-            </div>
+            <button type="submit" class="mt-8 py-2 px-4 bg-indigo-600 text-white rounded">Get Recommendations</button>
         </form>
     </div>
 </div>
