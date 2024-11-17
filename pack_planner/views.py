@@ -63,16 +63,21 @@ def pack_assessment(request):
     View for displaying the pack assessment form and saving user inputs to the session.
     """
     if request.method == 'POST':
-        form = AssessmentForm(request.POST)
-        if form.is_valid():
-            # Store the assessment data in the session
-            request.session['pack_assessment'] = form.cleaned_data
-            # Redirect to the results page
-            return redirect('pack_assessment_results')
-    else:
-        form = AssessmentForm()
-
-    return render(request, 'pack_planner/assessment.html', {'form': form})
+        form_data = {
+            'adults': int(request.POST.get('adults', 1)),
+            'children': int(request.POST.get('children', 0)),
+            'hasElderly': request.POST.get('hasElderly') == 'on',
+            'hasDisabled': request.POST.get('hasDisabled') == 'on',
+            'hasPets': request.POST.get('hasPets') == 'on',
+            'petTypes': request.POST.getlist('petTypes'),
+            'transportType': request.POST.get('transportType', 'walking')
+        }
+        
+        # Store the assessment data in the session
+        request.session['pack_assessment'] = form_data
+        return redirect('pack_assessment_results')
+    
+    return render(request, 'pack_planner/assessment.html')
 
 def pack_assessment_results(request):
     """
@@ -83,21 +88,15 @@ def pack_assessment_results(request):
         messages.error(request, 'Please complete the pack assessment first.')
         return redirect('pack_assessment')
 
-    packs = generate_packs(assessment_data)
-    checklist = request.session.get('pack_checklist', {})
-
-    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        item_id = request.POST.get('item_id')
-        checked = request.POST.get('checked') == 'true'
-        checklist[item_id] = checked
-        request.session['pack_checklist'] = checklist
-        return JsonResponse({'status': 'success'})
-
-    return render(request, 'pack_planner/assessment_results.html', {
-        'packs': packs,
+    # Generate recommendations
+    recommendations = generate_packs(assessment_data)
+    
+    context = {
         'assessment': assessment_data,
-        'checklist': checklist
-    })
+        'recommendations': recommendations
+    }
+    
+    return render(request, 'pack_planner/assessment_results.html', context)
 
 def pack_browse(request):
     """Browse all packing recommendations with filtering"""

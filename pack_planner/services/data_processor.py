@@ -96,17 +96,19 @@ class DataProcessor:
 def generate_packs(assessment_data):
     """
     Generate packs based on the user's assessment data.
+    Returns a structured dictionary of recommendations organized by importance.
     """
-    packs = {
-        "adults": [],
-        "children": [],
-        "pets": []
+    recommendations = {
+        'critical': [],
+        'recommended': [],
+        'optional': []
     }
-
-    items = Item.objects.all()
-
-    # Apply filters based on transportation mode
-    transport_type = assessment_data.get('transport_type', 'walking')
+    
+    # Base query for all items
+    items = Item.objects.select_related('category').all()
+    
+    # Apply transportation mode filter
+    transport_type = assessment_data.get('transportType', 'walking')
     if transport_type == 'walking':
         items = items.filter(for_on_foot=True)
     elif transport_type == 'bicycle':
@@ -115,22 +117,46 @@ def generate_packs(assessment_data):
         items = items.filter(for_vehicle=True)
     elif transport_type == 'public':
         items = items.filter(for_public_transit=True)
-
-    # Generate packs for adults
-    for _ in range(assessment_data['adults']):
-        adult_pack = items.filter(for_adults=True)
-        packs['adults'].append(adult_pack)
-
-    # Generate packs for children
-    for _ in range(assessment_data['children']):
-        child_pack = items.filter(for_children=True)
-        packs['children'].append(child_pack)
-
-    # Generate packs for pets
-    if assessment_data.get('has_pets'):
-        pet_types = assessment_data.get('pet_types', [])
-        for pet_type in pet_types:
-            pet_pack = items.filter(for_pets=True)
-            packs['pets'].append(pet_pack)
-
-    return packs
+    
+    # Create base set of items for number of adults
+    num_adults = assessment_data.get('adults', 1)
+    if num_adults > 0:
+        adult_items = items.filter(for_adults=True)
+        recommendations['critical'].extend(list(adult_items.filter(importance='critical')))
+        recommendations['recommended'].extend(list(adult_items.filter(importance='recommended')))
+        recommendations['optional'].extend(list(adult_items.filter(importance='optional')))
+    
+    # Add items for children if present
+    num_children = assessment_data.get('children', 0)
+    if num_children > 0:
+        child_items = items.filter(for_children=True)
+        recommendations['critical'].extend(list(child_items.filter(importance='critical')))
+        recommendations['recommended'].extend(list(child_items.filter(importance='recommended')))
+        recommendations['optional'].extend(list(child_items.filter(importance='optional')))
+    
+    # Add items for elderly if present
+    if assessment_data.get('hasElderly'):
+        elderly_items = items.filter(for_elderly=True)
+        recommendations['critical'].extend(list(elderly_items.filter(importance='critical')))
+        recommendations['recommended'].extend(list(elderly_items.filter(importance='recommended')))
+        recommendations['optional'].extend(list(elderly_items.filter(importance='optional')))
+    
+    # Add items for disabled if present
+    if assessment_data.get('hasDisabled'):
+        disabled_items = items.filter(for_disabled=True)
+        recommendations['critical'].extend(list(disabled_items.filter(importance='critical')))
+        recommendations['recommended'].extend(list(disabled_items.filter(importance='recommended')))
+        recommendations['optional'].extend(list(disabled_items.filter(importance='optional')))
+    
+    # Add items for pets if present
+    if assessment_data.get('hasPets'):
+        pet_items = items.filter(for_pets=True)
+        recommendations['critical'].extend(list(pet_items.filter(importance='critical')))
+        recommendations['recommended'].extend(list(pet_items.filter(importance='recommended')))
+        recommendations['optional'].extend(list(pet_items.filter(importance='optional')))
+    
+    # Remove duplicates while preserving order
+    for importance in recommendations:
+        recommendations[importance] = list(dict.fromkeys(recommendations[importance]))
+    
+    return recommendations
