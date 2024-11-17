@@ -63,8 +63,16 @@ class ItemAdmin(admin.ModelAdmin):
                 'weight_note', 
                 'special_considerations', 
                 'alternatives',
-                'for_adults', 'for_children', 'for_pets', 'for_disabled', 'for_elderly',
-                'for_on_foot', 'for_bicycle', 'for_vehicle', 'for_public_transit'
+                'conditional_applicability',
+                'for_adults', 
+                'for_children', 
+                'for_pets', 
+                'for_disabled', 
+                'for_elderly',
+                'for_on_foot', 
+                'for_bicycle', 
+                'for_vehicle', 
+                'for_public_transit'
             ),
             'classes': ('collapse',)
         })

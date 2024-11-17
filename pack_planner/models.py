@@ -58,6 +58,7 @@ class Item(models.Model):
     alternatives = models.ManyToManyField('self', blank=True)
     order = models.IntegerField(default=0)
 
+    conditional_applicability = models.BooleanField(default=False)
     for_adults = models.BooleanField(default=True)
     for_children = models.BooleanField(default=False)
     for_pets = models.BooleanField(default=False)

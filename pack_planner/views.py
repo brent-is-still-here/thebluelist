@@ -11,10 +11,9 @@ from django.views.generic.edit import FormView
 
 import json
 
-from pack_planner.services.data_processor import generate_packs
 from pack_planner.forms import AssessmentForm, DataUploadForm
 from pack_planner.models import Category, Item, Product
-from pack_planner.services.data_processor import DataProcessor
+from pack_planner.services.data_processor import DataProcessor, generate_packs
 
 @login_required
 @permission_required('pack_planner.pack_planner_data_upload_permission', raise_exception=True)
@@ -189,16 +188,27 @@ def print_checklist(request):
 @require_http_methods(["POST"])
 def update_item_status(request):
     """Handle AJAX updates for item status (packed/not applicable)"""
-    try:
-        data = json.loads(request.body)
-        item_id = data.get('item_id')
-        status = data.get('status')
-        
-        # Get or create checklist in session
-        checklist = request.session.get('pack_checklist', {})
-        checklist[item_id] = status
-        request.session['pack_checklist'] = checklist
-        
-        return JsonResponse({'status': 'success'})
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        try:
+            item_id = request.POST.get('item_id')
+            status = request.POST.get('status')
+            
+            if not item_id or not status:
+                return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
+            
+            # Get or create checklist in session
+            checklist = request.session.get('pack_checklist', {})
+            checklist[str(item_id)] = status
+            request.session['pack_checklist'] = checklist
+            request.session.modified = True
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': f'Item {item_id} marked as {status}'
+            })
+            
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+            
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+    
