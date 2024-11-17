@@ -18,14 +18,17 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     importance = models.CharField(
-        max_length=20,
+        max_length=15,
         choices=[
-            ('critical', 'Critical - Required for survival'),
-            ('recommended', 'Recommended - Significantly improves chances'),
-            ('optional', 'Optional - Additional support')
+            ('critical', 'Critical'),
+            ('recommended', 'Recommended'),
+            ('optional', 'Optional')
         ]
     )
     order = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
     
     class Meta:
         verbose_name_plural = "categories"
@@ -38,7 +41,7 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     uses = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='items')
     importance = models.CharField(
         max_length=20,
         choices=[
@@ -48,9 +51,19 @@ class Item(models.Model):
         ]
     )
     weight_note = models.CharField(max_length=100, blank=True, help_text="e.g. 'Light', 'Heavy', 'One per person'")
-    special_considerations = models.TextField(blank=True, help_text="Notes about children, elderly, pets, etc.")
+    special_considerations = models.TextField(blank=True, help_text="Special concerns, regulations, etc.")
     alternatives = models.ManyToManyField('self', blank=True)
     order = models.IntegerField(default=0)
+
+    for_adults = models.BooleanField(default=True)
+    for_children = models.BooleanField(default=False)
+    for_pets = models.BooleanField(default=False)
+    for_disabled = models.BooleanField(default=False)
+    for_elderly = models.BooleanField(default=False)
+    for_on_foot = models.BooleanField(default=True)
+    for_bicycle = models.BooleanField(default=True)
+    for_vehicle = models.BooleanField(default=True)
+    for_public_transit = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['category', 'order', 'name']
