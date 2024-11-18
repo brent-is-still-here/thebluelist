@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 from django.views.generic.edit import FormView
 
@@ -186,29 +187,45 @@ def print_checklist(request):
     return render(request, 'pack_planner/print_checklist.html', context)
 
 @require_http_methods(["POST"])
+@ensure_csrf_cookie
 def update_item_status(request):
     """Handle AJAX updates for item status (packed/not applicable)"""
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        try:
-            item_id = request.POST.get('item_id')
-            status = request.POST.get('status')
-            
-            if not item_id or not status:
-                return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
-            
-            # Get or create checklist in session
-            checklist = request.session.get('pack_checklist', {})
-            checklist[str(item_id)] = status
-            request.session['pack_checklist'] = checklist
-            request.session.modified = True
-            
+    try:
+        # Debug print
+        print("Received request:", request.POST)
+        
+        if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
-                'status': 'success',
-                'message': f'Item {item_id} marked as {status}'
-            })
-            
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-            
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+                'status': 'error',
+                'message': 'Not an AJAX request'
+            }, status=400)
+
+        item_id = request.POST.get('item_id')
+        status = request.POST.get('status')
+        
+        if not item_id or not status:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Missing required fields. Got item_id: {item_id}, status: {status}'
+            }, status=400)
+        
+        # Get or create checklist in session
+        checklist = request.session.get('pack_checklist', {})
+        checklist[str(item_id)] = status
+        request.session['pack_checklist'] = checklist
+        request.session.modified = True
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'Item {item_id} marked as {status}'
+        })
+        
+    except Exception as e:
+        import traceback
+        print("Error in update_item_status:", str(e))
+        print(traceback.format_exc())
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
     
