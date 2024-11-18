@@ -210,16 +210,72 @@
     {% if alternatives %}
     <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Alternative Businesses</h2>
+        
         <div class="space-y-4">
             {% for alt in alternatives %}
             <div class="border-b border-gray-200 pb-4 last:border-b-0">
-                <h3 class="text-lg font-medium">
-                    <a href="{% url 'business_detail' alt.business.slug %}" class="text-blue-600 hover:text-blue-800">
-                        {{ alt.business.name }}
-                    </a>
-                </h3>
-                <p class="text-gray-600">{{ alt.business.description|truncatewords:30 }}</p>
-                <p class="text-sm text-gray-500 mt-1">Matches {{ alt.overlap_count }} product{{ alt.overlap_count|pluralize:",s" }}/service{{ alt.overlap_count|pluralize:",s" }}</p>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-medium">
+                            <a href="{% url 'business_detail' alt.business.slug %}" class="hover:text-blue-600">
+                                {{ alt.business.name }}
+                            </a>
+                        </h3>
+                        
+                        {{ alt.business.description|truncatewords:30 }}
+                        
+                        <div class="text-sm mt-1">
+                            Matches {{ alt.overlap_count }} product{{ alt.overlap_count|pluralize:",s" }}/service{{ alt.overlap_count|pluralize:",s" }}
+                        </div>
+
+                        {% if alt.business.politicaldata %}
+                        <div class="mt-2">
+                            <div class="text-sm">
+                                <span class="text-red-600">
+                                    [ {{ alt.business.politicaldata.overall_conservative_percentage|default:"0" }}% Conservative ]
+                                </span>
+                                /
+                                <span class="text-blue-600">
+                                    [ {{ alt.business.politicaldata.overall_liberal_percentage|default:"0" }}% Liberal ]
+                                </span>
+                                {% if alt.business.inherited_from %}
+                                    <span class="text-sm text-gray-600">*inherited from {{ alt.business.inherited_from.name }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mt-1">
+                                {% if alt.business.politicaldata.direct_america_pac_donor or alt.business.politicaldata.affiliated_pac_america_pac_donor %}
+                                <div class="text-sm text-red-600">⚠️ America PAC Donor</div>
+                                {% endif %}
+                                
+                                {% if alt.business.politicaldata.direct_save_america_pac_donor or alt.business.politicaldata.affiliated_pac_save_america_pac_donor %}
+                                <div class="text-sm text-red-600">⚠️ Save America PAC Donor</div>
+                                {% endif %}
+                                
+                                {% if alt.business.politicaldata.direct_maga_inc_donor or alt.business.politicaldata.affiliated_pac_maga_inc_donor %}
+                                <div class="text-sm text-red-600">⚠️ MAGA Inc Donor</div>
+                                {% endif %}
+                                
+                                {% if alt.business.politicaldata.senior_employee_trump_donor %}
+                                <div class="text-sm text-red-600">⚠️ Senior Employee Trump Donor</div>
+                                {% endif %}
+                                
+                                {% if alt.business.politicaldata.senior_employee_america_pac_donor %}
+                                <div class="text-sm text-red-600">⚠️ Senior Employee America Pac Donor</div>
+                                {% endif %}
+                                
+                                {% if alt.business.politicaldata.senior_employee_save_america_pac_donor %}
+                                <div class="text-sm text-red-600">⚠️ Senior Employee Save America Pac Donor</div>
+                                {% endif %}
+                                
+                                {% if alt.business.politicaldata.senior_employee_maga_inc_donor %}
+                                <div class="text-sm text-red-600">⚠️ Senior Employee MAGA Inc Donor</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>
