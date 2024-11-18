@@ -25,6 +25,7 @@ class Category(models.Model):
             ('optional', 'Optional')
         ]
     )
+    seventy_two_hr_bag = models.BooleanField(default=True)
     order = models.IntegerField(default=0)
 
     def __str__(self):
@@ -68,6 +69,7 @@ class Item(models.Model):
     for_bicycle = models.BooleanField(default=True)
     for_vehicle = models.BooleanField(default=True)
     for_public_transit = models.BooleanField(default=True)
+    seventy_two_hr_bag = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['category', 'order', 'name']
@@ -80,3 +82,5 @@ class Product(models.Model):
     notes = models.TextField(blank=True)
     is_available = models.BooleanField(default=True)
     last_verified = models.DateTimeField(auto_now=True)
+
+    seventy_two_hr_bag = models.BooleanField(default=True)
