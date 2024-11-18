@@ -272,12 +272,18 @@
 
     function checkCategoryCompletion(itemElement) {
         const categorySection = itemElement.closest('.category-section');
-        const categoryHeader = categorySection.querySelector('[data-category-header]');
+        const categoryHeader = categorySection.querySelector('.category-header');
         const completionStatus = categorySection.querySelector('.completion-status');
-        const visibleItems = categorySection.querySelectorAll('[data-item-id]:not(.hidden)');
-        const packedItems = categorySection.querySelectorAll('.item-packed');
         
-        if (visibleItems.length === packedItems.length && visibleItems.length > 0) {
+        // Get all items within this category
+        const allItems = categorySection.querySelectorAll('[data-item-id]');
+        const packedItems = categorySection.querySelectorAll('.item-packed');
+        const hiddenItems = categorySection.querySelectorAll('[data-item-id].hidden');
+
+        // Check if all items are either packed or not applicable (hidden)
+        const allComplete = (packedItems.length + hiddenItems.length) === allItems.length;
+
+        if (allComplete && allItems.length > 0) {
             categoryHeader.classList.add('bg-green-50');
             completionStatus.classList.remove('hidden');
             categorySection.setAttribute('data-complete', 'true');

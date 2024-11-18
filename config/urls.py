@@ -9,5 +9,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='companies/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('packplanner/', include('pack_planner.urls')),
+    path('safetyathome/', include('safety_at_home.urls')),
     path('securityonline/', include('online_security.urls')),
 ]
