@@ -48,34 +48,68 @@
             </div>
         </div>
 
+        <!-- Pack Index -->
+        <div class="bg-white shadow rounded-lg mb-8">
+            <div class="px-6 py-5 border-b border-gray-200 sm:px-8">
+                <h2 class="text-xl font-semibold text-gray-900">Quick Navigation</h2>
+            </div>
+            <div class="px-6 py-4 sm:px-8">
+                <div class="flex flex-wrap gap-4">
+                    {% for pack_name, categories in recommendations.items %}
+                        <a href="#pack-{{ forloop.counter }}"
+                        class="px-4 py-2 bg-gray-50 text-gray-900 rounded-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                            {{ pack_name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
         {% csrf_token %}
 
         <!-- Packs -->
         {% for pack_name, categories in recommendations.items %}
-            <div class="bg-white shadow rounded-lg mb-8">
-                <div class="px-6 py-5 border-b border-gray-200 sm:px-8">
+            <div id="pack-{{ forloop.counter }}" class="bg-white shadow rounded-lg mb-8">
+                <button class="w-full px-6 py-5 border-b border-gray-200 sm:px-8 flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
+                        onclick="togglePack('pack-content-{{ forloop.counter }}')">
                     <h2 class="text-2xl font-semibold text-gray-900">{{ pack_name }}</h2>
-                </div>
+                    <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
+                         data-pack-icon="pack-content-{{ forloop.counter }}"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
                 
-                {% for category, items in categories %}
-                    <div class="category-section border-b border-gray-200 last:border-b-0" 
-                         data-category-id="{{ category.id }}">
-                        <div class="px-6 py-6 sm:px-8 {% if category.is_complete %}bg-green-50{% endif %}">
-                            <!-- Category Header -->
-                            <div class="mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">{{ category.name }}</h3>
-                                {% if category.description %}
-                                    <p class="mt-1 text-sm text-gray-600">{{ category.description }}</p>
-                                {% endif %}
-                            </div>
+                <div id="pack-content-{{ forloop.counter }}">
+                    {% for category, items in categories %}
+                        <div class="category-section border-b border-gray-200 last:border-b-0" 
+                             data-category-id="{{ category.id }}"
+                             data-complete="false">
+                            <button class="category-header w-full px-6 py-4 sm:px-8 flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
+                                    onclick="toggleCategory('category-content-{{ category.id }}')">
+                                <div class="flex-grow">
+                                    <div class="flex items-center">
+                                        <h3 class="text-lg font-semibold text-gray-900">{{ category.name }}</h3>
+                                        <span class="ml-3 text-sm text-green-600 font-medium completion-status hidden">
+                                            All Items Complete
+                                        </span>
+                                    </div>
+                                    {% if category.description %}
+                                        <p class="mt-1 text-sm text-gray-600">{{ category.description }}</p>
+                                    {% endif %}
+                                </div>
+                                <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
+                                     data-category-icon="category-content-{{ category.id }}"
+                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
                             
-                            <!-- Items List -->
-                            <div class="space-y-4">
+                            <div id="category-content-{{ category.id }}" class="px-6 py-4 sm:px-8 space-y-4">
                                 {% for item in items %}
-                                    <div class="flex items-center justify-between p-4 rounded {% if item.id|slugify in checklist and checklist|get_item:item.id == 'packed' %}bg-green-50{% endif %} {% if item.id|slugify in checklist and checklist|get_item:item.id == 'not_applicable' %}hidden{% endif %}"
+                                    <div class="flex items-center justify-between p-4 rounded hover:bg-gray-50 {% if item.id|slugify in checklist and checklist|get_item:item.id == 'packed' %}bg-green-50 item-packed{% endif %} {% if item.id|slugify in checklist and checklist|get_item:item.id == 'not_applicable' %}hidden{% endif %}"
                                          data-item-id="{{ item.id }}">
                                         
-                                        <!-- Item Info -->
                                         <div class="flex-grow max-w-2xl">
                                             <div class="flex items-center mb-1">
                                                 <span class="text-base font-medium text-gray-900">{{ item.name }}</span>
@@ -88,7 +122,6 @@
                                             {% endif %}
                                         </div>
                                         
-                                        <!-- Buttons -->
                                         <div class="flex items-center space-x-3 ml-4">
                                             {% if item.conditional_applicability %}
                                                 <button data-action="not-applicable" 
@@ -117,24 +150,29 @@
                                 {% endfor %}
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         {% endfor %}
     </div>
 </div>
 
 <script>
-    // Debug logging to verify script loading
-
-    // Wait for DOM to be fully loaded before attaching handlers
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize collapsible states
+        document.querySelectorAll('[id^="pack-content-"]').forEach(pack => {
+            pack.style.display = 'block';
+        });
+        
+        document.querySelectorAll('[id^="category-content-"]').forEach(category => {
+            category.style.display = 'block';
+        });
         
         // Add handlers for Not Applicable buttons
         document.querySelectorAll('[data-action="not-applicable"]').forEach(button => {
             button.addEventListener('click', function() {
                 const itemId = this.getAttribute('data-item-id');
-                markNotApplicable(itemId);
+                markNotApplicable(itemId, this);  // Pass the button element
             });
         });
         
@@ -142,12 +180,38 @@
         document.querySelectorAll('[data-action="pack"]').forEach(button => {
             button.addEventListener('click', function() {
                 const itemId = this.getAttribute('data-item-id');
-                markPacked(itemId);
+                markPacked(itemId, this);  // Pass the button element
             });
+        });
+        
+        // Check initial category completion states
+        document.querySelectorAll('.category-section').forEach(category => {
+            const anyItem = category.querySelector('[data-item-id]');
+            if (anyItem) {
+                checkCategoryCompletion(anyItem);
+            }
         });
     });
 
-    function markNotApplicable(itemId) {
+    function togglePack(packId) {
+        const content = document.getElementById(packId);
+        const icon = document.querySelector(`[data-pack-icon="${packId}"]`);
+        const isVisible = content.style.display !== 'none';
+        
+        content.style.display = isVisible ? 'none' : 'block';
+        icon.style.transform = isVisible ? 'rotate(-90deg)' : 'rotate(0deg)';
+    }
+
+    function toggleCategory(categoryId) {
+        const content = document.getElementById(categoryId);
+        const icon = document.querySelector(`[data-category-icon="${categoryId}"]`);
+        const isVisible = content.style.display !== 'none';
+        
+        content.style.display = isVisible ? 'none' : 'block';
+        icon.style.transform = isVisible ? 'rotate(-90deg)' : 'rotate(0deg)';
+    }
+
+    function markNotApplicable(itemId, buttonElement) {
         const formData = new FormData();
         formData.append('item_id', itemId);
         formData.append('status', 'not_applicable');
@@ -160,12 +224,10 @@
             },
             body: formData
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+                const itemElement = buttonElement.closest('[data-item-id]');
                 itemElement.classList.add('hidden');
                 checkCategoryCompletion(itemElement);
             }
@@ -173,10 +235,13 @@
         .catch(error => console.error('Error:', error));
     }
 
-    function markPacked(itemId) {
+    function markPacked(itemId, buttonElement) {
         const formData = new FormData();
+        const itemElement = buttonElement.closest('[data-item-id]');
+        const isCurrentlyPacked = itemElement.classList.contains('item-packed');
+        
         formData.append('item_id', itemId);
-        formData.append('status', 'packed');
+        formData.append('status', isCurrentlyPacked ? 'unpacked' : 'packed');
         
         fetch('{% url "update_item_status" %}', {
             method: 'POST',
@@ -186,17 +251,20 @@
             },
             body: formData
         })
-        .then(response => {
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
-                const buttonElement = itemElement.querySelector('[data-action="pack"]');
-                
-                itemElement.classList.add('bg-green-50');
-                buttonElement.classList.add('bg-green-100');
-                buttonElement.textContent = 'Packed ✓';
+                if (isCurrentlyPacked) {
+                    // Unpack
+                    itemElement.classList.remove('bg-green-50', 'item-packed');
+                    buttonElement.classList.remove('bg-green-100');
+                    buttonElement.textContent = 'Mark Packed';
+                } else {
+                    // Pack
+                    itemElement.classList.add('bg-green-50', 'item-packed');
+                    buttonElement.classList.add('bg-green-100');
+                    buttonElement.textContent = 'Packed ✓';
+                }
                 checkCategoryCompletion(itemElement);
             }
         })
@@ -205,11 +273,19 @@
 
     function checkCategoryCompletion(itemElement) {
         const categorySection = itemElement.closest('.category-section');
+        const categoryHeader = categorySection.querySelector('[data-category-header]');
+        const completionStatus = categorySection.querySelector('.completion-status');
         const visibleItems = categorySection.querySelectorAll('[data-item-id]:not(.hidden)');
-        const packedItems = categorySection.querySelectorAll('.bg-green-50');
+        const packedItems = categorySection.querySelectorAll('.item-packed');
         
-        if (visibleItems.length === packedItems.length) {
-            categorySection.querySelector('.px-4').classList.add('bg-green-50');
+        if (visibleItems.length === packedItems.length && visibleItems.length > 0) {
+            categoryHeader.classList.add('bg-green-50');
+            completionStatus.classList.remove('hidden');
+            categorySection.setAttribute('data-complete', 'true');
+        } else {
+            categoryHeader.classList.remove('bg-green-50');
+            completionStatus.classList.add('hidden');
+            categorySection.setAttribute('data-complete', 'false');
         }
     }
 </script>
