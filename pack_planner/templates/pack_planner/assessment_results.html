@@ -126,35 +126,28 @@
 
 <script>
     // Debug logging to verify script loading
-    console.log('Assessment results script loading...');
 
     // Wait for DOM to be fully loaded before attaching handlers
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded, attaching handlers...');
         
         // Add handlers for Not Applicable buttons
         document.querySelectorAll('[data-action="not-applicable"]').forEach(button => {
-            console.log('Found Not Applicable button:', button);
             button.addEventListener('click', function() {
                 const itemId = this.getAttribute('data-item-id');
-                console.log('Not Applicable clicked for item:', itemId);
                 markNotApplicable(itemId);
             });
         });
         
         // Add handlers for Pack buttons
         document.querySelectorAll('[data-action="pack"]').forEach(button => {
-            console.log('Found Pack button:', button);
             button.addEventListener('click', function() {
                 const itemId = this.getAttribute('data-item-id');
-                console.log('Pack clicked for item:', itemId);
                 markPacked(itemId);
             });
         });
     });
 
     function markNotApplicable(itemId) {
-        console.log('markNotApplicable called with itemId:', itemId);
         const formData = new FormData();
         formData.append('item_id', itemId);
         formData.append('status', 'not_applicable');
@@ -168,11 +161,9 @@
             body: formData
         })
         .then(response => {
-            console.log('Response received:', response);
             return response.json();
         })
         .then(data => {
-            console.log('Data received:', data);
             if (data.status === 'success') {
                 const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
                 itemElement.classList.add('hidden');
@@ -183,7 +174,6 @@
     }
 
     function markPacked(itemId) {
-        console.log('markPacked called with itemId:', itemId);
         const formData = new FormData();
         formData.append('item_id', itemId);
         formData.append('status', 'packed');
@@ -197,11 +187,9 @@
             body: formData
         })
         .then(response => {
-            console.log('Response received:', response);
             return response.json();
         })
         .then(data => {
-            console.log('Data received:', data);
             if (data.status === 'success') {
                 const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
                 const buttonElement = itemElement.querySelector('[data-action="pack"]');
@@ -216,13 +204,9 @@
     }
 
     function checkCategoryCompletion(itemElement) {
-        console.log('Checking category completion');
         const categorySection = itemElement.closest('.category-section');
         const visibleItems = categorySection.querySelectorAll('[data-item-id]:not(.hidden)');
         const packedItems = categorySection.querySelectorAll('.bg-green-50');
-        
-        console.log('Visible items:', visibleItems.length);
-        console.log('Packed items:', packedItems.length);
         
         if (visibleItems.length === packedItems.length) {
             categorySection.querySelector('.px-4').classList.add('bg-green-50');
