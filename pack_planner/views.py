@@ -106,10 +106,14 @@ def pack_assessment_results(request):
 
     # Generate recommendations
     recommendations = generate_packs(assessment_data)
+
+    # Get pack type from query parameter, default to go-bag only
+    show_extended = request.GET.get('show_extended', 'false').lower() == 'true'
     
     context = {
         'assessment': assessment_data,
-        'recommendations': recommendations
+        'recommendations': recommendations,
+        'show_extended': show_extended
     }
     
     return render(request, 'pack_planner/assessment_results.html', context)

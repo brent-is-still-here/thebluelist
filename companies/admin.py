@@ -33,7 +33,6 @@ class CategoryImportMixin:
         
         return HttpResponseRedirect(reverse('admin:companies_productcategory_changelist'))
 
-
 # Step 1: Add PoliticalDataInline for editing political data within a business
 class PoliticalDataInline(admin.StackedInline):
     model = PoliticalData
@@ -49,6 +48,27 @@ class EditRequestInline(admin.TabularInline):
     fields = ('submitted_by', 'status', 'justification', 'created_at', 'reviewed_at')
     readonly_fields = ('created_at', 'reviewed_at')
 
+@admin.register(ServiceCategory)
+class ServiceCategoryAdmin(CategoryImportMixin, admin.ModelAdmin):
+    list_display = ('name', 'parent', 'slug')
+    search_fields = ('name',)
+    list_filter = ('parent',)
+    prepopulated_fields = {'slug': ('name',)}
+    raw_id_fields = ('parent',)
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('parent')
+
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(CategoryImportMixin, admin.ModelAdmin):
+    list_display = ('name', 'parent', 'slug')
+    search_fields = ('name',)
+    list_filter = ('parent',)
+    prepopulated_fields = {'slug': ('name',)}
+    raw_id_fields = ('parent',)
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('parent')
 
 # Step 3: Updated BusinessAdmin to include inlines
 @admin.register(Business)

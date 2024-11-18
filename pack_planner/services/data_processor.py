@@ -30,7 +30,9 @@ class DataProcessor:
                 defaults={
                     'description': cat_data['description'],
                     'importance': cat_data['importance'],
-                    'order': cat_data.get('order', 0)
+                    'order': cat_data.get('order', 0),
+                    'go_bag': cat_data.get('go_bag', True),
+                    'seventy_two_hr_bag': cat_data.get('seventy_two_hr_bag', True)
                 }
             )
             if created:
@@ -50,15 +52,22 @@ class DataProcessor:
                         'weight_note': item_data.get('weight_note', ''),
                         'special_considerations': item_data.get('special_considerations', ''),
                         'order': item_data.get('order', 0),
+                        # All boolean fields with their defaults
+                        'conditional_applicability': item_data.get('conditional_applicability', False),
                         'for_adults': item_data.get('for_adults', True),
                         'for_children': item_data.get('for_children', False),
                         'for_pets': item_data.get('for_pets', False),
+                        'for_cats': item_data.get('for_cats', False),
+                        'for_dogs': item_data.get('for_dogs', False),
+                        'for_small_animals': item_data.get('for_small_animals', False),
                         'for_disabled': item_data.get('for_disabled', False),
                         'for_elderly': item_data.get('for_elderly', False),
                         'for_on_foot': item_data.get('for_on_foot', True),
                         'for_bicycle': item_data.get('for_bicycle', True),
                         'for_vehicle': item_data.get('for_vehicle', True),
                         'for_public_transit': item_data.get('for_public_transit', True),
+                        'go_bag': item_data.get('go_bag', True),
+                        'seventy_two_hr_bag': item_data.get('seventy_two_hr_bag', True)
                     }
                 )
                 
@@ -84,7 +93,9 @@ class DataProcessor:
                         'description': prod_data['description'],
                         'url': prod_data.get('url', ''),
                         'notes': prod_data.get('notes', ''),
-                        'is_available': prod_data.get('is_available', True)
+                        'is_available': prod_data.get('is_available', True),
+                        'go_bag': prod_data.get('go_bag', True),
+                        'seventy_two_hr_bag': prod_data.get('seventy_two_hr_bag', True)
                     }
                 )
                 if created:
