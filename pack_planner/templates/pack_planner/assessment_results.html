@@ -70,47 +70,44 @@
         <!-- Packs -->
         {% for pack_name, categories in recommendations.items %}
             <div id="pack-{{ forloop.counter }}" class="bg-white shadow rounded-lg mb-8">
+                <!-- Collapsible Pack Header -->
                 <button class="w-full px-6 py-5 border-b border-gray-200 sm:px-8 flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
                         onclick="togglePack('pack-content-{{ forloop.counter }}')">
                     <h2 class="text-2xl font-semibold text-gray-900">{{ pack_name }}</h2>
                     <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
-                         data-pack-icon="pack-content-{{ forloop.counter }}"
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        data-pack-icon="pack-content-{{ forloop.counter }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
                 
                 <div id="pack-content-{{ forloop.counter }}">
                     {% for category, items in categories %}
-                        <div class="category-section border-b border-gray-200 last:border-b-0" 
-                             data-category-id="{{ category.id }}"
-                             data-complete="false">
+                        <!-- Category Header with Toggle -->
+                        <div class="category-section border-b border-gray-200 last:border-b-0" data-category-id="{{ category.id }}">
                             <button class="category-header w-full px-6 py-4 sm:px-8 flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
                                     onclick="toggleCategory('category-content-{{ category.id }}')">
-                                <div class="flex-grow">
-                                    <div class="flex items-center">
-                                        <h3 class="text-lg font-semibold text-gray-900">{{ category.name }}</h3>
-                                        <span class="ml-3 text-sm text-green-600 font-medium completion-status hidden">
-                                            All Items Complete
-                                        </span>
-                                    </div>
+                                <div class="flex-grow text-left">
+                                    <h3 class="text-lg font-bold text-gray-900">{{ category.name }}</h3>
                                     {% if category.description %}
-                                        <p class="mt-1 text-sm text-gray-600">{{ category.description }}</p>
+                                        <p class="mt-1 text-sm text-gray-700">{{ category.description }}</p>
                                     {% endif %}
                                 </div>
                                 <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
-                                     data-category-icon="category-content-{{ category.id }}"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    data-category-icon="category-content-{{ category.id }}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
                             
-                            <div id="category-content-{{ category.id }}" class="px-6 py-4 sm:px-8 space-y-4">
+                            <!-- Collapsible Items Section -->
+                            <div id="category-content-{{ category.id }}" class="pl-8 pr-6 py-4 sm:pl-12 sm:pr-8 space-y-4 hidden">
                                 {% for item in items %}
                                     <div class="flex items-center justify-between p-4 rounded hover:bg-gray-50 {% if item.id|slugify in checklist and checklist|get_item:item.id == 'packed' %}bg-green-50 item-packed{% endif %} {% if item.id|slugify in checklist and checklist|get_item:item.id == 'not_applicable' %}hidden{% endif %}"
-                                         data-item-id="{{ item.id }}">
+                                        data-item-id="{{ item.id }}">
                                         
-                                        <div class="flex-grow max-w-2xl">
+                                        <!-- Indented Item Details -->
+                                        <div class="flex-grow max-w-2xl pl-4">
                                             <div class="flex items-center mb-1">
                                                 <span class="text-base font-medium text-gray-900">{{ item.name }}</span>
                                                 {% if item.weight_note %}
@@ -122,6 +119,7 @@
                                             {% endif %}
                                         </div>
                                         
+                                        <!-- Item Actions -->
                                         <div class="flex items-center space-x-3 ml-4">
                                             {% if item.conditional_applicability %}
                                                 <button data-action="not-applicable" 
@@ -142,7 +140,7 @@
                                             </button>
                                             
                                             <a href="{% url 'item_detail' item.id %}"
-                                               class="min-w-[120px] px-4 py-2 text-sm font-medium border border-indigo-500 rounded text-indigo-500 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-center">
+                                            class="min-w-[120px] px-4 py-2 text-sm font-medium border border-indigo-500 rounded text-indigo-500 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-center">
                                                 View Details
                                             </a>
                                         </div>
@@ -154,6 +152,7 @@
                 </div>
             </div>
         {% endfor %}
+
     </div>
 </div>
 
