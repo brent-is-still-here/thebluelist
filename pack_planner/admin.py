@@ -8,15 +8,33 @@ from .models import Category, Item, Product
 class ProductInline(admin.TabularInline):
     model = Product
     extra = 1
-    fields = ('name', 'description', 'url', 'is_available', 'last_verified')
+    fields = ('name', 'description', 'url', 'notes', 'is_available', 'go_bag', 'seventy_two_hr_bag', 'last_verified')
     readonly_fields = ('last_verified',)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'importance', 'order', 'item_count')
-    list_filter = ('importance',)
+    list_display = ('name', 'importance', 'order', 'go_bag', 'seventy_two_hr_bag', 'item_count')
+    list_filter = ('importance', 'go_bag', 'seventy_two_hr_bag')
     search_fields = ('name', 'description')
     ordering = ('order', 'name')
+    
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'description',
+                'importance',
+                'order',
+            )
+        }),
+        ('Pack Type Applicability', {
+            'fields': (
+                'go_bag',
+                'seventy_two_hr_bag',
+            ),
+            'classes': ('collapse',)
+        })
+    )
     
     def item_count(self, obj):
         count = obj.items.count()
@@ -37,13 +55,27 @@ class ItemAdmin(admin.ModelAdmin):
         'weight_note',
         'product_count',
         'has_special_considerations',
-        'for_adults',
-        'for_children',
-        'for_pets',
         'go_bag',
         'seventy_two_hr_bag'
     )
-    list_filter = ('importance', 'category', 'for_adults', 'for_children', 'for_pets', 'for_disabled', 'for_elderly', 'go_bag', 'seventy_two_hr_bag')
+    list_filter = (
+        'importance', 
+        'category',
+        'go_bag',
+        'seventy_two_hr_bag',
+        'for_adults',
+        'for_children',
+        'for_pets',
+        'for_cats',
+        'for_dogs',
+        'for_small_animals',
+        'for_disabled',
+        'for_elderly',
+        'for_on_foot',
+        'for_bicycle',
+        'for_vehicle',
+        'for_public_transit'
+    )
     search_fields = ('name', 'description', 'uses', 'special_considerations')
     ordering = ('category', 'order', 'name')
     inlines = [ProductInline]
@@ -60,23 +92,35 @@ class ItemAdmin(admin.ModelAdmin):
                 'order'
             )
         }),
-        ('Details', {
+        ('Pack Type Applicability', {
+            'fields': (
+                'go_bag',
+                'seventy_two_hr_bag',
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Item Details', {
             'fields': (
                 'weight_note', 
                 'special_considerations', 
                 'alternatives',
                 'conditional_applicability',
-                'for_adults', 
-                'for_children', 
-                'for_pets', 
-                'for_disabled', 
-                'for_elderly',
-                'for_on_foot', 
-                'for_bicycle', 
-                'for_vehicle', 
-                'for_public_transit',
-                'go_bag',
-                'seventy_two_hr_bag'
+            ),
+            'classes': ('collapse',)
+        }),
+        ('User Applicability', {
+            'fields': (
+                ('for_adults', 'for_elderly'),
+                ('for_children', 'for_disabled'),
+                'for_pets',
+                ('for_cats', 'for_dogs', 'for_small_animals'),
+            ),
+            'classes': ('collapse',)
+        }),
+        ('Transportation Methods', {
+            'fields': (
+                ('for_on_foot', 'for_bicycle'),
+                ('for_vehicle', 'for_public_transit'),
             ),
             'classes': ('collapse',)
         })
@@ -106,11 +150,15 @@ class ProductAdmin(admin.ModelAdmin):
         'item',
         'category_name',
         'is_available',
+        'go_bag',
+        'seventy_two_hr_bag',
         'last_verified',
         'url_link'
     )
     list_filter = (
-        'is_available', 
+        'is_available',
+        'go_bag',
+        'seventy_two_hr_bag', 
         'item__category',
         'last_verified'
     )
@@ -121,6 +169,31 @@ class ProductAdmin(admin.ModelAdmin):
         'item__name'
     )
     readonly_fields = ('last_verified',)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'description',
+                'item',
+                'url',
+                'notes',
+            )
+        }),
+        ('Availability', {
+            'fields': (
+                'is_available',
+                'last_verified',
+            )
+        }),
+        ('Pack Type Applicability', {
+            'fields': (
+                'go_bag',
+                'seventy_two_hr_bag',
+            ),
+            'classes': ('collapse',)
+        })
+    )
     
     def category_name(self, obj):
         return obj.item.category.name

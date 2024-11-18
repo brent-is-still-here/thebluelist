@@ -195,14 +195,30 @@
                                         
                                         <!-- Indented Item Details -->
                                         <div class="flex-grow max-w-2xl pl-4">
-                                            <div class="flex items-center mb-1">
+                                            <div class="flex items-center mb-1 gap-2">
                                                 <span class="text-base font-medium text-gray-900">{{ item.name }}</span>
+                                                {% if item.importance %}
+                                                    <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ item.importance|importance_class }}">
+                                                        {{ item.importance|display_importance }}
+                                                    </span>
+                                                {% endif %}
                                                 {% if item.weight_note %}
-                                                    <span class="ml-2 text-sm text-gray-500">({{ item.weight_note }})</span>
+                                                    <span class="text-sm text-gray-500 italic">
+                                                        {{ item.weight_note }}
+                                                    </span>
                                                 {% endif %}
                                             </div>
-                                            {% if item.special_considerations %}
-                                                <p class="text-sm text-gray-600">{{ item.special_considerations }}</p>
+                                            {% if item.description or item.special_considerations %}
+                                                <div class="space-y-1">
+                                                    {% if item.description %}
+                                                        <p class="text-sm text-gray-700">{{ item.description }}</p>
+                                                    {% endif %}
+                                                    {% if item.special_considerations %}
+                                                        <p class="text-sm text-gray-600 italic">
+                                                            <span class="font-medium">Note:</span> {{ item.special_considerations }}
+                                                        </p>
+                                                    {% endif %}
+                                                </div>
                                             {% endif %}
                                         </div>
                                         
