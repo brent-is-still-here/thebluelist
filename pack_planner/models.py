@@ -25,6 +25,7 @@ class Category(models.Model):
             ('optional', 'Optional')
         ]
     )
+    go_bag = models.BooleanField(default=True)
     seventy_two_hr_bag = models.BooleanField(default=True)
     order = models.IntegerField(default=0)
 
@@ -63,12 +64,16 @@ class Item(models.Model):
     for_adults = models.BooleanField(default=True)
     for_children = models.BooleanField(default=False)
     for_pets = models.BooleanField(default=False)
+    for_cats = models.BooleanField(default=False)
+    for_dogs = models.BooleanField(default=False)
+    for_small_animals = models.BooleanField(default=False)
     for_disabled = models.BooleanField(default=False)
     for_elderly = models.BooleanField(default=False)
     for_on_foot = models.BooleanField(default=True)
     for_bicycle = models.BooleanField(default=True)
     for_vehicle = models.BooleanField(default=True)
     for_public_transit = models.BooleanField(default=True)
+    go_bag = models.BooleanField(default=True)
     seventy_two_hr_bag = models.BooleanField(default=True)
 
     class Meta:
@@ -82,5 +87,6 @@ class Product(models.Model):
     notes = models.TextField(blank=True)
     is_available = models.BooleanField(default=True)
     last_verified = models.DateTimeField(auto_now=True)
-
+    
+    go_bag = models.BooleanField(default=True)
     seventy_two_hr_bag = models.BooleanField(default=True)

@@ -65,6 +65,89 @@
             </div>
         </div>
 
+        <!-- Go-Bag vs 72-hr Bag -->
+        <div class="bg-white shadow rounded-lg p-4 mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-lg font-medium text-gray-900">Pack Type</h3>
+                        <button id="showPackInfo" class="text-indigo-500 hover:text-indigo-600" aria-label="Pack type information">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M12 18h.01M12 3a9 9 0 110 18 9 9 0 010-18z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-500" id="packTypeDescription">
+                        Currently showing Go-Bag items only
+                    </p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="inline-flex items-center cursor-pointer">
+                        <span class="mr-3 text-sm font-medium text-gray-900">Go-Bag</span>
+                        <div class="relative">
+                            <input type="checkbox" 
+                                   class="sr-only peer" 
+                                   id="packTypeToggle"
+                                   {% if show_extended %}checked{% endif %}>
+                            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 
+                                        peer-focus:ring-blue-300 peer-checked:after:translate-x-full 
+                                        peer-checked:bg-blue-600 after:content-[''] after:absolute 
+                                        after:top-0.5 after:left-[2px] after:bg-white after:rounded-full 
+                                        after:h-5 after:w-5 after:transition-all"></div>
+                        </div>
+                        <span class="ml-3 text-sm font-medium text-gray-900">72-Hour Kit</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pack Type Info Modal -->
+        <div id="packTypeModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg max-w-2xl mx-4 p-6 shadow-xl" role="dialog" aria-labelledby="modalTitle">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 id="modalTitle" class="text-xl font-semibold text-gray-900">
+                        Choosing Your Pack Type
+                    </h3>
+                    <button id="closeModal" class="text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">Close</span>
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-2">Go-Bag</h4>
+                        <p class="text-gray-600">A “go-bag” is just as it sounds, the bag you will pick up when you are ready to leave your home.  You can have a go-bag prepacked or you can print a list of items for packing your bag just before you leave. Each member of the family should have a bag that is manageable for them to transport. A go-bag contains only the bare essentials needed to escape a dangerous situation with 10 minutes or less of lead time. Choose a go-bag if:</p>
+                        <ul class="list-disc ml-5 mt-2 text-gray-600">
+                            <li>You live close to a safe destination</li>
+                            <li>You have reliable transportation</li>
+                            <li>You need maximum mobility</li>
+                            <li>You're operating on a limited budget</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-2">72-Hour Kit</h4>
+                        <p class="text-gray-600">A 72-hour kit includes everything in a go-bag plus additional supplies to keep you safe for 72 hours while escaping an emergency. 72-hour kits are not necessarily for travel and can be beneficial during natural disasters, supply chain disruptions, etc. Choose a 72-hour kit if:</p>
+                        <ul class="list-disc ml-5 mt-2 text-gray-600">
+                            <li>You live far from safe destinations</li>
+                            <li>You rely on public transportation</li>
+                            <li>You live in an area prone to natural disasters</li>
+                            <li>You have mobility limitations</li>
+                            <li>You need to be self-sufficient for several days</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-gray-50 -mx-6 -mb-6 px-6 py-4 rounded-b-lg">
+                    <p class="text-sm text-gray-500">Remember: The best pack is the one you can actually carry and maintain. Consider your specific situation, capabilities, and resources when choosing.</p>
+                </div>
+            </div>
+        </div>
+
         {% csrf_token %}
 
         <!-- Packs -->
@@ -103,8 +186,12 @@
                             <!-- Collapsible Items Section -->
                             <div id="category-content-{{ category.id }}" class="pl-8 pr-6 py-4 sm:pl-12 sm:pr-8 space-y-4 hidden">
                                 {% for item in items %}
-                                    <div class="flex items-center justify-between p-4 rounded hover:bg-gray-50 {% if item.id|slugify in checklist and checklist|get_item:item.id == 'packed' %}bg-green-50 item-packed{% endif %} {% if item.id|slugify in checklist and checklist|get_item:item.id == 'not_applicable' %}hidden{% endif %}"
-                                        data-item-id="{{ item.id }}">
+                                <div class="flex items-center justify-between p-4 rounded hover:bg-gray-50 
+                                    {% if item.id|slugify in checklist and checklist|get_item:item.id == 'packed' %}bg-green-50 item-packed{% endif %}
+                                    {% if item.id|slugify in checklist and checklist|get_item:item.id == 'not_applicable' %}hidden{% endif %}"
+                                    data-pack-type="{% if item.seventy_two_hr_bag and not item.go_bag %}extended{% endif %}"
+                                    style="{% if not item.go_bag and not show_extended %}display: none;{% endif %}"
+                                    item-id="{{ item.id }}">
                                         
                                         <!-- Indented Item Details -->
                                         <div class="flex-grow max-w-2xl pl-4">
@@ -158,6 +245,60 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Show and hide items based on go-bag vs 72 hour bag
+        const toggle = document.getElementById('packTypeToggle');
+        const description = document.getElementById('packTypeDescription');
+        const modal = document.getElementById('packTypeModal');
+        const showModalBtn = document.getElementById('showPackInfo');
+        const closeModalBtn = document.getElementById('closeModal');
+        
+        function toggleModal(show) {
+            modal.classList.toggle('hidden', !show);
+            if (show) {
+                // Trap focus in modal
+                const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+                firstFocusable.focus();
+
+                // Handle tab key navigation
+                modal.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey && document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    }
+                });
+            }
+        }
+
+        showModalBtn.addEventListener('click', () => toggleModal(true));
+        closeModalBtn.addEventListener('click', () => toggleModal(false));
+
+        if (toggle) {
+            toggle.addEventListener('change', function() {
+                const extendedItems = document.querySelectorAll('[data-pack-type="extended"]');
+                const isExtended = this.checked;
+                
+                extendedItems.forEach(item => {
+                    item.style.display = isExtended ? 'flex' : 'none';
+                });
+                
+                description.textContent = isExtended ? 
+                    'Showing all items (72-Hour Kit)' : 
+                    'Showing Go-Bag items only';
+                    
+                // Update URL without page refresh
+                const url = new URL(window.location.href);
+                url.searchParams.set('show_extended', isExtended);
+                window.history.pushState({}, '', url);
+            });
+        }
+        
         // Initialize collapsible states
         document.querySelectorAll('[id^="pack-content-"]').forEach(pack => {
             pack.style.display = 'block';

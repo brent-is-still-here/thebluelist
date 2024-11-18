@@ -40,8 +40,10 @@ class ItemAdmin(admin.ModelAdmin):
         'for_adults',
         'for_children',
         'for_pets',
+        'go_bag',
+        'seventy_two_hr_bag'
     )
-    list_filter = ('importance', 'category', 'for_adults', 'for_children', 'for_pets', 'for_disabled', 'for_elderly')
+    list_filter = ('importance', 'category', 'for_adults', 'for_children', 'for_pets', 'for_disabled', 'for_elderly', 'go_bag', 'seventy_two_hr_bag')
     search_fields = ('name', 'description', 'uses', 'special_considerations')
     ordering = ('category', 'order', 'name')
     inlines = [ProductInline]
@@ -72,7 +74,9 @@ class ItemAdmin(admin.ModelAdmin):
                 'for_on_foot', 
                 'for_bicycle', 
                 'for_vehicle', 
-                'for_public_transit'
+                'for_public_transit',
+                'go_bag',
+                'seventy_two_hr_bag'
             ),
             'classes': ('collapse',)
         })
