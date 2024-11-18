@@ -24,11 +24,6 @@ def safety_at_home_landing(request):
             'status': 'coming_soon'
         },
         {
-            'title': 'Legal & Financial Preparedness',
-            'description': 'Protect your rights and assets with proper legal and financial preparation.',
-            'status': 'coming_soon'
-        },
-        {
             'title': 'Mental & Emotional Resilience',
             'description': 'Resources and strategies for maintaining mental and emotional well-being.',
             'status': 'coming_soon'
@@ -42,21 +37,22 @@ def safety_at_home_landing(request):
     
     emergency_sections = [
         {
-            'title': 'Go-Bag',
+            'title': 'Go-Bag & 72-Hour Bag',
             'description': 'Essential items for immediate evacuation.',
             'status': 'available',
             'url': '/packplanner/'
         },
         {
-            'title': '72-Hour Bag',
-            'description': 'Comprehensive preparation for extended emergencies.',
-            'status': 'coming_soon'
-        },
-        {
             'title': 'Home Emergency Preparedness',
             'description': 'Making your home ready for various emergency scenarios.',
             'status': 'coming_soon'
-        }
+        },
+        {
+            'title': 'Legal & Financial Preparedness',
+            'description': 'Protect your rights and assets with proper legal and financial preparation.',
+            'status': 'coming_soon'
+        },
+        
     ]
     
     context = {
