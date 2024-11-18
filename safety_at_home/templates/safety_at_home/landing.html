@@ -1,0 +1,67 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Safety at Home</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Comprehensive resources and tools to help you prepare for uncertainty and protect what matters most.
+            </p>
+        </div>
+
+        <!-- Emergency & Evacuation Section -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Emergency & Evacuation</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for section in emergency_sections %}
+                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ section.title }}</h3>
+                                {% if section.status == 'available' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Available
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        Coming Soon
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <p class="text-gray-600 mb-4">{{ section.description }}</p>
+                            {% if section.status == 'available' %}
+                                <a href="{{ section.url }}" 
+                                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Get Started
+                                    <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Upcoming Sections -->
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">More Resources Coming Soon</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for section in upcoming_sections %}
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ section.title }}</h3>
+                        <p class="text-gray-600">{{ section.description }}</p>
+                        <span class="mt-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Coming Soon
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

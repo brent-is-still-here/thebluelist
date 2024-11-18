@@ -1,0 +1,176 @@
+{% extends "users/base.html" %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Pack Planning Assessment</h1>
+            
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            This assessment helps create a personalized emergency pack list. No data is stored beyond your current session.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" class="space-y-8">
+                {% csrf_token %}
+                
+                <!-- Family Composition -->
+                <div class="bg-white shadow rounded-lg p-6 space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-900">Family Composition</h2>
+                    
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                        <div>
+                            <label for="adults" class="block text-sm font-medium text-gray-700">Number of Adults</label>
+                            <input type="number" name="adults" id="adults" min="1" value="1" required
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                        
+                        <div>
+                            <label for="children" class="block text-sm font-medium text-gray-700">Number of Children</label>
+                            <input type="number" name="children" id="children" min="0" value="0"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Considerations -->
+                <div class="bg-white shadow rounded-lg p-6 space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-900">Special Considerations</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="hasElderly" id="hasElderly"
+                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            </div>
+                            <div class="ml-3">
+                                <label for="hasElderly" class="text-sm text-gray-700">Elderly Family Members</label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="hasDisabled" id="hasDisabled"
+                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            </div>
+                            <div class="ml-3">
+                                <label for="hasDisabled" class="text-sm text-gray-700">Family Members with Disabilities</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pets -->
+                <div class="bg-white shadow rounded-lg p-6 space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-900">Pets</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="hasPets" id="hasPets"
+                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                       onchange="document.getElementById('petTypesSection').style.display = this.checked ? 'block' : 'none'">
+                            </div>
+                            <div class="ml-3">
+                                <label for="hasPets" class="text-sm text-gray-700">We have pets</label>
+                            </div>
+                        </div>
+
+                        <div id="petTypesSection" class="ml-7 space-y-2" style="display: none;">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="petTypes" value="dog" id="petDog"
+                                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                </div>
+                                <div class="ml-3">
+                                    <label for="petDog" class="text-sm text-gray-700">Dogs</label>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="petTypes" value="cat" id="petCat"
+                                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                </div>
+                                <div class="ml-3">
+                                    <label for="petCat" class="text-sm text-gray-700">Cats</label>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="petTypes" value="other" id="petOther"
+                                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                </div>
+                                <div class="ml-3">
+                                    <label for="petOther" class="text-sm text-gray-700">Other Small Animals</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportation -->
+                <div class="bg-white shadow rounded-lg p-6 space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-900">Primary Mode of Transportation</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <input type="radio" name="transportType" value="walking" id="transportWalking"
+                                   class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" checked>
+                            <label for="transportWalking" class="ml-3 block text-sm text-gray-700">Walking</label>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="radio" name="transportType" value="bicycle" id="transportBicycle"
+                                   class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label for="transportBicycle" class="ml-3 block text-sm text-gray-700">Bicycle</label>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="radio" name="transportType" value="car" id="transportCar"
+                                   class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label for="transportCar" class="ml-3 block text-sm text-gray-700">Car</label>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="radio" name="transportType" value="public" id="transportPublic"
+                                   class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label for="transportPublic" class="ml-3 block text-sm text-gray-700">Public Transportation</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Get Recommendations
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize pet types section visibility based on checkbox state
+    document.addEventListener('DOMContentLoaded', function() {
+        const hasPetsCheckbox = document.getElementById('hasPets');
+        const petTypesSection = document.getElementById('petTypesSection');
+        petTypesSection.style.display = hasPetsCheckbox.checked ? 'block' : 'none';
+    });
+</script>
+{% endblock %}
