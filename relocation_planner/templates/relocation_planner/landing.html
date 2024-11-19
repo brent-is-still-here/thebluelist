@@ -1,0 +1,43 @@
+{% extends 'Users/base.html' %}
+
+{% block title %}Relocation Planner - {{ block.super }}{% endblock %}
+
+{% block content %}
+{# Sub-navigation #}
+<div class="mb-6">
+    <nav class="flex space-x-4">
+        <a href="{% url 'relocation_planner:landing' %}" 
+           class="text-blue-600 hover:text-blue-800 {% if request.resolver_match.url_name == 'index' %}font-bold{% endif %}">
+            Overview
+        </a>
+        <a href="{% url 'relocation_planner:country-list' %}" 
+           class="text-blue-600 hover:text-blue-800 {% if request.resolver_match.url_name == 'country-list' %}font-bold{% endif %}">
+            Countries
+        </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'relocation_planner:experience-create' %}" 
+               class="text-blue-600 hover:text-blue-800">
+                Share Experience
+            </a>
+        {% endif %}
+    </nav>
+</div>
+
+<div class="space-y-8">
+    {# Hero Section #}
+    <div class="text-center py-8 bg-blue-50 rounded-lg">
+        <h1 class="text-4xl font-bold text-blue-900 mb-4">Find Your New Home</h1>
+        <p class="text-lg text-blue-700 mb-6">Explore countries, compare options, and plan your international relocation</p>
+        
+        {% if not user.is_authenticated %}
+            <a href="{% url 'users:login' %}" 
+               class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                Sign in to contribute
+            </a>
+        {% endif %}
+    </div>
+
+    {# Rest of the template content remains the same #}
+    ...
+</div>
+{% endblock %}

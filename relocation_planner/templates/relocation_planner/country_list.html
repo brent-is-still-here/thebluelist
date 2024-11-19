@@ -1,0 +1,87 @@
+{# relocation_planner/templates/relocation_planner/country_list.html #}
+{% extends 'relocation_planner/base.html' %}
+
+{% block relocation_content %}
+<div class="space-y-6">
+    {# Search and Filter Section #}
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <form method="get" class="flex gap-4 items-end">
+            <div class="flex-1">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Countries</label>
+                <input type="text" 
+                       name="search" 
+                       id="search" 
+                       value="{{ request.GET.search|default:'' }}"
+                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                       placeholder="Enter country name...">
+            </div>
+            <button type="submit" 
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                Search
+            </button>
+            {% if request.GET.search %}
+                <a href="{% url 'relocation_planner:country-list' %}" 
+                   class="text-gray-600 hover:text-gray-800">
+                    Clear
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    {# Countries Grid #}
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for country in countries %}
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                    <a href="{% url 'relocation_planner:country-detail' country.slug %}" 
+                       class="hover:text-blue-600">
+                        {{ country.name }}
+                    </a>
+                </h2>
+                
+                <div class="space-y-2 text-gray-600">
+                    <p>Capital: {{ country.capital_city }}</p>
+                    <p>Population: {{ country.population|intcomma }}</p>
+                    
+                    {% if country.official_languages.exists %}
+                        <p>Languages: 
+                            {{ country.official_languages.all|join:", " }}
+                        </p>
+                    {% endif %}
+                    
+                    {% if country.avg_cost_of_living %}
+                        <p>Avg. Cost of Living: ${{ country.avg_cost_of_living|floatformat:2 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'relocation_planner:country-detail' country.slug %}" 
+                       class="text-blue-600 hover:text-blue-800">
+                        View Details →
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-span-full text-center text-gray-600">
+                No countries found.
+                {% if user.is_authenticated %}
+                    <a href="{% url 'relocation_planner:country-create' %}" 
+                       class="text-blue-600 hover:text-blue-800 ml-2">
+                        Add one?
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Add Country Button #}
+    {% if user.is_authenticated %}
+        <div class="text-center mt-8">
+            <a href="{% url 'relocation_planner:country-create' %}" 
+               class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                Add New Country
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

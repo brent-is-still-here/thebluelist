@@ -244,7 +244,7 @@
                                             
                                             <a href="{% url 'item_detail' item.id %}"
                                             class="min-w-[120px] px-4 py-2 text-sm font-medium border border-indigo-500 rounded text-indigo-500 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-center">
-                                                View Details
+                                                More Info
                                             </a>
                                         </div>
                                     </div>
@@ -382,6 +382,7 @@
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Full response data:', data);
             if (data.status === 'success') {
                 const itemElement = buttonElement.closest('[data-item-id]');
                 itemElement.classList.add('hidden');

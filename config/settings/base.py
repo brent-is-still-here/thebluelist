@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'companies.apps.CompaniesConfig',
     'online_security.apps.OnlineSecurityConfig',
     'pack_planner.apps.PackPlannerConfig',
+    'relocation_planner.apps.RelocationPlannerConfig',
     'safety_at_home.apps.SafetyAtHomeConfig',
     'users.apps.UsersConfig',
 ]
