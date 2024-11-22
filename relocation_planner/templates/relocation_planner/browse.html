@@ -1,0 +1,34 @@
+{% extends "users/base.html" %}
+{% load humanize %}
+
+{% block title %}Relocation Planner - Browse Countries{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900">Browse Countries</h1>
+        <p class="mt-4 text-gray-600">Discover detailed insights and user-submitted information for each country.</p>
+    </div>
+
+    <div class="mt-6 text-right">
+        <a href="{% url 'relocation_planner:add_country' %}" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            Add New Country
+        </a>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for country in countries %}
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-gray-900">{{ country.name }}</h2>
+            <p class="text-gray-600">Capital: {{ country.capital_city }}</p>
+            <p class="text-gray-600">Population: {{ country.population|intcomma }}</p>
+            <a href="{% url 'relocation_planner:country_detail' country.slug %}" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                View Details
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-gray-600">No countries found. Add a new one using the button above!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

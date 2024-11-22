@@ -1,0 +1,248 @@
+{% extends "users/base.html" %}
+{% load dict_filters %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">
+        {% if country %}Edit {{ country.name }}{% else %}Add New Country{% endif %}
+    </h1>
+
+    <form method="post" class="space-y-8">
+        {% csrf_token %}
+        
+        {# Basic Info #}
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Basic Information</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {% for field in country_form %}
+                    <div class="{% if field.field.widget.input_type == 'textarea' or field.name == 'common_languages' %}lg:col-span-2{% endif %}">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Visas #}
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Visa Information</h2>
+            {{ visa_formset.management_form }}
+            
+            <div id="visa-forms" class="space-y-6">
+                {% for visa_form in visa_formset %}
+                    <div class="visa-entry bg-gray-50 rounded-lg p-4" id="visa-form-{{ forloop.counter0 }}">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Visa {{ forloop.counter }}</h3>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {% for field in visa_form.visible_fields %}
+                                <div class="{% if field.field.widget.input_type == 'textarea' %}lg:col-span-2{% endif %}">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ field.label }}</label>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {# Requirements #}
+                        <div class="bg-white rounded-lg p-4 mt-6">
+                            <h4 class="text-md font-medium text-gray-700 mb-4">Requirements</h4>
+                            {% with visa_id=visa_form.instance.id|default:forloop.counter0 %}
+                                {% with req_formset=requirement_formsets|get_item:visa_id %}
+                                    {% if req_formset %}
+                                        {{ req_formset.management_form }}
+                                        <div id="requirements-container-{{ visa_id }}" class="space-y-4">
+                                            {% for req_form in req_formset %}
+                                                <div class="requirement-entry border border-gray-200 rounded p-4">
+                                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                                            {{ req_form.name }}
+                                                            {{ req_form.id }}
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                                            {{ req_form.description }}
+                                                        </div>
+                                                    </div>
+                                                    {{ req_form.DELETE }}
+                                                    <button type="button" 
+                                                            class="mt-4 text-sm text-red-600 hover:text-red-800"
+                                                            onclick="removeRequirement(this)">
+                                                        Remove Requirement
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <button type="button" 
+                                            class="mt-4 text-sm text-blue-600 hover:text-blue-800"
+                                            onclick="addRequirement('{{ visa_id }}')">
+                                        + Add Requirement
+                                    </button>
+                                {% endwith %}
+                            {% endwith %}
+                        </div>
+
+                        {{ visa_form.DELETE }}
+                        <button type="button" 
+                                class="mt-4 text-sm text-red-600 hover:text-red-800"
+                                onclick="removeVisa(this)">
+                            Remove Visa
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" 
+                    class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    onclick="addVisa()">
+                Add Visa
+            </button>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <a href="{% url 'relocation_planner:browse' %}" 
+               class="px-4 py-2 border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50">
+                Cancel
+            </a>
+            <button type="submit" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                {% if country %}Update Country{% else %}Create Country{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    input[type="text"], 
+    input[type="url"], 
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #D1D5DB;
+        border-radius: 0.375rem;
+        background-color: white;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+</style>
+
+<script>
+    let visaFormCount = {{ visa_formset.total_form_count }};
+    
+    function addVisa() {
+        const visaForms = document.getElementById('visa-forms');
+        const totalForms = document.querySelector('[name="visas-TOTAL_FORMS"]');
+        const newFormIdx = totalForms.value;
+    
+        const template = `
+            <div class="visa-entry bg-gray-50 rounded-lg p-4" id="visa-form-${newFormIdx}">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">New Visa</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {% for field in visa_formset.empty_form.visible_fields %}
+                        <div class="{% if field.field.widget.input_type == 'textarea' %}lg:col-span-2{% endif %}">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ field.label }}</label>
+                            {{ field.as_widget|escapejs }}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="bg-white rounded-lg p-4 mt-6">
+                    <h4 class="text-md font-medium text-gray-700 mb-4">Requirements</h4>
+                    <div id="requirements-container-new_${newFormIdx}" class="space-y-4"></div>
+                    <button type="button" 
+                            class="mt-4 text-sm text-blue-600 hover:text-blue-800"
+                            onclick="addRequirement('new_${newFormIdx}')">
+                        + Add Requirement
+                    </button>
+                </div>
+    
+                <input type="hidden" name="visas-${newFormIdx}-DELETE" value="">
+                <button type="button" 
+                        class="mt-4 text-sm text-red-600 hover:text-red-800"
+                        onclick="removeVisa(this, ${newFormIdx})">
+                    Remove Visa
+                </button>
+            </div>
+        `.replace(/__prefix__/g, newFormIdx);
+        
+        visaForms.insertAdjacentHTML('beforeend', template);
+        totalForms.value = parseInt(totalForms.value) + 1;
+    }
+    
+    function addRequirement(visaId) {
+        const container = document.getElementById(`requirements-container-${visaId}`);
+        const reqFormPrefix = visaId.toString().startsWith('new_') ? 
+            `new_visa_${visaId}_requirements` : 
+            `visa_${visaId}_requirements`;
+            
+        const totalFormsInput = document.querySelector(`[name="${reqFormPrefix}-TOTAL_FORMS"]`);
+        const newFormIdx = totalFormsInput ? parseInt(totalFormsInput.value) : 0;
+    
+        const template = `
+            <div class="requirement-entry border border-gray-200 rounded p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        <input type="text" name="${reqFormPrefix}-${newFormIdx}-name" 
+                               class="w-full border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <input type="text" name="${reqFormPrefix}-${newFormIdx}-description" 
+                               class="w-full border-gray-300 rounded-md">
+                    </div>
+                </div>
+                <input type="hidden" name="${reqFormPrefix}-${newFormIdx}-DELETE" value="">
+                <button type="button" 
+                        class="mt-4 text-sm text-red-600 hover:text-red-800"
+                        onclick="removeRequirement(this)">
+                    Remove Requirement
+                </button>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', template);
+        if (totalFormsInput) {
+            totalFormsInput.value = newFormIdx + 1;
+        } else {
+            // Create management form if it doesn't exist
+            const managementForm = `
+                <input type="hidden" name="${reqFormPrefix}-TOTAL_FORMS" value="1">
+                <input type="hidden" name="${reqFormPrefix}-INITIAL_FORMS" value="0">
+                <input type="hidden" name="${reqFormPrefix}-MIN_NUM_FORMS" value="0">
+                <input type="hidden" name="${reqFormPrefix}-MAX_NUM_FORMS" value="1000">
+            `;
+            container.insertAdjacentHTML('beforebegin', managementForm);
+        }
+    }
+    
+    function removeVisa(button, formIdx) {
+        const visaEntry = button.closest('.visa-entry');
+        const deleteInput = visaEntry.querySelector(`input[name="visas-${formIdx}-DELETE"]`);
+        if (deleteInput) {
+            deleteInput.value = 'on';
+            visaEntry.style.display = 'none';
+        }
+    }
+    
+    function removeRequirement(button) {
+        const reqEntry = button.closest('.requirement-entry');
+        const deleteInput = reqEntry.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) {
+            deleteInput.value = 'on';
+            reqEntry.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
