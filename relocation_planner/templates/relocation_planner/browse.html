@@ -19,9 +19,28 @@
     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for country in countries %}
         <div class="p-6 bg-white rounded-lg shadow">
-            <h2 class="text-xl font-semibold text-gray-900">{{ country.name }}</h2>
-            <p class="text-gray-600">Capital: {{ country.capital_city }}</p>
-            <p class="text-gray-600">Population: {{ country.population|intcomma }}</p>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ country.name }}</h2>
+            
+            {% if country.cost_of_living_index %}
+                <p class="text-gray-600 mb-2">Cost of Living Index: {{ country.cost_of_living_index }}</p>
+            {% endif %}
+            
+            {% if country.quality_of_life_index %}
+                <p class="text-gray-600 mb-2">Quality of Life Index: {{ country.quality_of_life_index }}</p>
+            {% endif %}
+            
+            <div class="mb-4">
+                {% if country.has_universal_healthcare %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Universal Healthcare Available
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        No Universal Healthcare
+                    </span>
+                {% endif %}
+            </div>
+
             <a href="{% url 'relocation_planner:country_detail' country.slug %}" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                 View Details
             </a>
