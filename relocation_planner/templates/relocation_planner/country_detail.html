@@ -4,6 +4,34 @@
 {% block title %}{{ country.name }} - Relocation Planner{% endblock %}
 
 {% block content %}
+<!-- Requirement Modal -->
+<div id="requirementModal" 
+     class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg max-w-lg w-full mx-4">
+        <div class="p-6">
+            <div class="flex justify-between items-start">
+                <h3 id="modalTitle" class="text-lg font-medium text-gray-900"></h3>
+                <button onclick="closeModal()" 
+                        class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">Close</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-4">
+                <p id="modalDescription" class="text-sm text-gray-500"></p>
+            </div>
+            <div class="mt-6">
+                <button onclick="closeModal()" 
+                        class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
     {# Header Section with Edit Button #}
     <div class="flex justify-between items-start">
@@ -86,7 +114,10 @@
                 {% for visa in country.visa_list.all %}
                     <div class="{% if not forloop.last %}border-b border-gray-200 pb-6{% endif %}">
                         <h3 class="text-lg font-medium text-gray-900">{{ visa.name }}</h3>
-                        <dl class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+                        {% if visa.description %}
+                            <p class="mt-2 text-gray-600">{{ visa.description }}</p>
+                        {% endif %}
+                        <dl class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Duration</dt>
                                 <dd class="mt-1">{{ visa.duration }}</dd>
@@ -94,9 +125,19 @@
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Requirements</dt>
                                 <dd class="mt-1">
-                                    <ul class="list-disc list-inside">
+                                    <ul class="list-disc list-inside space-y-1">
                                         {% for req in visa.requirement_list.all %}
-                                            <li>{{ req.name }}</li>
+                                            <li>
+                                                <button 
+                                                    onclick="showRequirement('{{ req.name|escapejs }}', '{{ req.description|escapejs }}')"
+                                                    class="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center">
+                                                    {{ req.name }}
+                                                    <svg class="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </dd>
@@ -105,9 +146,9 @@
                         {% if visa.information_link %}
                             <div class="mt-3">
                                 <a href="{{ visa.information_link }}" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer"
-                                   class="text-blue-600 hover:text-blue-800">
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="text-blue-600 hover:text-blue-800">
                                     More Information →
                                 </a>
                             </div>
@@ -181,4 +222,34 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    function showRequirement(name, description) {
+        const modal = document.getElementById('requirementModal');
+        const titleElement = document.getElementById('modalTitle');
+        const descriptionElement = document.getElementById('modalDescription');
+        
+        titleElement.textContent = name;
+        descriptionElement.textContent = description;
+        modal.classList.remove('hidden');
+        
+        // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('requirementModal');
+        modal.classList.add('hidden');
+        
+        // Re-enable background scrolling
+        document.body.style.overflow = '';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('requirementModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeModal();
+        }
+    });
+</script>
 {% endblock %}
