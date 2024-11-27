@@ -1,0 +1,24 @@
+{% extends "users/base.html" %}
+
+{% block title %}Relocation Planner - Assessment{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold text-gray-900 text-center">Relocation Assessment</h1>
+    <p class="mt-4 text-center text-gray-600">Answer a few questions to get personalized recommendations.</p>
+
+    <form method="post" action="{% url 'relocation_planner:assessment' %}" class="mt-8 space-y-6 bg-white p-6 rounded-lg shadow">
+        {% csrf_token %}
+        <div>
+            <label for="priority" class="block text-sm font-medium text-gray-700">What's your top priority?</label>
+            <input type="text" id="priority" name="priority" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div class="text-center">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

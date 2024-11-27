@@ -1,0 +1,24 @@
+{% extends "users/base.html" %}
+
+{% block title %}Relocation Planner - Assessment Results{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold text-gray-900 text-center">Assessment Results</h1>
+    <p class="mt-4 text-center text-gray-600">Based on your answers, here are the top recommendations:</p>
+
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for result in results %}
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold text-gray-900">{{ result.name }}</h2>
+            <p class="text-gray-600">{{ result.description }}</p>
+            <a href="{% url 'relocation_planner:country_detail' result.slug %}" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                View Details
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-gray-600">No results found. Try adjusting your priorities or inputs.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

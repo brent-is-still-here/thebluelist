@@ -1,0 +1,245 @@
+{% extends "users/base.html" %}
+{% load humanize %}
+
+{% block title %}{{ country.name }} - Relocation Planner{% endblock %}
+
+{% block content %}
+<!-- Requirement Modal -->
+<div id="requirementModal" 
+     class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg max-w-lg w-full mx-4">
+        <div class="p-6">
+            <div class="flex justify-between items-start">
+                <h3 id="modalTitle" class="text-lg font-medium text-gray-900"></h3>
+                <button onclick="closeModal()" 
+                        class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">Close</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-4">
+                <p id="modalDescription" class="text-sm text-gray-500"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    {# Header Section with Edit Button #}
+    <div class="flex justify-between items-start">
+        <h1 class="text-3xl font-bold text-gray-900">{{ country.name }}</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'relocation_planner:edit_country' country.slug %}" 
+               class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Edit Country
+            </a>
+        {% endif %}
+    </div>
+
+    {# Language Information Card #}
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Language Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Business Language</h3>
+                <p class="mt-1 text-gray-900">{{ country.business_language.name|default:"Not specified" }}</p>
+            </div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Common Languages</h3>
+                <p class="mt-1 text-gray-900">
+                    {% for language in country.common_languages.all %}
+                        {{ language.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        None specified
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {# Quality Metrics Card #}
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quality of Life</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Cost of Living Index</h3>
+                <p class="mt-1 text-gray-900">
+                    {% if country.cost_of_living_index %}
+                        {{ country.cost_of_living_index|floatformat:2 }}
+                    {% else %}
+                        Not available
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Quality of Life Index</h3>
+                <p class="mt-1 text-gray-900">
+                    {% if country.quality_of_life_index %}
+                        {{ country.quality_of_life_index|floatformat:2 }}
+                    {% else %}
+                        Not available
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Healthcare System</h3>
+                <p class="mt-1">
+                    {% if country.has_universal_healthcare %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Universal Healthcare Available
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            No Universal Healthcare
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {# Visa Information Card #}
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Visa Options</h2>
+        {% if country.visa_list.exists %}
+            <div class="space-y-6">
+                {% for visa in country.visa_list.all %}
+                    <div class="{% if not forloop.last %}border-b border-gray-200 pb-6{% endif %}">
+                        <h3 class="text-lg font-medium text-gray-900">{{ visa.name }}</h3>
+                        {% if visa.description %}
+                            <p class="mt-2 text-gray-600">{{ visa.description }}</p>
+                        {% endif %}
+                        <dl class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Duration</dt>
+                                <dd class="mt-1">{{ visa.duration }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Requirements</dt>
+                                <dd class="mt-1">
+                                    <ul class="list-disc list-inside space-y-1">
+                                        {% for req in visa.requirement_list.all %}
+                                            <li>
+                                                <button 
+                                                    onclick="showRequirement('{{ req.name|escapejs }}', '{{ req.description|escapejs }}')"
+                                                    class="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center">
+                                                    {{ req.name }}
+                                                </button>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </dd>
+                            </div>
+                        </dl>
+                        {% if visa.information_link %}
+                            <div class="mt-3">
+                                <a href="{{ visa.information_link }}" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="text-blue-600 hover:text-blue-800">
+                                    More Information →
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No visa information available.</p>
+        {% endif %}
+    </div>
+
+    {# Pet Relocation Card #}
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Pet Relocation Requirements</h2>
+        {% if country.pet_requirement_list.exists %}
+            {% regroup country.pet_requirement_list.all by animal as animal_list %}
+            <div class="space-y-6">
+                {% for animal in animal_list %}
+                    <div class="{% if not forloop.last %}border-b border-gray-200 pb-6{% endif %}">
+                        <h3 class="text-lg font-medium text-gray-900">{{ animal.grouper.name }}</h3>
+                        <div class="mt-3 space-y-3">
+                            {% for req in animal.list %}
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700">
+                                        {{ req.get_type_display }}
+                                    </h4>
+                                    <p class="mt-1">{{ req.name }}</p>
+                                    {% if req.description %}
+                                        <p class="mt-1 text-sm text-gray-500">{{ req.description }}</p>
+                                    {% endif %}
+                                    {% if req.duration %}
+                                        <p class="mt-1 text-sm text-gray-500">Duration: {{ req.duration }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if country.pet_relocation_info_link %}
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <a href="{{ country.pet_relocation_info_link }}" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="text-blue-600 hover:text-blue-800">
+                        Official Pet Relocation Information →
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="text-gray-500">No pet relocation information available.</p>
+            {% if country.pet_relocation_info_link %}
+                <div class="mt-4">
+                    <a href="{{ country.pet_relocation_info_link }}" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="text-blue-600 hover:text-blue-800">
+                        View Official Pet Relocation Information →
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {# Last Updated Information #}
+    <div class="text-sm text-gray-500 text-center">
+        <p>Last updated: {{ country.updated_at|date:"F j, Y" }}</p>
+        {% if country.last_modified_by %}
+            <p>Updated by: {{ country.last_modified_by.username }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function showRequirement(name, description) {
+        const modal = document.getElementById('requirementModal');
+        const titleElement = document.getElementById('modalTitle');
+        const descriptionElement = document.getElementById('modalDescription');
+        
+        titleElement.textContent = name;
+        descriptionElement.textContent = description;
+        modal.classList.remove('hidden');
+        
+        // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('requirementModal');
+        modal.classList.add('hidden');
+        
+        // Re-enable background scrolling
+        document.body.style.overflow = '';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('requirementModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeModal();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "users/base.html" %}
+
+{% block title %}Relocation Planner - Home{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900">Welcome to the Relocation Planner</h1>
+        <p class="mt-4 text-gray-600">Explore countries, plan your move, and discover essential resources for relocation.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Browse Countries</h2>
+            <p class="text-gray-600 mb-4">Find detailed information about countries worldwide.</p>
+            <a href="{% url 'relocation_planner:browse' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Browse Now
+            </a>
+        </div>
+
+        <div class="p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Relocation Assessment</h2>
+            <p class="text-gray-600 mb-4">Get personalized recommendations based on your needs and preferences.</p>
+            <a href="{% url 'relocation_planner:assessment' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Start Assessment
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
