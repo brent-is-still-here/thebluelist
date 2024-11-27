@@ -207,10 +207,6 @@ class CountryDetailView(View):
 #             messages.error(request, f"An error occurred: {str(e)}")
 #             return self.get(request, slug)
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views import View
-import uuid
-
 class EditCountryView(View):
     template_name = "relocation_planner/edit_country.html"
 
@@ -218,7 +214,7 @@ class EditCountryView(View):
         requirement_formsets = {}
         for visa in visas:
             visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
-            prefix = f'requirements_{visa_id}'
+            prefix = f'visa_{visa_id}_requirements'  # Match the JS prefix
             formset = VisaRequirementFormSet(
                 instance=visa,
                 prefix=prefix
@@ -244,6 +240,8 @@ class EditCountryView(View):
 
     def post(self, request, slug=None):
         print("POST received")  # Debug
+        print("POST data keys:", request.POST.keys()) # Debug
+
         country = get_object_or_404(Country, slug=slug) if slug else None
         country_form = EditCountryForm(request.POST, instance=country)
         visa_formset = VisaFormSet(request.POST, instance=country if country else None, prefix='visas')
@@ -264,7 +262,11 @@ class EditCountryView(View):
                     visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
                     
                     # Get the correct prefix for requirements
-                    prefix = f'requirements_{visa_id}'
+                    prefix = f'visa_{visa_id}_requirements'
+
+                    print(f"Looking for requirements with prefix: {prefix}") # Debug
+                    requirement_keys = [k for k in request.POST.keys() if k.startswith(prefix)] # Debug
+                    print(f"Found requirement keys: {requirement_keys}") # Debug
                     
                     # Create requirement formset with the correct prefix
                     requirement_formset = VisaRequirementFormSet(
