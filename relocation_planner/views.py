@@ -14,6 +14,8 @@ from .models import (
     AnimalSpecies
 )
 
+import uuid
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -205,17 +207,23 @@ class CountryDetailView(View):
 #             messages.error(request, f"An error occurred: {str(e)}")
 #             return self.get(request, slug)
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+import uuid
+
 class EditCountryView(View):
     template_name = "relocation_planner/edit_country.html"
 
     def get_visa_requirement_formsets(self, visas):
         requirement_formsets = {}
         for visa in visas:
+            visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
+            prefix = f'requirements_{visa_id}'
             formset = VisaRequirementFormSet(
                 instance=visa,
-                prefix=f'requirements_{visa.id}' if visa.id else f'requirements_new_{len(requirement_formsets)}'
+                prefix=prefix
             )
-            requirement_formsets[visa.id if visa.id else f'new_{len(requirement_formsets)}'] = formset
+            requirement_formsets[visa_id] = formset
         return requirement_formsets
 
     def get(self, request, slug=None):
@@ -235,49 +243,69 @@ class EditCountryView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, slug=None):
+        print("POST received")  # Debug
         country = get_object_or_404(Country, slug=slug) if slug else None
         country_form = EditCountryForm(request.POST, instance=country)
-        visa_formset = VisaFormSet(request.POST, instance=country)
+        visa_formset = VisaFormSet(request.POST, instance=country if country else None, prefix='visas')
+        
+        print(f"Country form valid: {country_form.is_valid()}")  # Debug
+        print(f"Visa formset valid: {visa_formset.is_valid()}")  # Debug
+        if not visa_formset.is_valid():
+            print(f"Visa formset errors: {visa_formset.errors}")  # Debug
 
         requirement_formsets = {}
         is_valid = country_form.is_valid() and visa_formset.is_valid()
 
-        # Process existing visas
+        # Process existing visas and collect their requirement formsets
         if is_valid:
-            country = country_form.save()
-            visas = visa_formset.save(commit=False)
-
-            # Handle visa deletions
-            for obj in visa_formset.deleted_objects:
-                obj.delete()
-
-            # Process each visa and its requirements
             for visa_form in visa_formset.forms:
                 if not visa_form.cleaned_data.get('DELETE', False):
-                    visa = visa_form.save(commit=False)
-                    visa.country = country
-                    visa.save()
-
-                    # Process requirements for this visa
-                    prefix = f'visa_{visa.id}_requirements' if visa.id else f'new_visa_{len(requirement_formsets)}_requirements'
+                    visa = visa_form.instance
+                    visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
+                    
+                    # Get the correct prefix for requirements
+                    prefix = f'requirements_{visa_id}'
+                    
+                    # Create requirement formset with the correct prefix
                     requirement_formset = VisaRequirementFormSet(
                         request.POST,
                         instance=visa,
                         prefix=prefix
                     )
-
+                    
                     if requirement_formset.is_valid():
+                        requirement_formsets[visa_id] = requirement_formset
+                    else:
+                        is_valid = False
+                        requirement_formsets[visa_id] = requirement_formset
+
+        if is_valid:
+            country = country_form.save()
+            
+            # Save visas
+            for visa_form in visa_formset.forms:
+                if not visa_form.cleaned_data.get('DELETE', False):
+                    visa = visa_form.save(commit=False)
+                    visa.country = country
+                    visa.save()
+                    
+                    # Get the corresponding requirement formset
+                    visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
+                    requirement_formset = requirement_formsets.get(visa_id)
+                    
+                    if requirement_formset:
+                        # Save requirements
                         requirements = requirement_formset.save(commit=False)
                         for req in requirement_formset.deleted_objects:
                             req.delete()
                         for requirement in requirements:
                             requirement.visa = visa
                             requirement.save()
-                    else:
-                        is_valid = False
-                        requirement_formsets[visa.id if visa.id else f'new_{len(requirement_formsets)}'] = requirement_formset
+                else:
+                    # Handle deletion
+                    if visa_form.instance.pk:
+                        visa_form.instance.delete()
 
-        if is_valid:
             return redirect("relocation_planner:country_detail", slug=country.slug)
 
         # If we get here, there was a validation error

@@ -9,6 +9,17 @@
 
     <form method="post" class="space-y-8">
         {% csrf_token %}
+
+        {% if country_form.non_field_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ country_form.non_field_errors }}
+            </div>
+        {% endif %}
+        {% if visa_formset.non_form_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ visa_formset.non_form_errors }}
+            </div>
+        {% endif %}
         
         {# Basic Info #}
         <div class="bg-white shadow rounded-lg p-6">
@@ -36,6 +47,10 @@
                     <div class="visa-entry bg-gray-50 rounded-lg p-4" id="visa-form-{{ forloop.counter0 }}">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Visa {{ forloop.counter }}</h3>
                         
+                        {% for hidden in visa_form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {% for field in visa_form.visible_fields %}
                                 <div class="{% if field.field.widget.input_type == 'textarea' %}lg:col-span-2{% endif %}">
@@ -144,10 +159,25 @@
         const visaForms = document.getElementById('visa-forms');
         const totalForms = document.querySelector('[name="visas-TOTAL_FORMS"]');
         const newFormIdx = totalForms.value;
-    
+        const newUuid = crypto.randomUUID();
+        
+        // Add management form for requirements
+        const reqManagementForm = `
+            <input type="hidden" name="requirements_new_${newUuid}-TOTAL_FORMS" value="0">
+            <input type="hidden" name="requirements_new_${newUuid}-INITIAL_FORMS" value="0">
+            <input type="hidden" name="requirements_new_${newUuid}-MIN_NUM_FORMS" value="0">
+            <input type="hidden" name="requirements_new_${newUuid}-MAX_NUM_FORMS" value="1000">
+        `;
+
         const template = `
-            <div class="visa-entry bg-gray-50 rounded-lg p-4" id="visa-form-${newFormIdx}">
+            <div class="visa-entry bg-gray-50 rounded-lg p-4" id="visa-form-${newUuid}">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">New Visa</h3>
+                
+                 <!-- Add hidden fields from empty form -->
+                {% for hidden in visa_formset.empty_form.hidden_fields %}
+                    {{ hidden.as_widget|escapejs }}
+                {% endfor %}
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {% for field in visa_formset.empty_form.visible_fields %}
                         <div class="{% if field.field.widget.input_type == 'textarea' %}lg:col-span-2{% endif %}">
@@ -159,14 +189,14 @@
                 
                 <div class="bg-white rounded-lg p-4 mt-6">
                     <h4 class="text-md font-medium text-gray-700 mb-4">Requirements</h4>
-                    <div id="requirements-container-new_${newFormIdx}" class="space-y-4"></div>
+                    <div id="requirements-container-${newUuid}" class="space-y-4"></div>
                     <button type="button" 
                             class="mt-4 text-sm text-blue-600 hover:text-blue-800"
-                            onclick="addRequirement('new_${newFormIdx}')">
+                            onclick="addRequirement('${newUuid}')">
                         + Add Requirement
                     </button>
                 </div>
-    
+
                 <input type="hidden" name="visas-${newFormIdx}-DELETE" value="">
                 <button type="button" 
                         class="mt-4 text-sm text-red-600 hover:text-red-800"
@@ -175,32 +205,33 @@
                 </button>
             </div>
         `.replace(/__prefix__/g, newFormIdx);
-        
+
         visaForms.insertAdjacentHTML('beforeend', template);
         totalForms.value = parseInt(totalForms.value) + 1;
     }
     
     function addRequirement(visaId) {
         const container = document.getElementById(`requirements-container-${visaId}`);
-        const reqFormPrefix = visaId.toString().startsWith('new_') ? 
+        const reqFormPrefix = visaId.startsWith('new_') ? 
             `new_visa_${visaId}_requirements` : 
             `visa_${visaId}_requirements`;
-            
+
         const totalFormsInput = document.querySelector(`[name="${reqFormPrefix}-TOTAL_FORMS"]`);
         const newFormIdx = totalFormsInput ? parseInt(totalFormsInput.value) : 0;
-    
+        const newUuid = crypto.randomUUID(); // Unique identifier for this form
+
         const template = `
             <div class="requirement-entry border border-gray-200 rounded p-4">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
                         <input type="text" name="${reqFormPrefix}-${newFormIdx}-name" 
-                               class="w-full border-gray-300 rounded-md">
+                            class="w-full border-gray-300 rounded-md">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                         <input type="text" name="${reqFormPrefix}-${newFormIdx}-description" 
-                               class="w-full border-gray-300 rounded-md">
+                            class="w-full border-gray-300 rounded-md">
                     </div>
                 </div>
                 <input type="hidden" name="${reqFormPrefix}-${newFormIdx}-DELETE" value="">
@@ -211,12 +242,14 @@
                 </button>
             </div>
         `;
-        
+
         container.insertAdjacentHTML('beforeend', template);
+
+        // Increment TOTAL_FORMS count
         if (totalFormsInput) {
             totalFormsInput.value = newFormIdx + 1;
         } else {
-            // Create management form if it doesn't exist
+            // Add management form if it doesn't exist
             const managementForm = `
                 <input type="hidden" name="${reqFormPrefix}-TOTAL_FORMS" value="1">
                 <input type="hidden" name="${reqFormPrefix}-INITIAL_FORMS" value="0">
