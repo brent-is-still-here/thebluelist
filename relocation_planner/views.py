@@ -54,7 +54,7 @@ class EditCountryView(View):
         requirement_formsets = {}
         for visa in visas:
             visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
-            prefix = f'visa_{visa_id}_requirements'  # Match the JS prefix
+            prefix = f'visa_{visa_id}_requirements'
             formset = VisaRequirementFormSet(
                 instance=visa,
                 prefix=prefix
@@ -84,8 +84,8 @@ class EditCountryView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, slug=None):
-        print("POST received")  # Debug
-        print("POST data keys:", request.POST.keys()) # Debug
+        print("POST received")
+        print("POST data keys:", request.POST.keys())
 
         country = get_object_or_404(Country, slug=slug) if slug else None
         country_form = EditCountryForm(request.POST, instance=country)
@@ -95,90 +95,85 @@ class EditCountryView(View):
             instance=country if country else None,
             prefix='pet_requirements'
         )
-        
-        print(f"Country form valid: {country_form.is_valid()}")  # Debug
-        print(f"Visa formset valid: {visa_formset.is_valid()}")  # Debug
-        if not visa_formset.is_valid():
-            print(f"Visa formset errors: {visa_formset.errors}")  # Debug
-        print(f"Pet requirement formset valid: {pet_requirement_formset.is_valid()}")  # Debug
-        if not pet_requirement_formset.is_valid():
-            print(f"Pet requirement formset errors: {pet_requirement_formset.errors}")  # Debug
 
+        # First validate the main forms
+        country_form_valid = country_form.is_valid()
+        visa_formset_valid = visa_formset.is_valid()
+        pet_requirement_valid = pet_requirement_formset.is_valid()
+
+        print(f"Country form valid: {country_form_valid}")
+        print(f"Visa formset valid: {visa_formset_valid}")
+        print(f"Pet requirement formset valid: {pet_requirement_valid}")
+
+        if not visa_formset_valid:
+            print(f"Visa formset errors: {visa_formset.errors}")
+        if not pet_requirement_valid:
+            print(f"Pet requirement formset errors: {pet_requirement_formset.errors}")
+
+        # Process and validate visa requirements if main forms are valid
         requirement_formsets = {}
-        is_valid = (
-            country_form.is_valid() 
-            and visa_formset.is_valid() 
-            and pet_requirement_formset.is_valid()
-        )
+        visa_requirements_valid = True
 
-        # Process existing visas and collect their requirement formsets
-        if is_valid:
-            for visa_form in visa_formset.forms:
-                if not visa_form.cleaned_data.get('DELETE', False):
-                    visa = visa_form.instance
-                    visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
-                    
-                    # Get the correct prefix for requirements
-                    prefix = f'visa_{visa_id}_requirements'
-
-                    print(f"Looking for requirements with prefix: {prefix}") # Debug
-                    requirement_keys = [k for k in request.POST.keys() if k.startswith(prefix)] # Debug
-                    print(f"Found requirement keys: {requirement_keys}") # Debug
-                    
-                    # Create requirement formset with the correct prefix
-                    requirement_formset = VisaRequirementFormSet(
-                        request.POST,
-                        instance=visa,
-                        prefix=prefix
-                    )
-                    
-                    if requirement_formset.is_valid():
-                        requirement_formsets[visa_id] = requirement_formset
-                    else:
-                        is_valid = False
-                        requirement_formsets[visa_id] = requirement_formset
-
-        if is_valid:
+        if country_form_valid and visa_formset_valid and pet_requirement_valid:
+            # Save the country first to ensure it exists for relationships
             country = country_form.save()
-            
-            # Save visas
+
+            # Process each visa and its requirements
             for visa_form in visa_formset.forms:
                 if not visa_form.cleaned_data.get('DELETE', False):
+                    # Save the visa first
                     visa = visa_form.save(commit=False)
                     visa.country = country
                     visa.save()
-                    
-                    # Get the corresponding requirement formset
-                    visa_id = visa.id if visa.id else f'new_{uuid.uuid4().hex}'
-                    requirement_formset = requirement_formsets.get(visa_id)
-                    
-                    if requirement_formset:
-                        # Save requirements
-                        requirements = requirement_formset.save(commit=False)
-                        for req in requirement_formset.deleted_objects:
-                            req.delete()
-                        for requirement in requirements:
-                            requirement.visa = visa
-                            requirement.save()
+
+                    # Now handle requirements for this visa
+                    visa_id = str(visa.id) if visa.id else f'new_{uuid.uuid4().hex}'
+                    prefix = f'visa_{visa_id}_requirements'
+
+                    print(f"Looking for requirements with prefix: {prefix}")
+                    requirement_keys = [k for k in request.POST.keys() if k.startswith(prefix)]
+                    print(f"Found requirement keys: {requirement_keys}")
+
+                    if requirement_keys:
+                        requirement_formset = VisaRequirementFormSet(
+                            request.POST,
+                            instance=visa,
+                            prefix=prefix
+                        )
+
+                        if requirement_formset.is_valid():
+                            print(f"Processing requirements for visa {visa_id}")
+                            # Save requirements
+                            requirements = requirement_formset.save(commit=False)
+                            for requirement in requirements:
+                                requirement.visa = visa
+                                requirement.save()
+                            
+                            # Handle deletions
+                            for obj in requirement_formset.deleted_objects:
+                                obj.delete()
+                        else:
+                            print(f"Requirement formset errors for visa {visa_id}: {requirement_formset.errors}")
+                            visa_requirements_valid = False
                 else:
-                    # Handle deletion
+                    # Handle visa deletion
                     if visa_form.instance.pk:
                         visa_form.instance.delete()
 
-            # Save pet requirements
-            for req_form in pet_requirement_formset.forms:
-                if req_form.is_valid() and not req_form.cleaned_data.get('DELETE', False):
-                    requirement = req_form.save(commit=False)
-                    requirement.country = country
-                    requirement.save()
-                else:
-                    # Handle deletion
-                    if req_form.instance.pk and req_form.cleaned_data.get('DELETE', False):
-                        req_form.instance.delete()
+            # Process pet requirements if everything else is valid
+            if visa_requirements_valid:
+                for req_form in pet_requirement_formset.forms:
+                    if not req_form.cleaned_data.get('DELETE', False):
+                        requirement = req_form.save(commit=False)
+                        requirement.country = country
+                        requirement.save()
+                    else:
+                        if req_form.instance.pk:
+                            req_form.instance.delete()
 
-            return redirect("relocation_planner:country_detail", slug=country.slug)
+                return redirect("relocation_planner:country_detail", slug=country.slug)
 
-        # If we get here, there was a validation error
+        # If we get here, something failed validation
         if not requirement_formsets:
             requirement_formsets = self.get_visa_requirement_formsets(
                 [form.instance for form in visa_formset.forms if form.instance.pk and not form.cleaned_data.get('DELETE', False)]
