@@ -22,12 +22,6 @@
             <div class="mt-4">
                 <p id="modalDescription" class="text-sm text-gray-500"></p>
             </div>
-            <div class="mt-6">
-                <button onclick="closeModal()" 
-                        class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                    Close
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -132,10 +126,6 @@
                                                     onclick="showRequirement('{{ req.name|escapejs }}', '{{ req.description|escapejs }}')"
                                                     class="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center">
                                                     {{ req.name }}
-                                                    <svg class="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd" />
-                                                    </svg>
                                                 </button>
                                             </li>
                                         {% endfor %}
@@ -164,8 +154,8 @@
     {# Pet Relocation Card #}
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Pet Relocation Requirements</h2>
-        {% if country.pet_relocation_requirements.exists %}
-            {% regroup country.pet_relocation_requirements.all by animal as animal_list %}
+        {% if country.pet_requirement_list.exists %}
+            {% regroup country.pet_requirement_list.all by animal as animal_list %}
             <div class="space-y-6">
                 {% for animal in animal_list %}
                     <div class="{% if not forloop.last %}border-b border-gray-200 pb-6{% endif %}">

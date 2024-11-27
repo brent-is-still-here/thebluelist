@@ -117,6 +117,60 @@
             </button>
         </div>
 
+        {# Pet Relocation Requirements #}
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Pet Relocation Requirements</h2>
+            {{ pet_requirement_formset.management_form }}
+            
+            <div id="pet-requirement-forms" class="space-y-6">
+                {% for form in pet_requirement_formset %}
+                    <div class="pet-requirement-entry bg-gray-50 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Requirement {{ forloop.counter }}</h3>
+                        
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Animal</label>
+                                {{ form.animal }}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                                {{ form.type }}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                {{ form.name }}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                                {{ form.duration }}
+                            </div>
+                            <div class="lg:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+
+                        {{ form.DELETE }}
+                        <button type="button" 
+                                class="mt-4 text-sm text-red-600 hover:text-red-800"
+                                onclick="removePetRequirement(this)">
+                            Remove Requirement
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" 
+                    class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    onclick="addPetRequirement()">
+                Add Pet Requirement
+            </button>
+        </div>
+
         <div class="flex justify-end space-x-4">
             <a href="{% url 'relocation_planner:browse' %}" 
                class="px-4 py-2 border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50">
@@ -273,6 +327,68 @@
     
     function removeRequirement(button) {
         const reqEntry = button.closest('.requirement-entry');
+        const deleteInput = reqEntry.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) {
+            deleteInput.value = 'on';
+            reqEntry.style.display = 'none';
+        }
+    }
+
+    function addPetRequirement() {
+        const forms = document.getElementById('pet-requirement-forms');
+        const totalForms = document.querySelector('[name="pet_requirements-TOTAL_FORMS"]');
+        const newFormIdx = totalForms.value;
+
+        // Debug logs
+        console.log("Adding new pet requirement form");
+        console.log("Current total forms:", newFormIdx);
+
+        const template = `
+            <div class="pet-requirement-entry bg-gray-50 rounded-lg p-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">New Requirement</h3>
+                
+                {% for hidden in pet_requirement_formset.empty_form.hidden_fields %}
+                    {{ hidden.as_widget|escapejs }}
+                {% endfor %}
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Animal</label>
+                        {{ pet_requirement_formset.empty_form.animal.as_widget|escapejs }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                        {{ pet_requirement_formset.empty_form.type.as_widget|escapejs }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        {{ pet_requirement_formset.empty_form.name.as_widget|escapejs }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                        {{ pet_requirement_formset.empty_form.duration.as_widget|escapejs }}
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        {{ pet_requirement_formset.empty_form.description.as_widget|escapejs }}
+                    </div>
+                </div>
+
+                <input type="hidden" name="pet_requirements-${newFormIdx}-DELETE" value="">
+                <button type="button" 
+                        class="mt-4 text-sm text-red-600 hover:text-red-800"
+                        onclick="removePetRequirement(this)">
+                    Remove Requirement
+                </button>
+            </div>
+        `.replace(/__prefix__/g, newFormIdx);
+
+        forms.insertAdjacentHTML('beforeend', template);
+        totalForms.value = parseInt(totalForms.value) + 1;
+    }
+
+    function removePetRequirement(button) {
+        const reqEntry = button.closest('.pet-requirement-entry');
         const deleteInput = reqEntry.querySelector('input[name$="-DELETE"]');
         if (deleteInput) {
             deleteInput.value = 'on';

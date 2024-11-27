@@ -4,6 +4,7 @@ from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from .forms.edit_country import EditCountryForm
+from .forms.pet_relocation_requirement_formset import PetRelocationRequirementFormSet
 from .forms.visa_formset import VisaFormSet, VisaRequirementFormSet
 from .models import (
     Country,
@@ -37,175 +38,14 @@ class CountryDetailView(View):
                 'common_languages',
                 'visa_list',
                 'visa_list__requirement_list',
-                'pet_relocation_requirements',
-                'pet_relocation_requirements__animal'
+                'pet_requirement_list',
+                'pet_requirement_list__animal'
             ).select_related('business_language'),
             slug=slug
         )
         return render(request, "relocation_planner/country_detail.html", {
             "country": country
         })
-
-# class EditCountryView(View):
-#     def get(self, request, slug=None):
-#         logger.debug(f"GET request received for slug: {slug}")
-#         try:
-#             country = None
-#             if slug:
-#                 country = get_object_or_404(Country, slug=slug)
-            
-#             context = {
-#                 "country": country,
-#                 "languages": Language.objects.all().order_by('name'),
-#                 "visas": Visa.objects.all().order_by('name'),
-#                 "pet_requirements": PetRelocationRequirement.objects.all().order_by('animal__name', 'type'),
-#                 "animals": AnimalSpecies.objects.all().order_by('name'),
-#             }
-            
-#             return render(request, "relocation_planner/edit_country.html", context)
-#         except Exception as e:
-#             logger.error(f"Error in GET: {str(e)}")
-#             raise
-
-#     def post(self, request, slug=None):
-#         logger.debug("POST data received:")
-#         for key, value in request.POST.items():
-#             logger.debug(f"{key}: {value}")
-
-#         try:
-#             # Start a transaction since we're handling multiple related models
-#             with transaction.atomic():
-#                 if slug:
-#                     country = get_object_or_404(Country, slug=slug)
-#                 else:
-#                     country = Country()
-
-#                 # Update basic country fields as before...
-#                 country.name = request.POST.get("name")
-#                 country.cost_of_living_index = request.POST.get("cost_of_living_index") or None
-#                 country.quality_of_life_index = request.POST.get("quality_of_life_index") or None
-#                 country.has_universal_healthcare = request.POST.get("has_universal_healthcare") == "on"
-#                 country.pet_relocation_info_link = request.POST.get("pet_relocation_info_link", "")
-#                 country.business_language_id = request.POST.get("business_language") or None
-                
-#                 # Set the user who made the changes
-#                 if not country.id:
-#                     country.created_by = request.user
-#                 country.last_modified_by = request.user
-                
-#                 country.save()
-
-#                 # Update many-to-many relationships
-#                 common_languages_ids = request.POST.getlist("common_languages")
-#                 country.common_languages.set(common_languages_ids)
-
-#                 # Handle existing visas
-#                 visa_ids = request.POST.getlist("visa_ids[]")
-#                 existing_visas = set()  # Keep track of visas we're updating
-                
-#                 for visa_id in visa_ids:
-#                     logger.debug(f"Processing visa {visa_id}")
-
-#                     try:
-#                         visa = Visa.objects.get(id=visa_id)
-#                         existing_visas.add(visa.id)
-                        
-#                         # Update visa fields
-#                         visa.name = request.POST.get(f"visa_name_{visa_id}")
-#                         visa.duration = request.POST.get(f"visa_duration_{visa_id}")
-#                         visa.description = request.POST.get(f"visa_description_{visa_id}")
-#                         visa.information_link = request.POST.get(f"visa_information_link_{visa_id}")
-#                         visa.last_modified_by = request.user
-#                         visa.save()
-
-#                         # Handle existing requirements
-#                         req_ids = request.POST.getlist(f"visa_requirement_ids_{visa_id}[]", [])
-#                         logger.debug(f"Found existing requirement IDs: {req_ids}")
-#                         existing_reqs = set()
-
-#                         for req_id in req_ids:
-#                             try:
-#                                 req = VisaRequirement.objects.get(id=req_id)
-#                                 existing_reqs.add(req.id)
-                                
-#                                 req.name = request.POST.get(f"visa_requirement_name_{visa_id}_{req_id}")
-#                                 req.description = request.POST.get(f"visa_requirement_description_{visa_id}_{req_id}")
-#                                 req.last_modified_by = request.user
-#                                 req.save()
-#                             except VisaRequirement.DoesNotExist:
-#                                 logger.warning(f"Requirement {req_id} not found for visa {visa_id}")
-
-#                         # Handle new requirements for existing visa
-#                         # These come from the "Add Requirement" button in the form
-#                         requirement_names = request.POST.getlist(f"new_visa_requirement_name_{visa_id}[]", [])
-#                         requirement_descriptions = request.POST.getlist(f"new_visa_requirement_description_{visa_id}[]", [])
-
-#                         logger.debug(f"New requirements for visa {visa_id}: Names={requirement_names}, Descriptions={requirement_descriptions}")
-
-#                         for name, description in zip(requirement_names, requirement_descriptions):
-#                             if name.strip():  # Only create if name is provided and not just whitespace
-#                                 new_req = VisaRequirement.objects.create(
-#                                     visa=visa,
-#                                     name=name,
-#                                     description=description,
-#                                     created_by=request.user,
-#                                     last_modified_by=request.user
-#                                 )
-#                                 existing_reqs.add(new_req.id)
-#                                 logger.debug(f"Created new requirement: {new_req.id} for visa {visa_id}")
-
-#                         # Clean up removed requirements
-#                         visa.requirements.exclude(id__in=existing_reqs).delete()
-
-#                     except Visa.DoesNotExist:
-#                         messages.warning(request, f"Visa with ID {visa_id} not found")
-
-#                 # Handle new visas and their requirements (this part seems to be working)
-#                 new_visa_names = request.POST.getlist("new_visa_name[]")
-#                 new_visa_durations = request.POST.getlist("new_visa_duration[]")
-#                 new_visa_descriptions = request.POST.getlist("new_visa_description[]")
-#                 new_visa_links = request.POST.getlist("new_visa_information_link[]")
-
-#                 for i in range(len(new_visa_names)):
-#                     if new_visa_names[i]:  # Only create if name is provided
-#                         visa = Visa.objects.create(
-#                             name=new_visa_names[i],
-#                             duration=new_visa_durations[i],
-#                             description=new_visa_descriptions[i],
-#                             information_link=new_visa_links[i],
-#                             created_by=request.user,
-#                             last_modified_by=request.user
-#                         )
-#                         country.visas.add(visa)
-#                         existing_visas.add(visa.id)
-
-#                         # Handle requirements for the new visa
-#                         new_req_names = request.POST.getlist(f"new_requirement_name_new_{i}[]")
-#                         new_req_descriptions = request.POST.getlist(f"new_requirement_description_new_{i}[]")
-#                         logger.debug(f"Found new requirements for visa {visa_id}:")
-#                         logger.debug(f"Names: {new_req_names}")
-#                         logger.debug(f"Descriptions: {new_req_descriptions}")
-                        
-#                         for name, desc in zip(new_req_names, new_req_descriptions):
-#                             if name.strip():  # Only create if name is provided and not just whitespace
-#                                 VisaRequirement.objects.create(
-#                                     visa=visa,
-#                                     name=name,
-#                                     description=desc,
-#                                     created_by=request.user,
-#                                     last_modified_by=request.user
-#                                 )
-
-#                 # Clean up visas that were removed
-#                 country.visas.exclude(id__in=existing_visas).delete()
-
-#                 messages.success(request, f"Country {'updated' if slug else 'added'} successfully!")
-#                 return redirect("relocation_planner:country_detail", slug=country.slug)
-                
-#         except Exception as e:
-#             logger.error(f"Error saving country: {str(e)}")
-#             messages.error(request, f"An error occurred: {str(e)}")
-#             return self.get(request, slug)
 
 class EditCountryView(View):
     template_name = "relocation_planner/edit_country.html"
@@ -229,12 +69,17 @@ class EditCountryView(View):
         requirement_formsets = self.get_visa_requirement_formsets(
             country.visa_list.all() if country else []
         )
+        pet_requirement_formset = PetRelocationRequirementFormSet(
+            instance=country if country else None, 
+            prefix='pet_requirements'
+        )
 
         context = {
             "country": country,
             "country_form": country_form,
             "visa_formset": visa_formset,
             "requirement_formsets": requirement_formsets,
+            "pet_requirement_formset": pet_requirement_formset,
         }
         return render(request, self.template_name, context)
 
@@ -245,14 +90,26 @@ class EditCountryView(View):
         country = get_object_or_404(Country, slug=slug) if slug else None
         country_form = EditCountryForm(request.POST, instance=country)
         visa_formset = VisaFormSet(request.POST, instance=country if country else None, prefix='visas')
+        pet_requirement_formset = PetRelocationRequirementFormSet(
+            request.POST, 
+            instance=country if country else None,
+            prefix='pet_requirements'
+        )
         
         print(f"Country form valid: {country_form.is_valid()}")  # Debug
         print(f"Visa formset valid: {visa_formset.is_valid()}")  # Debug
         if not visa_formset.is_valid():
             print(f"Visa formset errors: {visa_formset.errors}")  # Debug
+        print(f"Pet requirement formset valid: {pet_requirement_formset.is_valid()}")  # Debug
+        if not pet_requirement_formset.is_valid():
+            print(f"Pet requirement formset errors: {pet_requirement_formset.errors}")  # Debug
 
         requirement_formsets = {}
-        is_valid = country_form.is_valid() and visa_formset.is_valid()
+        is_valid = (
+            country_form.is_valid() 
+            and visa_formset.is_valid() 
+            and pet_requirement_formset.is_valid()
+        )
 
         # Process existing visas and collect their requirement formsets
         if is_valid:
@@ -308,6 +165,17 @@ class EditCountryView(View):
                     if visa_form.instance.pk:
                         visa_form.instance.delete()
 
+            # Save pet requirements
+            for req_form in pet_requirement_formset.forms:
+                if req_form.is_valid() and not req_form.cleaned_data.get('DELETE', False):
+                    requirement = req_form.save(commit=False)
+                    requirement.country = country
+                    requirement.save()
+                else:
+                    # Handle deletion
+                    if req_form.instance.pk and req_form.cleaned_data.get('DELETE', False):
+                        req_form.instance.delete()
+
             return redirect("relocation_planner:country_detail", slug=country.slug)
 
         # If we get here, there was a validation error
@@ -321,6 +189,7 @@ class EditCountryView(View):
             "country_form": country_form,
             "visa_formset": visa_formset,
             "requirement_formsets": requirement_formsets,
+            "pet_requirement_formset": pet_requirement_formset,
         }
         return render(request, self.template_name, context)
 

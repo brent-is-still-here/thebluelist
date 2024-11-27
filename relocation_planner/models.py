@@ -68,6 +68,11 @@ class Visa(BaseModel):
 
 class PetRelocationRequirement(BaseModel):
     """Requirements for relocating with pets"""
+    country = models.ForeignKey(
+        'Country',
+        on_delete=models.CASCADE,
+        related_name='pet_requirement_list'  # Changed from pet_relocation_requirements
+    )
     animal = models.ForeignKey(AnimalSpecies, on_delete=models.CASCADE)
     TYPE_CHOICES = [
         ('VACCINATION', 'Vaccination'),
@@ -107,10 +112,6 @@ class Country(BaseModel):
         blank=True
     )
     has_universal_healthcare = models.BooleanField(default=False)
-    pet_relocation_requirements = models.ManyToManyField(
-        PetRelocationRequirement,
-        related_name='countries'
-    )
     pet_relocation_info_link = models.URLField(blank=True)
     
     def save(self, *args, **kwargs):
